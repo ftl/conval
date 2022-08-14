@@ -1,0 +1,85 @@
+name: Worked All Germany Contest
+official_rules: https://www.darc.de/der-club/referate/conteste/wag-contest/en/rules/
+period_of_operation:
+- duration: 24h
+breaks:
+categories:
+- name: Single operator, CW, low power
+  operator: single
+  power: low
+  bands: all
+  modes: cw
+- name: Single operator, CW, high power
+  operator: single
+  power: high
+  bands: all
+  modes: cw
+- name: Single operator, SSB, low power
+  operator: single
+  power: low
+  bands: all
+  modes: ssb
+- name: Single operator, SSB, high power
+  operator: single
+  power: high
+  bands: all
+  modes: ssb
+- name: Single operator, mixed, low power
+  operator: single
+  power: low
+  bands: all
+  modes: all
+- name: Single operator, mixed, high power
+  operator: single
+  power: high
+  bands: all
+  modes: all
+- name: Single operator, mixed, QRP
+  operator: single
+  power: qrp
+  bands: all
+  modes: all
+- name: Multi operator
+  operator: multi
+  bands: all
+  modes: all
+- name: SWL, single operator
+overlays:
+modes:
+- cw
+- ssb
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+bandchange_rules:
+- operator: multi
+  grace_period: 10m
+  multiplier_exception: true
+exchange:
+- rst
+- [serial, wag_dok, nm]
+scoring:
+  qsos:
+  - my_country: DL
+    their_country: DL
+    points: 1
+  - my_country: DL
+    their_continent: EU
+    points: 3
+  - my_country: DL
+    their_continent: [NA, SA, AF, AS, OC, AN]
+    points: 5
+  - their_country: DL
+    points: 3
+  qso_band_rule: once_per_band
+  multis:
+  - property: dxcc_entity
+    my_country: DL
+    band_rule: once_per_band
+    multis: 1
+  - property: wag_district
+    band_rule: once_per_band
+    multis: 1

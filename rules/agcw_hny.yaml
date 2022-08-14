@@ -1,0 +1,40 @@
+name: AGCW Happy New Year Contest
+official_rules: https://www.agcw.de/contest/hnyc/
+period_of_operation:
+- duration: 3h
+breaks:
+categories:
+- name: Class 1, High Power
+  operator: single
+  power: high
+  bands: all
+- name: Class 2, Low Power
+  operator: single
+  power: low
+  bands: all
+- name: Class 3, QRP
+  operator: single
+  power: qrp
+  bands: all
+- name: Class 4, SWL
+  operator: single
+  bands: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+- 20m
+exchange:
+- rst
+- serial
+- member_number
+scoring:
+  qsos:
+  - points: 1
+  qso_band_rule: once_per_band
+  multis: 
+  - property: member_number
+    band_rule: once_per_band
+    multis: 1

@@ -1,0 +1,83 @@
+name: Worked All Europe DX Contest
+official_rules: https://www.darc.de/der-club/referate/conteste/wae-dx-contest/en/wae-rules/
+period_of_operation:
+- operator: single
+  duration: 36h
+- operator: multi
+  duration: 48h
+breaks:
+- break: 1h
+categories:
+- name: Single-Op High
+  operator: single
+  power: high
+  bands: all
+- name: Single-Op Low
+  operator: single
+  power: low
+  bands: all
+- name: Multi-Op
+  operator: multi
+  bands: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- rst
+- serial
+scoring:
+  qsos:
+  - my_continent: EU
+    their_continent: other
+    points: 1
+  - my_continent: [NA, SA, AF, AS, OC, AN]
+    their_continent: EU
+    points: 1
+  qso_band_rule: once_per_band
+  multis: 
+  - property: dxcc_entity
+    my_continent: EU
+    band_rule: once_per_band
+    bands:
+    - 80m
+    multis: 4
+  - property: dxcc_entity
+    my_continent: EU
+    band_rule: once_per_band
+    bands:
+    - 40m
+    multis: 3
+  - property: dxcc_entity
+    my_continent: EU
+    band_rule: once_per_band
+    bands:
+    - 20m
+    - 15m
+    - 10m
+    multis: 2
+  - property: wae_entity
+    my_continent: [NA, SA, AF, AS, OC, AN]
+    band_rule: once_per_band
+    bands:
+    - 80m
+    multis: 4
+  - property: wae_entity
+    my_continent: [NA, SA, AF, AS, OC, AN]
+    band_rule: once_per_band
+    bands:
+    - 40m
+    multis: 3
+  - property: wae_entity
+    my_continent: [NA, SA, AF, AS, OC, AN]
+    band_rule: once_per_band
+    bands:
+    - 20m
+    - 15m
+    - 10m
+    multis: 2

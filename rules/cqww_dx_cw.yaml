@@ -1,0 +1,118 @@
+name: CQ World Wide DX Context CW
+official_rules: https://www.cqww.com/rules.htm
+period_of_operation:
+- operator: single
+  overlay: classic
+  duration: 24h
+- duration: 48h
+breaks:
+- operator: single
+  overlay: classic
+  break: 1h
+categories:
+- name: Single Operator High Power All Band
+  operator: single
+  power: high
+  bands: all
+- name: Single Operator High Power Single Band
+  operator: single
+  power: high
+  bands: single
+- name: Single Operator Low Power All Band
+  operator: single
+  power: low
+  bands: all
+- name: Single Operator Low Power Single Band
+  operator: single
+  power: low
+  bands: single
+- name: Single Operator QRP All Band
+  operator: single
+  power: qrp
+  bands: all
+- name: Single Operator QRP Single Band
+  operator: single
+  power: qrp
+  bands: single
+- name: Single Operator High Power All Band Assisted
+  operator: single
+  power: high
+  bands: all
+  assisted: true
+- name: Single Operator High Power Single Band Assisted
+  operator: single
+  power: high
+  bands: single
+  assisted: true
+- name: Single Operator Low Power All Band Assisted
+  operator: single
+  power: low
+  bands: all
+  assisted: true
+- name: Single Operator Low Power Single band Assisted
+  operator: single
+  power: low
+  bands: single
+  assisted: true
+- name: Single Operator QRP All Band Assisted
+  operator: single
+  power: qrp
+  bands: all
+  assisted: true
+- name: Single Operator QRP Single Band Assisted
+  operator: single
+  power: qrp
+  bands: single
+  assisted: true
+- name: Multi-Single High Power
+  operator: multi
+  tx: 1
+  power: high
+- name: Multi-Single Low Power
+  operator: multi
+  tx: 1
+  power: high
+- name: Multi-Two
+  operator: multi
+  tx: 2
+- name: Multi-Multi
+  operator: multi
+  tx: multi
+- name: Checklog
+overlays:
+- tb_wires
+- rookie
+- classic
+- youth
+modes:
+- cw
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- rst
+- cq_zone
+scoring:
+  qsos:
+  - their_continent: other
+    points: 3
+  - their_continent: same
+    their_country: other
+    points: 1
+  - my_continent: NA
+    their_continent: NA
+    points: 2
+  - their_country: same
+    points: 0
+  qso_band_rule: once_per_band
+  multis: 
+  - property: cq_zone
+    band_rule: once_per_band
+    multis: 1
+  - property: dxcc_entity
+    band_rule: once_per_band
+    multis: 1

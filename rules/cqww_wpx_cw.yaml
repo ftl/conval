@@ -1,0 +1,118 @@
+name: CQ World Wide WPX Context CW
+official_rules: https://www.cqwpx.com/rules.htm
+period_of_operation:
+- operator: single
+  overlay: classic
+  duration: 24h
+- operator: single
+  duration: 36h
+- operator: multi
+  duration: 48h
+breaks:
+- operator: single
+  break: 1h
+categories:
+- name: Single Operator High Power All Band
+  operator: single
+  power: high
+  bands: all
+- name: Single Operator High Power Single Band
+  operator: single
+  power: high
+  bands: single
+- name: Single Operator Low Power All Band
+  operator: single
+  power: low
+  bands: all
+- name: Single Operator Low Power Single Band
+  operator: single
+  power: low
+  bands: single
+- name: Single Operator QRP All Band
+  operator: single
+  power: qrp
+  bands: all
+- name: Single Operator QRP Single Band
+  operator: single
+  power: qrp
+  bands: single
+- name: MULTI-ONE
+  operator: multi
+  tx: 1
+- name: MULTI-TWO
+  operator: multi
+  tx: 2
+- name: MULTI-UNLIMITED
+  operator: multi
+  tx: multi
+- name: MULTI-DISTRIBUTED
+  operator: multi
+  tx: distributed
+- name: Checklog
+overlays:
+- tb_wires
+- rookie
+- classic
+- youth
+modes:
+- cw
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- rst
+- serial_number
+scoring:
+  qsos:
+  - their_continent: other
+    bands:
+    - 10m
+    - 15m
+    - 20m
+    points: 3
+  - their_continent: other
+    bands:
+    - 40m
+    - 80m
+    - 160m
+    points: 6
+  - their_continent: same
+    their_country: other
+    bands:
+    - 10m
+    - 15m
+    - 20m
+    points: 1
+  - their_continent: same
+    their_country: other
+    bands:
+    - 40m
+    - 80m
+    - 160m
+    points: 2
+  - my_continent: NA
+    their_continent: NA
+    bands:
+    - 10m
+    - 15m
+    - 20m
+    points: 2
+  - my_continent: NA
+    their_continent: NA
+    bands:
+    - 40m
+    - 80m
+    - 160m
+    points: 4
+  - their_country: same
+    points: 1
+  qso_band_rule: once_per_band
+  multis: 
+  - property: wpx_prefix
+    band_rule: once
+    multis: 1
+  

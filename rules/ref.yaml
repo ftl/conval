@@ -1,0 +1,51 @@
+name: Coupe du REF
+official_rules: https://concours.r-e-f.org/contest/a-propos/
+period_of_operation:
+- duration: 36h
+breaks:
+categories:
+- name: Single Op All Band
+  operator: single
+  bands: all
+  modes: all
+- name: Single Op Single Band
+  operator: single
+  bands: single
+  modes: all
+- name: Multi-Single
+  operator: multi
+  bands: all
+  modes: all
+- name: SWL
+overlays:
+modes:
+- cw
+- ssb
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+band_change_rules:
+exchange:
+- rst
+- [serial, ref_department]
+scoring:
+  qsos:
+  - their_country: F
+    my_continent: EU
+    points: 1
+  - their_country: F
+    my_continent: [NA, SA, AF, AS, OC, AN]
+    points: 3
+  qso_band_rule: once_per_band
+  multis:
+  - property: dxcc_entity
+    my_country: F
+    band_rule: once_per_band
+    multis: 1
+  - property: ref_department
+    band_rule: once_per_band
+    multis: 1
+    
