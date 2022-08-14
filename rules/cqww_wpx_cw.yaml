@@ -38,10 +38,10 @@ categories:
   bands: single
 - name: MULTI-ONE
   operator: multi
-  tx: 1
+  tx: one
 - name: MULTI-TWO
   operator: multi
-  tx: 2
+  tx: two
 - name: MULTI-UNLIMITED
   operator: multi
   tx: multi
@@ -65,7 +65,7 @@ bands:
 - 10m
 exchange:
 - rst
-- serial_number
+- serial
 scoring:
   qsos:
   - their_continent: other
@@ -94,15 +94,15 @@ scoring:
     - 80m
     - 160m
     points: 2
-  - my_continent: NA
-    their_continent: NA
+  - my_continent: na
+    their_continent: na
     bands:
     - 10m
     - 15m
     - 20m
     points: 2
-  - my_continent: NA
-    their_continent: NA
+  - my_continent: na
+    their_continent: na
     bands:
     - 40m
     - 80m

@@ -103,8 +103,8 @@ scoring:
   - their_continent: same
     their_country: other
     points: 1
-  - my_continent: NA
-    their_continent: NA
+  - my_continent: na
+    their_continent: na
     points: 2
   - their_country: same
     points: 0
