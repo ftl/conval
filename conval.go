@@ -65,9 +65,6 @@ const (
 	CQZoneExchange       Exchange = "cq_zone"
 	ITUZoneExchange      Exchange = "itu_zone"
 	NoMemberExchange     Exchange = "nm"
-
-	RefDepartmentExchange Exchange = "ref_department" // TODO move into a specific REF package
-	WAGDOKExchange        Exchange = "wag_dok"        // TODO move into a specific DARC package
 )
 
 type ExchangeValidator interface {
@@ -81,9 +78,12 @@ func (f ExchangeValidatorFunc) ValidateExchange(exchange string) error {
 }
 
 var ExchangeValidators = map[Exchange]ExchangeValidator{
-	RSTExchange: ExchangeValidatorFunc(func(exchange string) error {
-		return nil
-	}), // TODO extract function into a separate file for common validators
+	RSTExchange:          ExchangeValidatorFunc(ValidateRST),
+	SerialExchange:       ExchangeValidatorFunc(ValidateSerial),
+	MemberNumberExchange: ExchangeValidatorFunc(ValidateMemberNumber),
+	CQZoneExchange:       ExchangeValidatorFunc(ValidateCQZone),
+	ITUZoneExchange:      ExchangeValidatorFunc(ValidateITUZone),
+	NoMemberExchange:     ExchangeValidatorFunc(ValidateNoMember),
 }
 
 type Continent string
@@ -123,10 +123,6 @@ const (
 	ITUZoneProperty    Property = "itu_zone"
 	DXCCEntityProperty Property = "dxcc_entity"
 	WPXPrefixProperty  Property = "wpx_prefix"
-
-	REFDepartmentProperty Property = "ref_department" // TODO move into a specific REF package
-	WAEEntityProperty     Property = "wae_property"   // TODO move into a specific DARC package
-	WAGDistrictProperty   Property = "wag_district"   // TODO move into a specific DARC package
 )
 
 type PropertyGetter interface {
@@ -140,9 +136,10 @@ func (f PropertyGetterFunc) GetProperty(qso QSO) string {
 }
 
 var PropertyGetters = map[Property]PropertyGetter{
-	CQZoneProperty: PropertyGetterFunc(func(QSO) string {
-		return ""
-	}), // TODO extract function into a separate file for common property getters
+	CQZoneProperty:     PropertyGetterFunc(GetCQZone),
+	ITUZoneProperty:    PropertyGetterFunc(GetITUZone),
+	DXCCEntityProperty: PropertyGetterFunc(GetDXCCEntity),
+	WPXPrefixProperty:  PropertyGetterFunc(GetWPXPrefix),
 }
 
 type QSO struct {
