@@ -19,6 +19,7 @@ type Definition struct {
 	Modes           []Mode                `yaml:"modes"`
 	Bands           []ContestBand         `yaml:"bands"`
 	BandChangeRules []BandChangeRule      `yaml:"band_change_rules"`
+	Exhange         []ExchangeField       `yaml:"exchange"`
 }
 
 type ConstrainedDuration struct {
@@ -41,6 +42,8 @@ type Category struct {
 	Modes    []Mode       `yaml:"modes"`
 	Assisted bool         `yaml:"assisted"`
 }
+
+type ExchangeField []Exchange
 
 func LoadYAML(r io.Reader) (*Definition, error) {
 	decoder := yaml.NewDecoder(r)

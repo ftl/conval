@@ -118,6 +118,22 @@ band_change_rules:
 				},
 			},
 		},
+		{
+			desc: "three exchange field, one with two alternatives",
+			yaml: `name: Test Contest
+exchange:
+- [rst]
+- [serial]
+- [member_number, nm]`,
+			expected: Definition{
+				Name: "Test Contest",
+				Exhange: []ExchangeField{
+					{RSTExchange},
+					{SerialExchange},
+					{MemberNumberExchange, NoMemberExchange},
+				},
+			},
+		},
 	}
 
 	for _, tc := range tt {
