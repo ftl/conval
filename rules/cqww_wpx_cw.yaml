@@ -1,6 +1,6 @@
 name: CQ World Wide WPX Context CW
 official_rules: https://www.cqwpx.com/rules.htm
-period_of_operation:
+durations:
 - operator: single
   overlay: classic
   duration: 24h
@@ -10,7 +10,7 @@ period_of_operation:
   duration: 48h
 breaks:
 - operator: single
-  break: 1h
+  duration: 1h
 categories:
 - name: Single Operator High Power All Band
   operator: single

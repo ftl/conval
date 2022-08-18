@@ -1,12 +1,12 @@
 name: Worked All Europe DX Contest
 official_rules: https://www.darc.de/der-club/referate/conteste/wae-dx-contest/en/wae-rules/
-period_of_operation:
+durations:
 - operator: single
   duration: 36h
 - operator: multi
   duration: 48h
 breaks:
-- break: 1h
+- duration: 1h
 categories:
 - name: Single-Op High
   operator: single

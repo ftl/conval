@@ -1,6 +1,6 @@
 name: Coupe du REF
 official_rules: https://concours.r-e-f.org/contest/a-propos/
-period_of_operation:
+durations:
 - duration: 36h
 breaks:
 categories:

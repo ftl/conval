@@ -3,6 +3,7 @@ package conval
 import (
 	"fmt"
 	"io"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -11,6 +12,13 @@ type Definition struct {
 	Name          string `yaml:"name"`
 	Identifier    string `yaml:"identifier"`
 	OfficialRules string `yaml:"official_rules"`
+	Durations     []ConstrainedDuration
+	Breaks        []ConstrainedDuration
+}
+
+type ConstrainedDuration struct {
+	Constraint `yaml:",inline"`
+	Duration   time.Duration `yaml:"duration"`
 }
 
 func LoadYAML(r io.Reader) (*Definition, error) {

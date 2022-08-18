@@ -151,5 +151,6 @@ type Setup struct {
 }
 
 type Constraint struct {
-	// TODO define
+	Operator OperatorMode `yaml:"operator"`
+	Overlay  Overlay      `yaml:"overlay"`
 }
