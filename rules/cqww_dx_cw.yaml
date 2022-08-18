@@ -66,15 +66,15 @@ categories:
   assisted: true
 - name: Multi-Single High Power
   operator: multi
-  tx: 1
+  tx: one
   power: high
 - name: Multi-Single Low Power
   operator: multi
-  tx: 1
+  tx: one
   power: high
 - name: Multi-Two
   operator: multi
-  tx: 2
+  tx: two
 - name: Multi-Multi
   operator: multi
   tx: multi
@@ -94,8 +94,8 @@ bands:
 - 15m
 - 10m
 exchange:
-- rst
-- cq_zone
+- [rst]
+- [cq_zone]
 scoring:
   qsos:
   - their_continent: other

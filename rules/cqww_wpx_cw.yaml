@@ -64,8 +64,8 @@ bands:
 - 15m
 - 10m
 exchange:
-- rst
-- serial
+- [rst]
+- [serial]
 scoring:
   qsos:
   - their_continent: other

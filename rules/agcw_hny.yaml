@@ -27,9 +27,9 @@ bands:
 - 40m
 - 20m
 exchange:
-- rst
-- serial
-- member_number
+- [rst]
+- [serial]
+- [member_number, nm]
 scoring:
   qsos:
   - points: 1

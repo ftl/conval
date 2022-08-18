@@ -54,6 +54,25 @@ breaks:
 				},
 			},
 		},
+		{
+			desc: "single mode, dual mode, all mode categories",
+			yaml: `name: Test Contest
+categories:
+- name: Single Mode
+  modes: [cw]
+- name: Dual Mode
+  modes: [cw, rtty]
+- name: All Mode
+  modes: [all]`,
+			expected: Definition{
+				Name: "Test Contest",
+				Categories: []Category{
+					{Name: "Single Mode", Modes: []Mode{"cw"}},
+					{Name: "Dual Mode", Modes: []Mode{"cw", "rtty"}},
+					{Name: "All Mode", Modes: []Mode{"all"}},
+				},
+			},
+		},
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {

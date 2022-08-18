@@ -50,6 +50,8 @@ const (
 type Mode string
 
 const (
+	ModeALL Mode = "all"
+
 	ModeCW      Mode = "cw"
 	ModeSSB     Mode = "ssb"
 	ModeRTTY    Mode = "rtty"

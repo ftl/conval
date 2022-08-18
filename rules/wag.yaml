@@ -8,41 +8,41 @@ categories:
   operator: single
   power: low
   bands: all
-  modes: cw
+  modes: [cw]
 - name: Single operator, CW, high power
   operator: single
   power: high
   bands: all
-  modes: cw
+  modes: [cw]
 - name: Single operator, SSB, low power
   operator: single
   power: low
   bands: all
-  modes: ssb
+  modes: [ssb]
 - name: Single operator, SSB, high power
   operator: single
   power: high
   bands: all
-  modes: ssb
+  modes: [ssb]
 - name: Single operator, mixed, low power
   operator: single
   power: low
   bands: all
-  modes: all
+  modes: [all]
 - name: Single operator, mixed, high power
   operator: single
   power: high
   bands: all
-  modes: all
+  modes: [all]
 - name: Single operator, mixed, QRP
   operator: single
   power: qrp
   bands: all
-  modes: all
+  modes: [all]
 - name: Multi operator
   operator: multi
   bands: all
-  modes: all
+  modes: [all]
 - name: SWL, single operator
 overlays:
 modes:
@@ -59,7 +59,7 @@ bandchange_rules:
   grace_period: 10m
   multiplier_exception: true
 exchange:
-- rst
+- [rst]
 - [serial, wag_dok, nm]
 scoring:
   qsos:

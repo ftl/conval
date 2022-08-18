@@ -9,16 +9,27 @@ import (
 )
 
 type Definition struct {
-	Name          string `yaml:"name"`
-	Identifier    string `yaml:"identifier"`
-	OfficialRules string `yaml:"official_rules"`
-	Durations     []ConstrainedDuration
-	Breaks        []ConstrainedDuration
+	Name          string                `yaml:"name"`
+	Identifier    string                `yaml:"identifier"`
+	OfficialRules string                `yaml:"official_rules"`
+	Durations     []ConstrainedDuration `yaml:"durations"`
+	Breaks        []ConstrainedDuration `yaml:"breaks"`
+	Categories    []Category            `yaml:"categories"`
 }
 
 type ConstrainedDuration struct {
 	Constraint `yaml:",inline"`
 	Duration   time.Duration `yaml:"duration"`
+}
+
+type Category struct {
+	Name     string       `yaml:"name"`
+	Operator OperatorMode `yaml:"operator"`
+	TX       TXMode       `yaml:"tx"`
+	Power    PowerMode    `yaml:"power"`
+	Bands    BandMode     `yaml:"bands"`
+	Modes    []Mode       `yaml:"modes"`
+	Assisted bool         `yaml:"assisted"`
 }
 
 func LoadYAML(r io.Reader) (*Definition, error) {
@@ -29,7 +40,7 @@ func LoadYAML(r io.Reader) (*Definition, error) {
 	if err != nil {
 		return nil, err
 	}
-	// TODO result.Validate
+
 	return &result, nil
 }
 

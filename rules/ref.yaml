@@ -7,15 +7,15 @@ categories:
 - name: Single Op All Band
   operator: single
   bands: all
-  modes: all
+  modes: [all]
 - name: Single Op Single Band
   operator: single
   bands: single
-  modes: all
+  modes: [all]
 - name: Multi-Single
   operator: multi
   bands: all
-  modes: all
+  modes: [all]
 - name: SWL
 overlays:
 modes:
@@ -29,7 +29,7 @@ bands:
 - 10m
 band_change_rules:
 exchange:
-- rst
+- [rst]
 - [serial, ref_department]
 scoring:
   qsos:
