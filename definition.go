@@ -9,20 +9,27 @@ import (
 )
 
 type Definition struct {
-	Name          string                `yaml:"name"`
-	Identifier    string                `yaml:"identifier"`
-	OfficialRules string                `yaml:"official_rules"`
-	Durations     []ConstrainedDuration `yaml:"durations"`
-	Breaks        []ConstrainedDuration `yaml:"breaks"`
-	Categories    []Category            `yaml:"categories"`
-	Overlays      []Overlay             `yaml:"overlays"`
-	Modes         []Mode                `yaml:"modes"`
-	Bands         []ContestBand         `yaml:"bands"`
+	Name            string                `yaml:"name"`
+	Identifier      string                `yaml:"identifier"`
+	OfficialRules   string                `yaml:"official_rules"`
+	Durations       []ConstrainedDuration `yaml:"durations"`
+	Breaks          []ConstrainedDuration `yaml:"breaks"`
+	Categories      []Category            `yaml:"categories"`
+	Overlays        []Overlay             `yaml:"overlays"`
+	Modes           []Mode                `yaml:"modes"`
+	Bands           []ContestBand         `yaml:"bands"`
+	BandChangeRules []BandChangeRule      `yaml:"band_change_rules"`
 }
 
 type ConstrainedDuration struct {
 	Constraint `yaml:",inline"`
 	Duration   time.Duration `yaml:"duration"`
+}
+
+type BandChangeRule struct {
+	Constraint          `yaml:",inline"`
+	GracePeriod         time.Duration `yaml:"grace_period"`
+	MultiplierException bool          `yaml:"multiplier_exception"`
 }
 
 type Category struct {

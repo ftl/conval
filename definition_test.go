@@ -100,6 +100,24 @@ bands:
 				Bands: []ContestBand{"80m", "40m", "20m"},
 			},
 		},
+		{
+			desc: "multiple band change rules",
+			yaml: `name: Test Contest
+band_change_rules:
+- operator: single
+  overlay: classic
+  grace_period: 10m
+  multiplier_exception: false
+- grace_period: 10m
+  multiplier_exception: true`,
+			expected: Definition{
+				Name: "Test Contest",
+				BandChangeRules: []BandChangeRule{
+					{Constraint: Constraint{Operator: SingleOperator, Overlay: ClassicOverlay}, GracePeriod: 10 * time.Minute},
+					{GracePeriod: 10 * time.Minute, MultiplierException: true},
+				},
+			},
+		},
 	}
 
 	for _, tc := range tt {
