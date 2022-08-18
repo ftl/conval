@@ -99,20 +99,20 @@ exchange:
 scoring:
   qsos:
   - their_continent: [other]
-    points: 3
+    value: 3
   - their_continent: [same]
     their_country: [other]
-    points: 1
+    value: 1
   - my_continent: [na]
     their_continent: [na]
-    points: 2
+    value: 2
   - their_country: [same]
-    points: 0
+    value: 0
   qso_band_rule: once_per_band
   multis: 
   - property: cq_zone
     band_rule: once_per_band
-    multis: 1
+    value: 1
   - property: dxcc_entity
     band_rule: once_per_band
-    multis: 1
+    value: 1

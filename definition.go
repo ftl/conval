@@ -20,6 +20,7 @@ type Definition struct {
 	Bands           []ContestBand         `yaml:"bands"`
 	BandChangeRules []BandChangeRule      `yaml:"band_change_rules"`
 	Exhange         []ExchangeField       `yaml:"exchange"`
+	Scoring         Scoring               `yaml:"scoring"`
 }
 
 type ConstrainedDuration struct {
@@ -44,6 +45,32 @@ type Category struct {
 }
 
 type ExchangeField []Exchange
+
+type Scoring struct {
+	QSORules    []QSORule   `yaml:"qsos"`
+	QSOBandRule BandRule    `yaml:"qso_band_rule"`
+	MultiRules  []MultiRule `yaml:"multis"`
+}
+
+type QSORule struct {
+	MyContinent    []Continent   `yaml:"my_continent"`
+	MyCountry      []DXCCEntity  `yaml:"my_country"`
+	TheirContinent []Continent   `yaml:"their_continent"`
+	TheirCountry   []DXCCEntity  `yaml:"their_country"`
+	Bands          []ContestBand `yaml:"bands"`
+	Value          int           `yaml:"value"`
+}
+
+type MultiRule struct {
+	MyContinent    []Continent   `yaml:"my_continent"`
+	MyCountry      []DXCCEntity  `yaml:"my_country"`
+	TheirContinent []Continent   `yaml:"their_continent"`
+	TheirCountry   []DXCCEntity  `yaml:"their_country"`
+	Bands          []ContestBand `yaml:"bands"`
+	Property       Property      `yaml:"property"`
+	BandRule       BandRule      `yaml:"band_rule"`
+	Value          int           `yaml:"value"`
+}
 
 func LoadYAML(r io.Reader) (*Definition, error) {
 	decoder := yaml.NewDecoder(r)

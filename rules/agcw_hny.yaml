@@ -32,9 +32,9 @@ exchange:
 - [member_number, nm]
 scoring:
   qsos:
-  - points: 1
+  - value: 1
   qso_band_rule: once_per_band
   multis: 
   - property: member_number
     band_rule: once_per_band
-    multis: 1
+    value: 1

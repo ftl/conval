@@ -3,6 +3,8 @@ The package conval helps to evaluate the log files from amateur radio contests.
 */
 package conval
 
+import "time"
+
 type OperatorMode string
 
 const (
@@ -92,7 +94,7 @@ type Continent string
 
 const (
 	Africa       Continent = "af"
-	Antarctica   Continent = "ar"
+	Antarctica   Continent = "an"
 	Asia         Continent = "as"
 	Europa       Continent = "eu"
 	NorthAmerica Continent = "na"
@@ -101,6 +103,13 @@ const (
 
 	SameContinent  Continent = "same"
 	OtherContinent Continent = "other"
+)
+
+type DXCCEntity string
+
+const (
+	SameCountry  DXCCEntity = "same"
+	OtherCountry DXCCEntity = "other"
 )
 
 type BandRule string
@@ -146,7 +155,9 @@ var PropertyGetters = map[Property]PropertyGetter{
 }
 
 type QSO struct {
-	// TODO define
+	TheirCall string // TODO use the hamradio lib
+	Timestamp time.Time
+	Band      ContestBand
 
 	MyExchange    QSOExchange
 	TheirExchange QSOExchange

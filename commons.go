@@ -29,11 +29,21 @@ func ValidateNoMember(exchange string) error {
 // Common Property Getters
 
 func GetCQZone(qso QSO) string {
-	return "" // TODO implement
+	exchange, ok := qso.TheirExchange[CQZoneExchange]
+	if ok {
+		return exchange
+	}
+	// TODO get CQ zone from database
+	return ""
 }
 
 func GetITUZone(qso QSO) string {
-	return "" // TODO implement
+	exchange, ok := qso.TheirExchange[ITUZoneExchange]
+	if ok {
+		return exchange
+	}
+	// TODO get ITU zone from database
+	return ""
 }
 
 func GetDXCCEntity(qso QSO) string {
@@ -42,4 +52,10 @@ func GetDXCCEntity(qso QSO) string {
 
 func GetWPXPrefix(qso QSO) string {
 	return "" // TODO implement
+}
+
+func GetTheirExchangeProperty(exchange Exchange) PropertyGetter {
+	return PropertyGetterFunc(func(qso QSO) string {
+		return qso.TheirExchange[exchange]
+	})
 }

@@ -134,6 +134,50 @@ exchange:
 				},
 			},
 		},
+		{
+			desc: "scoring rules",
+			yaml: `name: Test Contest
+scoring:
+  qsos:
+  - their_continent: [other]
+    bands:
+    - 10m
+    - 15m
+    - 20m
+    value: 3
+  - their_continent: [other]
+    bands:
+    - 40m
+    - 80m
+    - 160m
+    value: 6
+  - value: 1
+  qso_band_rule: once_per_band
+  multis:
+  - property: dxcc_entity
+    my_continent: [eu]
+    band_rule: once_per_band
+    value: 1
+  - property: dxcc_entity
+    my_continent: [af, an, as, na, oc, sa]
+    band_rule: once_per_band
+    value: 2`,
+			expected: Definition{
+				Name: "Test Contest",
+				Scoring: Scoring{
+					QSORules: []QSORule{
+						{TheirContinent: []Continent{OtherContinent}, Bands: []ContestBand{Band10m, Band15m, Band20m}, Value: 3},
+						{TheirContinent: []Continent{OtherContinent}, Bands: []ContestBand{Band40m, Band80m, Band160m}, Value: 6},
+						{Value: 1},
+					},
+					QSOBandRule: OncePerBand,
+					MultiRules: []MultiRule{
+						{Property: DXCCEntityProperty, MyContinent: []Continent{Europa}, BandRule: OncePerBand, Value: 1},
+						{Property: DXCCEntityProperty, MyContinent: []Continent{Africa, Antarctica, Asia, NorthAmerica, Oceania, SouthAmerica}, BandRule: OncePerBand, Value: 2},
+					},
+				},
+			},
+		},
 	}
 
 	for _, tc := range tt {

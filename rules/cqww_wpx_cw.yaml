@@ -73,46 +73,46 @@ scoring:
     - 10m
     - 15m
     - 20m
-    points: 3
+    value: 3
   - their_continent: [other]
     bands:
     - 40m
     - 80m
     - 160m
-    points: 6
+    value: 6
   - their_continent: [same]
     their_country: [other]
     bands:
     - 10m
     - 15m
     - 20m
-    points: 1
+    value: 1
   - their_continent: [same]
     their_country: [other]
     bands:
     - 40m
     - 80m
     - 160m
-    points: 2
+    value: 2
   - my_continent: [na]
     their_continent: [na]
     bands:
     - 10m
     - 15m
     - 20m
-    points: 2
+    value: 2
   - my_continent: [na]
     their_continent: [na]
     bands:
     - 40m
     - 80m
     - 160m
-    points: 4
+    value: 4
   - their_country: [same]
-    points: 1
+    value: 1
   qso_band_rule: once_per_band
   multis: 
   - property: wpx_prefix
     band_rule: once
-    multis: 1
+    value: 1
   

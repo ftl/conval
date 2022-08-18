@@ -65,21 +65,21 @@ scoring:
   qsos:
   - my_country: [dl]
     their_country: [dl]
-    points: 1
+    value: 1
   - my_country: [dl]
     their_continent: [eu]
-    points: 3
+    value: 3
   - my_country: [dl]
-    their_continent: [af, an, as, na, oc, sa]
-    points: 5
+    their_continent: [other]
+    value: 5
   - their_country: [dl]
-    points: 3
+    value: 3
   qso_band_rule: once_per_band
   multis:
   - property: dxcc_entity
     my_country: [dl]
     band_rule: once_per_band
-    multis: 1
+    value: 1
   - property: wag_district
     band_rule: once_per_band
-    multis: 1
+    value: 1
