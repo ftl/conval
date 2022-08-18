@@ -73,6 +73,17 @@ categories:
 				},
 			},
 		},
+		{
+			desc: "known and unknown overlays",
+			yaml: `name: Test Contest
+overlays:
+- tb_wires
+- something_special`,
+			expected: Definition{
+				Name:     "Test Contest",
+				Overlays: []Overlay{"tb_wires", "something_special"},
+			},
+		},
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {

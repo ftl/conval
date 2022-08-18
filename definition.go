@@ -15,6 +15,7 @@ type Definition struct {
 	Durations     []ConstrainedDuration `yaml:"durations"`
 	Breaks        []ConstrainedDuration `yaml:"breaks"`
 	Categories    []Category            `yaml:"categories"`
+	Overlays      []Overlay             `yaml:"overlays"`
 }
 
 type ConstrainedDuration struct {
@@ -41,7 +42,15 @@ func LoadYAML(r io.Reader) (*Definition, error) {
 		return nil, err
 	}
 
+	result.Sanitize()
+
 	return &result, nil
+}
+
+func (d *Definition) Sanitize() {
+	// TODO implement
+	// - expand the all keyword for modes and bands
+	// - make all enum values lower case to match the defined constants
 }
 
 func (d Definition) Validate() error {
