@@ -84,7 +84,24 @@ overlays:
 				Overlays: []Overlay{"tb_wires", "something_special"},
 			},
 		},
+		{
+			desc: "modes and bands",
+			yaml: `name: Test Contest
+modes:
+- cw
+- ssb
+bands:
+- 80m
+- 40m
+- 20m`,
+			expected: Definition{
+				Name:  "Test Contest",
+				Modes: []Mode{"cw", "ssb"},
+				Bands: []ContestBand{"80m", "40m", "20m"},
+			},
+		},
 	}
+
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
 			buffer := bytes.NewBufferString(tc.yaml)

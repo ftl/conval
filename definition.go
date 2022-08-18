@@ -16,6 +16,8 @@ type Definition struct {
 	Breaks        []ConstrainedDuration `yaml:"breaks"`
 	Categories    []Category            `yaml:"categories"`
 	Overlays      []Overlay             `yaml:"overlays"`
+	Modes         []Mode                `yaml:"modes"`
+	Bands         []ContestBand         `yaml:"bands"`
 }
 
 type ConstrainedDuration struct {
