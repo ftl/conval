@@ -63,21 +63,21 @@ exchange:
 - [serial, wag_dok, nm]
 scoring:
   qsos:
-  - my_country: DL
-    their_country: DL
+  - my_country: [dl]
+    their_country: [dl]
     points: 1
-  - my_country: DL
-    their_continent: EU
+  - my_country: [dl]
+    their_continent: [eu]
     points: 3
-  - my_country: DL
-    their_continent: [NA, SA, AF, AS, OC, AN]
+  - my_country: [dl]
+    their_continent: [af, an, as, na, oc, sa]
     points: 5
-  - their_country: DL
+  - their_country: [dl]
     points: 3
   qso_band_rule: once_per_band
   multis:
   - property: dxcc_entity
-    my_country: DL
+    my_country: [dl]
     band_rule: once_per_band
     multis: 1
   - property: wag_district

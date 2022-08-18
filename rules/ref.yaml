@@ -33,16 +33,16 @@ exchange:
 - [serial, ref_department]
 scoring:
   qsos:
-  - their_country: F
-    my_continent: EU
+  - their_country: [f]
+    my_continent: [eu]
     points: 1
-  - their_country: F
-    my_continent: [NA, SA, AF, AS, OC, AN]
+  - their_country: [f]
+    my_continent: [af, an, as, na, oc, sa]
     points: 3
   qso_band_rule: once_per_band
   multis:
   - property: dxcc_entity
-    my_country: F
+    my_country: [f]
     band_rule: once_per_band
     multis: 1
   - property: ref_department

@@ -107,6 +107,7 @@ type BandRule string
 
 const (
 	OncePerBand BandRule = "once_per_band"
+	Once        BandRule = "once"
 )
 
 type Overlay string
@@ -146,7 +147,12 @@ var PropertyGetters = map[Property]PropertyGetter{
 
 type QSO struct {
 	// TODO define
+
+	MyExchange    QSOExchange
+	TheirExchange QSOExchange
 }
+
+type QSOExchange map[Exchange]string
 
 type Setup struct {
 	// TODO define

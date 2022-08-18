@@ -68,47 +68,47 @@ exchange:
 - [serial]
 scoring:
   qsos:
-  - their_continent: other
+  - their_continent: [other]
     bands:
     - 10m
     - 15m
     - 20m
     points: 3
-  - their_continent: other
+  - their_continent: [other]
     bands:
     - 40m
     - 80m
     - 160m
     points: 6
-  - their_continent: same
-    their_country: other
+  - their_continent: [same]
+    their_country: [other]
     bands:
     - 10m
     - 15m
     - 20m
     points: 1
-  - their_continent: same
-    their_country: other
+  - their_continent: [same]
+    their_country: [other]
     bands:
     - 40m
     - 80m
     - 160m
     points: 2
-  - my_continent: na
-    their_continent: na
+  - my_continent: [na]
+    their_continent: [na]
     bands:
     - 10m
     - 15m
     - 20m
     points: 2
-  - my_continent: na
-    their_continent: na
+  - my_continent: [na]
+    their_continent: [na]
     bands:
     - 40m
     - 80m
     - 160m
     points: 4
-  - their_country: same
+  - their_country: [same]
     points: 1
   qso_band_rule: once_per_band
   multis: 

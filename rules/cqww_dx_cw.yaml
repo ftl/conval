@@ -98,15 +98,15 @@ exchange:
 - [cq_zone]
 scoring:
   qsos:
-  - their_continent: other
+  - their_continent: [other]
     points: 3
-  - their_continent: same
-    their_country: other
+  - their_continent: [same]
+    their_country: [other]
     points: 1
-  - my_continent: na
-    their_continent: na
+  - my_continent: [na]
+    their_continent: [na]
     points: 2
-  - their_country: same
+  - their_country: [same]
     points: 0
   qso_band_rule: once_per_band
   multis: 

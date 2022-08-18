@@ -33,28 +33,28 @@ exchange:
 - [serial]
 scoring:
   qsos:
-  - my_continent: EU
-    their_continent: other
+  - my_continent: [eu]
+    their_continent: [other]
     points: 1
-  - my_continent: [NA, SA, AF, AS, OC, AN]
-    their_continent: EU
+  - my_continent: [af, an, as, na, oc, sa]
+    their_continent: [eu]
     points: 1
   qso_band_rule: once_per_band
   multis: 
   - property: dxcc_entity
-    my_continent: EU
+    my_continent: [eu]
     band_rule: once_per_band
     bands:
     - 80m
     multis: 4
   - property: dxcc_entity
-    my_continent: EU
+    my_continent: [eu]
     band_rule: once_per_band
     bands:
     - 40m
     multis: 3
   - property: dxcc_entity
-    my_continent: EU
+    my_continent: [eu]
     band_rule: once_per_band
     bands:
     - 20m
@@ -62,19 +62,19 @@ scoring:
     - 10m
     multis: 2
   - property: wae_entity
-    my_continent: [NA, SA, AF, AS, OC, AN]
+    my_continent: [af, an, as, na, oc, sa]
     band_rule: once_per_band
     bands:
     - 80m
     multis: 4
   - property: wae_entity
-    my_continent: [NA, SA, AF, AS, OC, AN]
+    my_continent: [af, an, as, na, oc, sa]
     band_rule: once_per_band
     bands:
     - 40m
     multis: 3
   - property: wae_entity
-    my_continent: [NA, SA, AF, AS, OC, AN]
+    my_continent: [af, an, as, na, oc, sa]
     band_rule: once_per_band
     bands:
     - 20m
