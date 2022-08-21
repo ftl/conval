@@ -6,13 +6,11 @@ package ref
 import "github.com/ftl/conval"
 
 func init() {
-	conval.ExchangeValidators[DepartmentExchange] = conval.ExchangeValidatorFunc(ValidateDepartment)
+	conval.PropertyValidators[DepartmentProperty] = conval.PropertyValidatorFunc(ValidateDepartment)
 	conval.PropertyGetters[DepartmentProperty] = conval.PropertyGetterFunc(GetDepartment)
 }
 
 const (
-	DepartmentExchange conval.Exchange = "ref_department"
-
 	DepartmentProperty conval.Property = "ref_department"
 )
 

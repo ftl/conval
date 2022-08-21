@@ -3,7 +3,11 @@ The package conval helps to evaluate the log files from amateur radio contests.
 */
 package conval
 
-import "time"
+import (
+	"time"
+
+	"github.com/ftl/hamradio/callsign"
+)
 
 type OperatorMode string
 
@@ -60,34 +64,23 @@ const (
 	ModeDigital Mode = "digital"
 )
 
-type Exchange string
-
-const (
-	RSTExchange          Exchange = "rst"
-	SerialExchange       Exchange = "serial"
-	MemberNumberExchange Exchange = "member_number"
-	CQZoneExchange       Exchange = "cq_zone"
-	ITUZoneExchange      Exchange = "itu_zone"
-	NoMemberExchange     Exchange = "nm"
-)
-
-type ExchangeValidator interface {
-	ValidateExchange(string) error
+type PropertyValidator interface {
+	ValidateProperty(string) error
 }
 
-type ExchangeValidatorFunc func(string) error
+type PropertyValidatorFunc func(string) error
 
-func (f ExchangeValidatorFunc) ValidateExchange(exchange string) error {
+func (f PropertyValidatorFunc) ValidateProperty(exchange string) error {
 	return f(exchange)
 }
 
-var ExchangeValidators = map[Exchange]ExchangeValidator{
-	RSTExchange:          ExchangeValidatorFunc(ValidateRST),
-	SerialExchange:       ExchangeValidatorFunc(ValidateSerial),
-	MemberNumberExchange: ExchangeValidatorFunc(ValidateMemberNumber),
-	CQZoneExchange:       ExchangeValidatorFunc(ValidateCQZone),
-	ITUZoneExchange:      ExchangeValidatorFunc(ValidateITUZone),
-	NoMemberExchange:     ExchangeValidatorFunc(ValidateNoMember),
+var PropertyValidators = map[Property]PropertyValidator{
+	TheirRSTProperty:     PropertyValidatorFunc(ValidateRST),
+	SerialNumberProperty: PropertyValidatorFunc(ValidateSerialNumber),
+	MemberNumberProperty: PropertyValidatorFunc(ValidateMemberNumber),
+	CQZoneProperty:       PropertyValidatorFunc(ValidateCQZone),
+	ITUZoneProperty:      PropertyValidatorFunc(ValidateITUZone),
+	NoMemberProperty:     PropertyValidatorFunc(ValidateNoMember),
 }
 
 type Continent string
@@ -131,10 +124,14 @@ const (
 type Property string
 
 const (
-	CQZoneProperty     Property = "cq_zone"
-	ITUZoneProperty    Property = "itu_zone"
-	DXCCEntityProperty Property = "dxcc_entity"
-	WPXPrefixProperty  Property = "wpx_prefix"
+	TheirRSTProperty     Property = "rst"
+	SerialNumberProperty Property = "serial"
+	MemberNumberProperty Property = "member_number"
+	NoMemberProperty     Property = "nm"
+	CQZoneProperty       Property = "cq_zone"
+	ITUZoneProperty      Property = "itu_zone"
+	DXCCEntityProperty   Property = "dxcc_entity"
+	WPXPrefixProperty    Property = "wpx_prefix"
 )
 
 type PropertyGetter interface {
@@ -148,14 +145,18 @@ func (f PropertyGetterFunc) GetProperty(qso QSO) string {
 }
 
 var PropertyGetters = map[Property]PropertyGetter{
-	CQZoneProperty:     PropertyGetterFunc(GetCQZone),
-	ITUZoneProperty:    PropertyGetterFunc(GetITUZone),
-	DXCCEntityProperty: PropertyGetterFunc(GetDXCCEntity),
-	WPXPrefixProperty:  PropertyGetterFunc(GetWPXPrefix),
+	TheirRSTProperty:     GetTheirExchangeProperty(TheirRSTProperty),
+	SerialNumberProperty: GetTheirExchangeProperty(SerialNumberProperty),
+	MemberNumberProperty: GetTheirExchangeProperty(MemberNumberProperty),
+	NoMemberProperty:     GetTheirExchangeProperty(NoMemberProperty),
+	CQZoneProperty:       PropertyGetterFunc(GetCQZone),
+	ITUZoneProperty:      PropertyGetterFunc(GetITUZone),
+	DXCCEntityProperty:   PropertyGetterFunc(GetDXCCEntity),
+	WPXPrefixProperty:    PropertyGetterFunc(GetWPXPrefix),
 }
 
 type QSO struct {
-	TheirCall string // TODO use the hamradio lib
+	TheirCall callsign.Callsign
 	Timestamp time.Time
 	Band      ContestBand
 
@@ -163,10 +164,18 @@ type QSO struct {
 	TheirExchange QSOExchange
 }
 
-type QSOExchange map[Exchange]string
+type QSOExchange map[Property]string
 
 type Setup struct {
-	// TODO define
+	MyCall     callsign.Callsign
+	Operator   OperatorMode
+	Overlay    Overlay
+	Bands      []ContestBand
+	Modes      []Mode
+	MyExchange QSOExchange
+
+	MyContinent Continent
+	MyCountry   DXCCEntity
 }
 
 type Constraint struct {

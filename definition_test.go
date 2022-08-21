@@ -128,9 +128,9 @@ exchange:
 			expected: Definition{
 				Name: "Test Contest",
 				Exhange: []ExchangeField{
-					{RSTExchange},
-					{SerialExchange},
-					{MemberNumberExchange, NoMemberExchange},
+					{TheirRSTProperty},
+					{SerialNumberProperty},
+					{MemberNumberProperty, NoMemberProperty},
 				},
 			},
 		},
@@ -165,13 +165,13 @@ scoring:
 			expected: Definition{
 				Name: "Test Contest",
 				Scoring: Scoring{
-					QSORules: []QSORule{
+					QSORules: []ScoringRule{
 						{TheirContinent: []Continent{OtherContinent}, Bands: []ContestBand{Band10m, Band15m, Band20m}, Value: 3},
 						{TheirContinent: []Continent{OtherContinent}, Bands: []ContestBand{Band40m, Band80m, Band160m}, Value: 6},
 						{Value: 1},
 					},
 					QSOBandRule: OncePerBand,
-					MultiRules: []MultiRule{
+					MultiRules: []ScoringRule{
 						{Property: DXCCEntityProperty, MyContinent: []Continent{Europa}, BandRule: OncePerBand, Value: 1},
 						{Property: DXCCEntityProperty, MyContinent: []Continent{Africa, Antarctica, Asia, NorthAmerica, Oceania, SouthAmerica}, BandRule: OncePerBand, Value: 2},
 					},

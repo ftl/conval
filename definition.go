@@ -44,24 +44,15 @@ type Category struct {
 	Assisted bool         `yaml:"assisted"`
 }
 
-type ExchangeField []Exchange
+type ExchangeField []Property
 
 type Scoring struct {
-	QSORules    []QSORule   `yaml:"qsos"`
-	QSOBandRule BandRule    `yaml:"qso_band_rule"`
-	MultiRules  []MultiRule `yaml:"multis"`
+	QSORules    []ScoringRule `yaml:"qsos"`
+	QSOBandRule BandRule      `yaml:"qso_band_rule"`
+	MultiRules  []ScoringRule `yaml:"multis"`
 }
 
-type QSORule struct {
-	MyContinent    []Continent   `yaml:"my_continent"`
-	MyCountry      []DXCCEntity  `yaml:"my_country"`
-	TheirContinent []Continent   `yaml:"their_continent"`
-	TheirCountry   []DXCCEntity  `yaml:"their_country"`
-	Bands          []ContestBand `yaml:"bands"`
-	Value          int           `yaml:"value"`
-}
-
-type MultiRule struct {
+type ScoringRule struct {
 	MyContinent    []Continent   `yaml:"my_continent"`
 	MyCountry      []DXCCEntity  `yaml:"my_country"`
 	TheirContinent []Continent   `yaml:"their_continent"`
@@ -88,7 +79,7 @@ func LoadYAML(r io.Reader) (*Definition, error) {
 
 func (d *Definition) Sanitize() {
 	// TODO implement
-	// - expand the all keyword for modes and bands
+	// - expand the all keywords for modes and bands
 	// - make all enum values lower case to match the defined constants
 }
 

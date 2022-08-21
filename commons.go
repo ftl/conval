@@ -6,11 +6,15 @@ func ValidateRST(exchange string) error {
 	return nil // TODO implement
 }
 
-func ValidateSerial(exchange string) error {
+func ValidateSerialNumber(exchange string) error {
 	return nil // TODO implement
 }
 
 func ValidateMemberNumber(exchange string) error {
+	return nil // TODO implement
+}
+
+func ValidateNoMember(exchange string) error {
 	return nil // TODO implement
 }
 
@@ -22,14 +26,10 @@ func ValidateITUZone(exchange string) error {
 	return nil // TODO implement
 }
 
-func ValidateNoMember(exchange string) error {
-	return nil // TODO implement
-}
-
 // Common Property Getters
 
 func GetCQZone(qso QSO) string {
-	exchange, ok := qso.TheirExchange[CQZoneExchange]
+	exchange, ok := qso.TheirExchange[CQZoneProperty]
 	if ok {
 		return exchange
 	}
@@ -38,7 +38,7 @@ func GetCQZone(qso QSO) string {
 }
 
 func GetITUZone(qso QSO) string {
-	exchange, ok := qso.TheirExchange[ITUZoneExchange]
+	exchange, ok := qso.TheirExchange[ITUZoneProperty]
 	if ok {
 		return exchange
 	}
@@ -54,8 +54,8 @@ func GetWPXPrefix(qso QSO) string {
 	return "" // TODO implement
 }
 
-func GetTheirExchangeProperty(exchange Exchange) PropertyGetter {
+func GetTheirExchangeProperty(property Property) PropertyGetter {
 	return PropertyGetterFunc(func(qso QSO) string {
-		return qso.TheirExchange[exchange]
+		return qso.TheirExchange[property]
 	})
 }
