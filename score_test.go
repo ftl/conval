@@ -3,15 +3,16 @@ package conval
 import (
 	"testing"
 
+	"github.com/ftl/hamradio/callsign"
 	"github.com/stretchr/testify/assert"
 )
 
-func T_estCounter_SimplestHappyPath(t *testing.T) {
+func TestCounter_SimplestHappyPath(t *testing.T) {
 	setup := Setup{}
 	rules := Scoring{
 		QSORules:    []ScoringRule{{Value: 1}},
 		QSOBandRule: OncePerBand,
-		MultiRules:  []ScoringRule{{Value: 1}},
+		MultiRules:  []ScoringRule{{Value: 1}, {Value: 2}},
 	}
 	qso := QSO{}
 
@@ -19,8 +20,8 @@ func T_estCounter_SimplestHappyPath(t *testing.T) {
 
 	qsoScore := counter.Add(qso)
 
-	assert.Equal(t, 1, qsoScore.Points)
-	assert.Equal(t, 1, qsoScore.Multis)
+	assert.Equal(t, 1, qsoScore.Points, "points")
+	assert.Equal(t, 3, qsoScore.Multis, "multis")
 }
 
 func TestFilterScoringRules(t *testing.T) {
@@ -222,4 +223,66 @@ func TestFilterScoringRules(t *testing.T) {
 			assert.Equal(t, tc.expected, actual)
 		})
 	}
+}
+
+func TestCounter_Add_Points_Once(t *testing.T) {
+	setup := Setup{}
+	rules := Scoring{
+		QSORules:    []ScoringRule{{Value: 1}},
+		QSOBandRule: Once,
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC")},
+		{TheirCall: callsign.MustParse("DL2ABC")},
+		{TheirCall: callsign.MustParse("DL1ABC")},
+	}
+	expectedScores := []QSOScore{
+		{Points: 1, Duplicate: false},
+		{Points: 1, Duplicate: false},
+		{Points: 1, Duplicate: true},
+	}
+	expectedTotalScore := BandScore{Points: 2}
+
+	counter := NewCounter(setup, rules)
+
+	for i, qso := range qsos {
+		actualScore := counter.Add(qso)
+		assert.Equal(t, expectedScores[i], actualScore)
+	}
+	actualTotalScore := counter.TotalScore()
+	assert.Equal(t, expectedTotalScore, actualTotalScore)
+}
+
+func TestCounter_Add_Points_OncePerBand(t *testing.T) {
+	setup := Setup{}
+	rules := Scoring{
+		QSORules:    []ScoringRule{{Value: 1}},
+		QSOBandRule: OncePerBand,
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m},
+	}
+	expectedScores := []QSOScore{
+		{Points: 1, Duplicate: false},
+		{Points: 1, Duplicate: false},
+		{Points: 1, Duplicate: true},
+		{Points: 1, Duplicate: false},
+		{Points: 1, Duplicate: false},
+		{Points: 1, Duplicate: true},
+	}
+	expectedTotalScore := BandScore{Points: 4}
+
+	counter := NewCounter(setup, rules)
+
+	for i, qso := range qsos {
+		actualScore := counter.Add(qso)
+		assert.Equal(t, expectedScores[i], actualScore)
+	}
+	actualTotalScore := counter.TotalScore()
+	assert.Equal(t, expectedTotalScore, actualTotalScore)
 }

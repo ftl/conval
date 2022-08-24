@@ -36,6 +36,8 @@ const (
 type ContestBand string
 
 const (
+	BandAll ContestBand = "all"
+
 	Band160m ContestBand = "160m"
 	Band80m  ContestBand = "80m"
 	Band40m  ContestBand = "40m"
@@ -156,7 +158,10 @@ var PropertyGetters = map[Property]PropertyGetter{
 }
 
 type QSO struct {
-	TheirCall callsign.Callsign
+	TheirCall      callsign.Callsign
+	TheirContinent Continent
+	TheirCountry   DXCCEntity
+
 	Timestamp time.Time
 	Band      ContestBand
 

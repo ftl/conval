@@ -1,11 +1,13 @@
 package conval
 
+import "github.com/ftl/hamradio/callsign"
+
 type Counter struct {
 	setup Setup
 	rules Scoring
 
-	scorePerBand map[ContestBand]BandScore
-	overallScore BandScore
+	callsignsPerBand map[ContestBand]map[callsign.Callsign]bool
+	scorePerBand     map[ContestBand]BandScore
 }
 
 type QSOScore struct {
@@ -23,15 +25,101 @@ func NewCounter(setup Setup, rules Scoring) *Counter {
 	return &Counter{
 		setup: setup,
 		rules: rules,
+
+		callsignsPerBand: make(map[ContestBand]map[callsign.Callsign]bool),
+		scorePerBand:     make(map[ContestBand]BandScore),
 	}
 }
 
+func (c Counter) TotalScore() BandScore {
+	return c.scorePerBand[BandAll]
+}
+
 func (c *Counter) Add(qso QSO) QSOScore {
-	return QSOScore{} // TODO implement
+	result := c.Probe(qso)
+
+	// apply the QSO band rule
+	var band ContestBand
+	switch c.rules.QSOBandRule {
+	case Once:
+		band = BandAll
+	case OncePerBand:
+		band = qso.Band
+	}
+
+	// update the callsign registry
+	var callsigns map[callsign.Callsign]bool
+	var bandOK bool
+	callsigns, bandOK = c.callsignsPerBand[band]
+	if !bandOK {
+		callsigns = make(map[callsign.Callsign]bool)
+	}
+	callsigns[qso.TheirCall] = true
+	c.callsignsPerBand[band] = callsigns
+
+	// update the scores
+	if !result.Duplicate {
+		totalScore := c.scorePerBand[BandAll]
+		totalScore.Points += result.Points
+		// TODO: add multis
+		c.scorePerBand[BandAll] = totalScore
+
+		scorePerBand := c.scorePerBand[qso.Band]
+		scorePerBand.Points += result.Points
+		// TODO: add multis
+		c.scorePerBand[qso.Band] = scorePerBand
+	}
+
+	// TODO: update other internal data structures for duplicate checks etc.
+
+	return result
 }
 
 func (c Counter) Probe(qso QSO) QSOScore {
-	return QSOScore{} // TODO implement
+	result := QSOScore{}
+
+	qsoRules := filterScoringRules(c.rules.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, qso.TheirExchange)
+	if len(qsoRules) == 1 {
+		result.Points = qsoRules[0].Value
+	} else if len(qsoRules) > 1 {
+		value := qsoRules[0].Value
+		allEqual := true
+		for _, rule := range qsoRules {
+			if value != rule.Value {
+				allEqual = false
+				break
+			}
+		}
+		if allEqual {
+			result.Points = value
+		}
+	}
+
+	// apply the QSO band rule
+	var band ContestBand
+	switch c.rules.QSOBandRule {
+	case Once:
+		band = BandAll
+	case OncePerBand:
+		band = qso.Band
+	}
+	// check the callsign registry for duplicate
+	var callsigns map[callsign.Callsign]bool
+	var bandOK bool
+	callsigns, bandOK = c.callsignsPerBand[band]
+	if bandOK {
+		_, result.Duplicate = callsigns[qso.TheirCall]
+	}
+
+	multiRules := filterScoringRules(c.rules.MultiRules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, qso.TheirExchange)
+	for _, rule := range multiRules {
+		// TODO:
+		// - check for uniqueness
+		// - apply the band rule
+		result.Multis += rule.Value
+	}
+
+	return result
 }
 
 func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, exchange QSOExchange) []ScoringRule {
