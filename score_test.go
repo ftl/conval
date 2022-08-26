@@ -237,9 +237,9 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL1ABC")},
 	}
 	expectedScores := []QSOScore{
-		{Points: 1, Duplicate: false},
-		{Points: 1, Duplicate: false},
-		{Points: 1, Duplicate: true},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 	}
 	expectedTotalScore := BandScore{Points: 2}
 
@@ -268,12 +268,12 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m},
 	}
 	expectedScores := []QSOScore{
-		{Points: 1, Duplicate: false},
-		{Points: 1, Duplicate: false},
-		{Points: 1, Duplicate: true},
-		{Points: 1, Duplicate: false},
-		{Points: 1, Duplicate: false},
-		{Points: 1, Duplicate: true},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 	}
 	expectedTotalScore := BandScore{Points: 4}
 
@@ -282,6 +282,67 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
 		assert.Equal(t, expectedScores[i], actualScore)
+	}
+	actualTotalScore := counter.TotalScore()
+	assert.Equal(t, expectedTotalScore, actualTotalScore)
+}
+
+func TestCounter_Add_Multis_Once(t *testing.T) {
+	setup := Setup{}
+	rules := Scoring{
+		MultiRules: []ScoringRule{{Property: "cq_zone", BandRule: Once, Value: 1}},
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("AB1C"), TheirExchange: QSOExchange{"cq_zone": "5"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), TheirExchange: QSOExchange{"cq_zone": "14"}},
+	}
+	expectedScores := []QSOScore{
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBand: map[Property]ContestBand{"cq_zone": BandAll}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBand: map[Property]ContestBand{"cq_zone": BandAll}},
+		{Multis: 0, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+	}
+	expectedTotalScore := BandScore{Multis: 2}
+
+	counter := NewCounter(setup, rules)
+
+	for i, qso := range qsos {
+		actualScore := counter.Add(qso)
+		assert.Equal(t, expectedScores[i], actualScore, "%d", i)
+	}
+	actualTotalScore := counter.TotalScore()
+	assert.Equal(t, expectedTotalScore, actualTotalScore)
+}
+
+func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
+	setup := Setup{}
+	rules := Scoring{
+		QSOBandRule: OncePerBand,
+		MultiRules:  []ScoringRule{{Property: "cq_zone", BandRule: OncePerBand, Value: 1}},
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("AB1C"), Band: Band80m, TheirExchange: QSOExchange{"cq_zone": "5"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("AB1C"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "5"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+	}
+	expectedScores := []QSOScore{
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBand: map[Property]ContestBand{"cq_zone": Band80m}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBand: map[Property]ContestBand{"cq_zone": Band80m}},
+		{Multis: 0, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBand: map[Property]ContestBand{"cq_zone": Band40m}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBand: map[Property]ContestBand{"cq_zone": Band40m}},
+		{Multis: 0, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+	}
+	expectedTotalScore := BandScore{Multis: 4}
+
+	counter := NewCounter(setup, rules)
+
+	for i, qso := range qsos {
+		actualScore := counter.Add(qso)
+		assert.Equal(t, expectedScores[i], actualScore, "%d", i)
 	}
 	actualTotalScore := counter.TotalScore()
 	assert.Equal(t, expectedTotalScore, actualTotalScore)

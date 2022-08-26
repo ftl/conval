@@ -7,13 +7,16 @@ type Counter struct {
 	rules Scoring
 
 	callsignsPerBand map[ContestBand]map[callsign.Callsign]bool
+	multisPerBand    map[ContestBand]map[Property]map[string]bool
 	scorePerBand     map[ContestBand]BandScore
 }
 
 type QSOScore struct {
-	Points    int
-	Multis    int
-	Duplicate bool
+	Points      int
+	Multis      int
+	MultiValues map[Property]string
+	MultiBand   map[Property]ContestBand
+	Duplicate   bool
 }
 
 type BandScore struct {
@@ -27,6 +30,7 @@ func NewCounter(setup Setup, rules Scoring) *Counter {
 		rules: rules,
 
 		callsignsPerBand: make(map[ContestBand]map[callsign.Callsign]bool),
+		multisPerBand:    make(map[ContestBand]map[Property]map[string]bool),
 		scorePerBand:     make(map[ContestBand]BandScore),
 	}
 }
@@ -39,45 +43,57 @@ func (c *Counter) Add(qso QSO) QSOScore {
 	result := c.Probe(qso)
 
 	// apply the QSO band rule
-	var band ContestBand
-	switch c.rules.QSOBandRule {
-	case Once:
-		band = BandAll
-	case OncePerBand:
-		band = qso.Band
-	}
+	band := effectiveBand(qso.Band, c.rules.QSOBandRule)
 
 	// update the callsign registry
 	var callsigns map[callsign.Callsign]bool
-	var bandOK bool
-	callsigns, bandOK = c.callsignsPerBand[band]
-	if !bandOK {
+	var callsignsOK bool
+	callsigns, callsignsOK = c.callsignsPerBand[band]
+	if !callsignsOK {
 		callsigns = make(map[callsign.Callsign]bool)
 	}
 	callsigns[qso.TheirCall] = true
 	c.callsignsPerBand[band] = callsigns
 
+	// update the multi registry
+	for property, value := range result.MultiValues {
+		band := result.MultiBand[property]
+		properties, propertiesOK := c.multisPerBand[band]
+		if !propertiesOK {
+			properties = make(map[Property]map[string]bool)
+		}
+		values, valuesOK := properties[property]
+		if !valuesOK {
+			values = make(map[string]bool)
+		}
+		values[value] = true
+		properties[property] = values
+		c.multisPerBand[band] = properties
+	}
+
 	// update the scores
 	if !result.Duplicate {
 		totalScore := c.scorePerBand[BandAll]
 		totalScore.Points += result.Points
-		// TODO: add multis
+		totalScore.Multis += result.Multis
 		c.scorePerBand[BandAll] = totalScore
 
 		scorePerBand := c.scorePerBand[qso.Band]
 		scorePerBand.Points += result.Points
-		// TODO: add multis
+		scorePerBand.Multis += result.Multis
 		c.scorePerBand[qso.Band] = scorePerBand
 	}
-
-	// TODO: update other internal data structures for duplicate checks etc.
 
 	return result
 }
 
 func (c Counter) Probe(qso QSO) QSOScore {
-	result := QSOScore{}
+	result := QSOScore{
+		MultiValues: make(map[Property]string),
+		MultiBand:   make(map[Property]ContestBand),
+	}
 
+	// find the relevant QSO rules
 	qsoRules := filterScoringRules(c.rules.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, qso.TheirExchange)
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
@@ -96,13 +112,8 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// apply the QSO band rule
-	var band ContestBand
-	switch c.rules.QSOBandRule {
-	case Once:
-		band = BandAll
-	case OncePerBand:
-		band = qso.Band
-	}
+	band := effectiveBand(qso.Band, c.rules.QSOBandRule)
+
 	// check the callsign registry for duplicate
 	var callsigns map[callsign.Callsign]bool
 	var bandOK bool
@@ -111,15 +122,54 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		_, result.Duplicate = callsigns[qso.TheirCall]
 	}
 
+	// find the relevant multi rules
 	multiRules := filterScoringRules(c.rules.MultiRules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, qso.TheirExchange)
 	for _, rule := range multiRules {
-		// TODO:
-		// - check for uniqueness
-		// - apply the band rule
-		result.Multis += rule.Value
+		if rule.Property == "" {
+			result.Multis += rule.Value
+			continue
+		}
+
+		// get the property value
+		getter, getterOK := PropertyGetters[rule.Property]
+		if !getterOK {
+			continue
+		}
+		value := getter.GetProperty(qso)
+
+		// apply the band rule
+		band := effectiveBand(qso.Band, rule.BandRule)
+
+		// check for duplicate values
+		var duplicateValue bool
+		properties, propertiesOK := c.multisPerBand[band]
+		if propertiesOK {
+			values, propertyOK := properties[rule.Property]
+			if propertyOK {
+				_, duplicateValue = values[value]
+			}
+		}
+
+		// count the multi if it is new
+		if !duplicateValue {
+			result.Multis += rule.Value
+			result.MultiValues[rule.Property] = value
+			result.MultiBand[rule.Property] = band
+		}
 	}
 
 	return result
+}
+
+func effectiveBand(band ContestBand, rule BandRule) ContestBand {
+	switch rule {
+	case Once:
+		return BandAll
+	case OncePerBand:
+		return band
+	default:
+		return ""
+	}
 }
 
 func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, exchange QSOExchange) []ScoringRule {
