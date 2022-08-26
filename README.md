@@ -2,10 +2,10 @@
 
 This little Go library helps to evaluate the log files from amateur radio contests in several ways:
 
-- calculate the score of a log file based on a given rule set
-- show the performance over time during the contest
-- calculate statistics
-- compare the performance of two log files
+- calculate the score of a log file based on a given rule set (work in progress)
+- show the performance over time during the contest (not yet implemented)
+- calculate statistics (not yet implemented)
+- compare the performance of two log files (not yet implemented)
 
 Log files can be provided in [ADIF](https://www.adif.org/) or [Cabrillo](https://wwrof.org/cabrillo/) format. The results are either provided as plain text, CSV, or JSON.
 
@@ -17,7 +17,7 @@ To include `conval` into your own projects as a library:
 go get github.com/ftl/conval
 ```
 
-## Use as a CLI Tool
+## Use as a CLI Tool (work in progress)
 
 `conval` also includes a simple CLI tool that is mainly used to demonstrate the integration of the library.
 
