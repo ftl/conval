@@ -12,16 +12,20 @@ type Counter struct {
 }
 
 type QSOScore struct {
-	Points      int
-	Multis      int
-	MultiValues map[Property]string
-	MultiBand   map[Property]ContestBand
-	Duplicate   bool
+	Points      int                      `yaml:"points"`
+	Multis      int                      `yaml:"multis"`
+	MultiValues map[Property]string      `yaml:"-"`
+	MultiBand   map[Property]ContestBand `yaml:"-"`
+	Duplicate   bool                     `yaml:"duplicate"`
+}
+
+func (s QSOScore) Equal(other QSOScore) bool {
+	return s.Points == other.Points && s.Multis == other.Multis && s.Duplicate == other.Duplicate
 }
 
 type BandScore struct {
-	Points int
-	Multis int
+	Points int `yaml:"points"`
+	Multis int `yaml:"multis"`
 }
 
 func NewCounter(setup Setup, rules Scoring) *Counter {
@@ -93,8 +97,16 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		MultiBand:   make(map[Property]ContestBand),
 	}
 
+	getProperty := func(property Property) string {
+		getter, getterOK := PropertyGetters[property]
+		if !getterOK {
+			return ""
+		}
+		return getter.GetProperty(qso)
+	}
+
 	// find the relevant QSO rules
-	qsoRules := filterScoringRules(c.rules.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, qso.TheirExchange)
+	qsoRules := filterScoringRules(c.rules.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
 	} else if len(qsoRules) > 1 {
@@ -123,7 +135,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant multi rules
-	multiRules := filterScoringRules(c.rules.MultiRules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, qso.TheirExchange)
+	multiRules := filterScoringRules(c.rules.MultiRules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
 	for _, rule := range multiRules {
 		if rule.Property == "" {
 			result.Multis += rule.Value
@@ -131,11 +143,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		}
 
 		// get the property value
-		getter, getterOK := PropertyGetters[rule.Property]
-		if !getterOK {
-			continue
-		}
-		value := getter.GetProperty(qso)
+		value := getProperty(rule.Property)
 
 		// apply the band rule
 		band := effectiveBand(qso.Band, rule.BandRule)
@@ -172,7 +180,9 @@ func effectiveBand(band ContestBand, rule BandRule) ContestBand {
 	}
 }
 
-func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, exchange QSOExchange) []ScoringRule {
+type propertyProvider func(property Property) string
+
+func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, getProperty propertyProvider) []ScoringRule {
 	matchingRules := make([]ScoringRule, 0, len(rules))
 	ruleScores := make([]int, 0, len(matchingRules))
 	maxRuleScore := 0
@@ -221,15 +231,14 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			}
 		}
 		if rule.Property != "" {
-			if exchange == nil {
-				continue
-			}
-			_, ok := exchange[rule.Property]
-			if !ok {
+			value := getProperty(rule.Property)
+			if value == "" {
 				continue
 			}
 			ruleScore++
 		}
+
+		ruleScore += rule.AdditionalWeight
 
 		matchingRules = append(matchingRules, rule)
 		ruleScores = append(ruleScores, ruleScore)

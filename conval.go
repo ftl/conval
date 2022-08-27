@@ -164,6 +164,7 @@ type QSO struct {
 
 	Timestamp time.Time
 	Band      ContestBand
+	Mode      Mode
 
 	MyExchange    QSOExchange
 	TheirExchange QSOExchange
@@ -172,15 +173,16 @@ type QSO struct {
 type QSOExchange map[Property]string
 
 type Setup struct {
-	MyCall     callsign.Callsign
-	Operator   OperatorMode
-	Overlay    Overlay
-	Bands      []ContestBand
-	Modes      []Mode
-	MyExchange QSOExchange
-
+	MyCall      callsign.Callsign
 	MyContinent Continent
 	MyCountry   DXCCEntity
+
+	Operator OperatorMode
+	Overlay  Overlay
+	Bands    []ContestBand
+	Modes    []Mode
+
+	MyExchange QSOExchange
 }
 
 type Constraint struct {

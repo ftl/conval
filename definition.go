@@ -1,10 +1,10 @@
 package conval
 
 import (
-	"fmt"
 	"io"
 	"time"
 
+	"github.com/ftl/hamradio/callsign"
 	"gopkg.in/yaml.v3"
 )
 
@@ -21,6 +21,7 @@ type Definition struct {
 	BandChangeRules []BandChangeRule      `yaml:"band_change_rules"`
 	Exhange         []ExchangeField       `yaml:"exchange"`
 	Scoring         Scoring               `yaml:"scoring"`
+	Examples        []Example             `yaml:"examples"`
 }
 
 type ConstrainedDuration struct {
@@ -53,14 +54,80 @@ type Scoring struct {
 }
 
 type ScoringRule struct {
-	MyContinent    []Continent   `yaml:"my_continent"`
-	MyCountry      []DXCCEntity  `yaml:"my_country"`
-	TheirContinent []Continent   `yaml:"their_continent"`
-	TheirCountry   []DXCCEntity  `yaml:"their_country"`
-	Bands          []ContestBand `yaml:"bands"`
-	Property       Property      `yaml:"property"`
-	BandRule       BandRule      `yaml:"band_rule"`
-	Value          int           `yaml:"value"`
+	MyContinent      []Continent   `yaml:"my_continent"`
+	MyCountry        []DXCCEntity  `yaml:"my_country"`
+	TheirContinent   []Continent   `yaml:"their_continent"`
+	TheirCountry     []DXCCEntity  `yaml:"their_country"`
+	Bands            []ContestBand `yaml:"bands"`
+	Property         Property      `yaml:"property"`
+	BandRule         BandRule      `yaml:"band_rule"`
+	AdditionalWeight int           `yaml:"additional_weight"`
+	Value            int           `yaml:"value"`
+}
+
+type Example struct {
+	Setup SetupExample `yaml:"setup"`
+	QSOs  []QSOExample `yaml:"qsos"`
+	Score BandScore    `yaml:"score"`
+}
+
+type SetupExample struct {
+	MyCall      string     `yaml:"my_call"`
+	MyContinent Continent  `yaml:"my_continent"`
+	MyCountry   DXCCEntity `yaml:"my_country"`
+
+	Operator OperatorMode  `yaml:"operator"`
+	Overlay  Overlay       `yaml:"overlay"`
+	Bands    []ContestBand `yaml:"bands"`
+	Modes    []Mode        `yaml:"modes"`
+
+	MyExchange QSOExchange `yaml:"my_exchange"`
+}
+
+func (s SetupExample) ToSetup() Setup {
+	myCall, err := callsign.Parse(s.MyCall)
+	if err != nil {
+		myCall = callsign.Callsign{}
+	}
+
+	return Setup{
+		MyCall:      myCall,
+		MyContinent: s.MyContinent,
+		MyCountry:   s.MyCountry,
+		Operator:    s.Operator,
+		Overlay:     s.Overlay,
+		Bands:       s.Bands,
+		Modes:       s.Modes,
+		MyExchange:  s.MyExchange,
+	}
+}
+
+type QSOExample struct {
+	TheirCall      string     `yaml:"their_call"`
+	TheirContinent Continent  `yaml:"their_continent"`
+	TheirCountry   DXCCEntity `yaml:"their_country"`
+
+	Timestamp time.Time   `yaml:"time"`
+	Band      ContestBand `yaml:"band"`
+	Mode      Mode        `yaml:"mode"`
+
+	MyExchange    QSOExchange `yaml:"my_exchange"`
+	TheirExchange QSOExchange `yaml:"their_exchange"`
+
+	Score QSOScore `yaml:",inline"`
+}
+
+func (q QSOExample) ToQSO() QSO {
+	return QSO{
+		TheirCall:      callsign.MustParse(q.TheirCall),
+		TheirContinent: q.TheirContinent,
+		TheirCountry:   q.TheirCountry,
+		Timestamp:      q.Timestamp,
+		Band:           q.Band,
+		Mode:           q.Mode,
+		MyExchange:     q.MyExchange,
+		TheirExchange:  q.TheirExchange,
+	}
 }
 
 func LoadYAML(r io.Reader) (*Definition, error) {
@@ -72,18 +139,5 @@ func LoadYAML(r io.Reader) (*Definition, error) {
 		return nil, err
 	}
 
-	result.Sanitize()
-
 	return &result, nil
-}
-
-func (d *Definition) Sanitize() {
-	// TODO implement
-	// - expand the all keywords for modes and bands
-	// - make all enum values lower case to match the defined constants
-}
-
-func (d Definition) Validate() error {
-	// TODO implement
-	return fmt.Errorf("not yet implemented")
 }

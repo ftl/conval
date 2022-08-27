@@ -105,8 +105,10 @@ scoring:
     value: 1
   - my_continent: [na]
     their_continent: [na]
+    additional_weight: 1
     value: 2
   - their_country: [same]
+    additional_weight: 10
     value: 0
   qso_band_rule: once_per_band
   multis: 
@@ -116,3 +118,56 @@ scoring:
   - property: dxcc_entity
     band_rule: once_per_band
     value: 1
+examples:
+  - setup:
+      my_continent: na
+      my_country: k
+      my_exchange:
+        cq_zone: 5
+      bands: [15m]
+      modes: [cw]
+    qsos:
+    - their_call: k1ab
+      their_continent: na
+      their_country: k
+      their_exchange:
+        cq_zone: 5
+      band: 15m
+      mode: cw
+      points: 0
+      multis: 2
+      duplicate: false
+    - their_call: ve1abc
+      their_continent: na
+      their_country: ve
+      their_exchange:
+        cq_zone: 5
+      band: 15m
+      mode: cw
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: ve2abc
+      their_continent: na
+      their_country: ve
+      their_exchange:
+        cq_zone: 5
+      band: 15m
+      mode: cw
+      points: 2
+      multis: 0
+      duplicate: false
+    - their_call: py1abc
+      their_continent: sa
+      their_country: py
+      their_exchange:
+        cq_zone: 11
+      band: 15m
+      mode: cw
+      points: 3
+      multis: 2
+      duplicate: false
+    score:
+      points: 7
+      multis: 5
+

@@ -47,7 +47,11 @@ func GetITUZone(qso QSO) string {
 }
 
 func GetDXCCEntity(qso QSO) string {
-	return "" // TODO implement
+	if qso.TheirCountry != "" {
+		return string(qso.TheirCountry)
+	}
+	// TODO get DXCC entity from database
+	return ""
 }
 
 func GetWPXPrefix(qso QSO) string {

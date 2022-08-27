@@ -215,10 +215,48 @@ func TestFilterScoringRules(t *testing.T) {
 				{Value: 1},
 			},
 		},
+		{
+			desc: "use additional weight to override a more specific rule",
+			rules: []ScoringRule{
+				{MyContinent: []Continent{NorthAmerica}, TheirContinent: []Continent{NorthAmerica}, Value: 1},
+				{TheirCountry: []DXCCEntity{SameCountry}, AdditionalWeight: 10, Value: 0},
+			},
+			myContinent:    NorthAmerica,
+			myCountry:      "k",
+			theirContinent: NorthAmerica,
+			theirCountry:   "k",
+			expected: []ScoringRule{
+				{TheirCountry: []DXCCEntity{SameCountry}, AdditionalWeight: 10, Value: 0},
+			},
+		},
+		{
+			desc: "find multiple matching rules for multis",
+			rules: []ScoringRule{
+				{Property: CQZoneProperty, BandRule: OncePerBand, Value: 1},
+				{Property: DXCCEntityProperty, BandRule: OncePerBand, Value: 1},
+			},
+			myContinent:    NorthAmerica,
+			myCountry:      "k",
+			theirContinent: NorthAmerica,
+			theirCountry:   "k",
+			exchange: QSOExchange{
+				CQZoneProperty:     "5",
+				DXCCEntityProperty: "k",
+			},
+			expected: []ScoringRule{
+				{Property: CQZoneProperty, BandRule: OncePerBand, Value: 1},
+				{Property: DXCCEntityProperty, BandRule: OncePerBand, Value: 1},
+			},
+		},
 	}
+
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			actual := filterScoringRules(tc.rules, true, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry, tc.band, tc.exchange)
+			getProperty := func(property Property) string {
+				return tc.exchange[property]
+			}
+
+			actual := filterScoringRules(tc.rules, true, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry, tc.band, getProperty)
 
 			assert.Equal(t, tc.expected, actual)
 		})
