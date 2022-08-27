@@ -277,7 +277,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 	expectedScores := []QSOScore{
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 	}
 	expectedTotalScore := BandScore{Points: 2}
 
@@ -308,10 +308,10 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 	expectedScores := []QSOScore{
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
 	}
 	expectedTotalScore := BandScore{Points: 4}
 
