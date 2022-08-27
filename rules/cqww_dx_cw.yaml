@@ -167,7 +167,78 @@ examples:
       points: 3
       multis: 2
       duplicate: false
+    - their_call: lu1abc
+      their_continent: sa
+      their_country: lu
+      their_exchange:
+        cq_zone: 13
+      band: 15m
+      mode: cw
+      points: 3
+      multis: 2
+      duplicate: false
     score:
-      points: 7
-      multis: 5
+      points: 10
+      multis: 7
+  - setup:
+      my_continent: sa
+      my_country: py
+      my_exchange:
+        cq_zone: 11
+      bands: [15m]
+      modes: [cw]
+    qsos:
+    - their_call: k1ab
+      their_continent: na
+      their_country: k
+      their_exchange:
+        cq_zone: 5
+      band: 15m
+      mode: cw
+      points: 3
+      multis: 2
+      duplicate: false
+    - their_call: ve1abc
+      their_continent: na
+      their_country: ve
+      their_exchange:
+        cq_zone: 5
+      band: 15m
+      mode: cw
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: ve2abc
+      their_continent: na
+      their_country: ve
+      their_exchange:
+        cq_zone: 5
+      band: 15m
+      mode: cw
+      points: 3
+      multis: 0
+      duplicate: false
+    - their_call: py1abc
+      their_continent: sa
+      their_country: py
+      their_exchange:
+        cq_zone: 11
+      band: 15m
+      mode: cw
+      points: 0
+      multis: 2
+      duplicate: false
+    - their_call: lu1abc
+      their_continent: sa
+      their_country: lu
+      their_exchange:
+        cq_zone: 13
+      band: 15m
+      mode: cw
+      points: 1
+      multis: 2
+      duplicate: false
+    score:
+      points: 10
+      multis: 7
 

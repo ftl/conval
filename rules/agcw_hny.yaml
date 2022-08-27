@@ -38,3 +38,53 @@ scoring:
   - property: member_number
     band_rule: once_per_band
     value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        nm: nm
+    qsos:
+    - their_call: dl1abc
+      their_exchange:
+        member_number: 1234
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange:
+        member_number: 1234
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange:
+        member_number: 1234
+      band: 40m
+      points: 0
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange:
+        nm: nm
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange:
+        nm: nm
+      band: 40m
+      points: 1
+      multis: 0
+    - their_call: dl3abc
+      their_exchange:
+        nm: nm
+      band: 20m
+      points: 1
+      multis: 0
+    score:
+      points: 5
+      multis: 2
