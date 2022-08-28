@@ -76,14 +76,7 @@ func (f PropertyValidatorFunc) ValidateProperty(exchange string) error {
 	return f(exchange)
 }
 
-var PropertyValidators = map[Property]PropertyValidator{
-	TheirRSTProperty:     PropertyValidatorFunc(ValidateRST),
-	SerialNumberProperty: PropertyValidatorFunc(ValidateSerialNumber),
-	MemberNumberProperty: PropertyValidatorFunc(ValidateMemberNumber),
-	CQZoneProperty:       PropertyValidatorFunc(ValidateCQZone),
-	ITUZoneProperty:      PropertyValidatorFunc(ValidateITUZone),
-	NoMemberProperty:     PropertyValidatorFunc(ValidateNoMember),
-}
+var PropertyValidators = map[Property]PropertyValidator{}
 
 type Continent string
 
@@ -133,7 +126,6 @@ const (
 	CQZoneProperty       Property = "cq_zone"
 	ITUZoneProperty      Property = "itu_zone"
 	DXCCEntityProperty   Property = "dxcc_entity"
-	WPXPrefixProperty    Property = "wpx_prefix"
 )
 
 type PropertyGetter interface {
@@ -146,16 +138,7 @@ func (f PropertyGetterFunc) GetProperty(qso QSO) string {
 	return f(qso)
 }
 
-var PropertyGetters = map[Property]PropertyGetter{
-	TheirRSTProperty:     GetTheirExchangeProperty(TheirRSTProperty),
-	SerialNumberProperty: GetTheirExchangeProperty(SerialNumberProperty),
-	MemberNumberProperty: GetTheirExchangeProperty(MemberNumberProperty),
-	NoMemberProperty:     GetTheirExchangeProperty(NoMemberProperty),
-	CQZoneProperty:       PropertyGetterFunc(GetCQZone),
-	ITUZoneProperty:      PropertyGetterFunc(GetITUZone),
-	DXCCEntityProperty:   PropertyGetterFunc(GetDXCCEntity),
-	WPXPrefixProperty:    PropertyGetterFunc(GetWPXPrefix),
-}
+var PropertyGetters = map[Property]PropertyGetter{}
 
 type QSO struct {
 	TheirCall      callsign.Callsign
