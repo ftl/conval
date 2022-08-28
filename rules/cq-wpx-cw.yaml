@@ -101,6 +101,7 @@ scoring:
     - 10m
     - 15m
     - 20m
+    additional_weight: 3
     value: 2
   - my_continent: [na]
     their_continent: [na]
@@ -108,12 +109,116 @@ scoring:
     - 40m
     - 80m
     - 160m
+    additional_weight: 3
     value: 4
   - their_country: [same]
+    additional_weight: 10
     value: 1
   qso_band_rule: once_per_band
   multis: 
   - property: wpx_prefix
     band_rule: once
     value: 1
-  
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: k1ab
+      their_continent: na
+      their_country: k
+      band: 80m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: k1ab
+      their_continent: na
+      their_country: k
+      band: 15m
+      points: 3
+      multis: 0
+      duplicate: false
+    - their_call: ea1abc
+      their_continent: eu
+      their_country: ea
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: ea2abc
+      their_continent: eu
+      their_country: ea
+      band: 15m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 15m
+      points: 1
+      multis: 0
+      duplicate: false
+    score:
+      points: 14
+      multis: 4
+  - setup:
+      my_continent: na
+      my_country: ve
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: k1ab
+      their_continent: na
+      their_country: k
+      band: 80m
+      points: 4
+      multis: 1
+      duplicate: false
+    - their_call: k1ab
+      their_continent: na
+      their_country: k
+      band: 15m
+      points: 2
+      multis: 0
+      duplicate: false
+    - their_call: ea1abc
+      their_continent: eu
+      their_country: ea
+      band: 80m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: ea2abc
+      their_continent: eu
+      their_country: ea
+      band: 15m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: ve1abc
+      their_continent: na
+      their_country: ve
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: ve1abc
+      their_continent: na
+      their_country: ve
+      band: 15m
+      points: 1
+      multis: 0
+      duplicate: false
+    score:
+      points: 17
+      multis: 4
