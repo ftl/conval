@@ -9,7 +9,7 @@ import (
 )
 
 // var listFlags = struct {
-// 	// add the flags for the list command here
+// add the flags for the list command here
 // }{}
 
 var listCmd = &cobra.Command{
