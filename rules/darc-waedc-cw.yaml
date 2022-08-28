@@ -42,20 +42,23 @@ scoring:
     value: 1
   qso_band_rule: once_per_band
   multis: 
-  - property: dxcc_entity
+  - property: wae_entity
     my_continent: [eu]
+    their_continent: [af, an, as, na, oc, sa]
     band_rule: once_per_band
     bands:
     - 80m
     value: 4
-  - property: dxcc_entity
+  - property: wae_entity
     my_continent: [eu]
+    their_continent: [af, an, as, na, oc, sa]
     band_rule: once_per_band
     bands:
     - 40m
     value: 3
-  - property: dxcc_entity
+  - property: wae_entity
     my_continent: [eu]
+    their_continent: [af, an, as, na, oc, sa]
     band_rule: once_per_band
     bands:
     - 20m
@@ -64,21 +67,127 @@ scoring:
     value: 2
   - property: wae_entity
     my_continent: [af, an, as, na, oc, sa]
+    their_contient: [eu]
     band_rule: once_per_band
     bands:
     - 80m
     value: 4
   - property: wae_entity
     my_continent: [af, an, as, na, oc, sa]
+    their_continent: [eu]
     band_rule: once_per_band
     bands:
     - 40m
     value: 3
   - property: wae_entity
     my_continent: [af, an, as, na, oc, sa]
+    their_continent: [eu]
     band_rule: once_per_band
     bands:
     - 20m
     - 15m
     - 10m
     value: 2
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: k1abc
+      their_continent: na
+      their_country: k
+      band: 80m
+      points: 1
+      multis: 4
+      duplicate: false
+    - their_call: k2abc
+      their_continent: na
+      their_country: k
+      band: 80m
+      points: 1
+      multis: 4
+      duplicate: false
+    - their_call: k1abc
+      their_continent: na
+      their_country: k
+      band: 40m
+      points: 1
+      multis: 3
+      duplicate: false
+    - their_call: k2abc
+      their_continent: na
+      their_country: k
+      band: 40m
+      points: 1
+      multis: 3
+      duplicate: false
+    - their_call: k1abc
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 1
+      multis: 2
+      duplicate: false
+    - their_call: k2abc
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 1
+      multis: 2
+      duplicate: false
+    score:
+      points: 6
+      multis: 18
+  - setup:
+      my_continent: na
+      my_country: ve
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 4
+      duplicate: false
+    - their_call: dl2abc
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 3
+      duplicate: false
+    - their_call: dl2abc
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 20m
+      points: 1
+      multis: 2
+      duplicate: false
+    - their_call: dl2abc
+      their_continent: eu
+      their_country: dl
+      band: 20m
+      points: 1
+      multis: 0
+      duplicate: false
+    score:
+      points: 6
+      multis: 9
