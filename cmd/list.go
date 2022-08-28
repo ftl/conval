@@ -39,6 +39,6 @@ func runList(cmd *cobra.Command, args []string) {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("%s\t%s\t%s\n", name, definition.Name, definition.OfficialRules)
+		fmt.Printf("%-32s\t%s\t%s\n", definition.Identifier, definition.Name, definition.OfficialRules)
 	}
 }

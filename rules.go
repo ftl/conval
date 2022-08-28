@@ -7,11 +7,14 @@ import (
 	"strings"
 )
 
+// use the cabrillo name as filename and identifier, see https://www.contestcalendar.com/cabnames.php
+
 //go:embed rules/*.yaml
 var definitions embed.FS
 
 func IncludedDefinition(name string) (*Definition, error) {
-	f, err := definitions.Open(fmt.Sprintf("rules/%s.yaml", name))
+	filename := fmt.Sprintf("rules/%s.yaml", strings.ToLower(name))
+	f, err := definitions.Open(filename)
 	if err != nil {
 		return nil, err
 	}

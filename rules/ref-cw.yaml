@@ -1,4 +1,5 @@
-name: Coupe du REF
+identifier: REF-CW
+name: Coupe du REF CW
 official_rules: https://concours.r-e-f.org/contest/a-propos/
 durations:
 - duration: 36h
@@ -20,7 +21,6 @@ categories:
 overlays:
 modes:
 - cw
-- ssb
 bands:
 - 80m
 - 40m
