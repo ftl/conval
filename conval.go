@@ -119,13 +119,14 @@ const (
 type Property string
 
 const (
-	TheirRSTProperty     Property = "rst"
-	SerialNumberProperty Property = "serial"
-	MemberNumberProperty Property = "member_number"
-	NoMemberProperty     Property = "nm"
-	CQZoneProperty       Property = "cq_zone"
-	ITUZoneProperty      Property = "itu_zone"
-	DXCCEntityProperty   Property = "dxcc_entity"
+	TheirRSTProperty         Property = "rst"
+	SerialNumberProperty     Property = "serial"
+	MemberNumberProperty     Property = "member_number"
+	NoMemberProperty         Property = "nm"
+	CQZoneProperty           Property = "cq_zone"
+	ITUZoneProperty          Property = "itu_zone"
+	DXCCEntityProperty       Property = "dxcc_entity"
+	WorkingConditionProperty Property = "working_condition"
 )
 
 type PropertyGetter interface {

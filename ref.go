@@ -6,7 +6,7 @@ package conval
 func init() {
 	PropertyValidators[REFDepartmentProperty] = PropertyValidatorFunc(validateREFDepartment)
 
-	PropertyGetters[REFDepartmentProperty] = PropertyGetterFunc(getREFDepartment)
+	PropertyGetters[REFDepartmentProperty] = getTheirExchangeProperty(REFDepartmentProperty)
 }
 
 const (
@@ -15,8 +15,4 @@ const (
 
 func validateREFDepartment(exchange string) error {
 	return nil // TODO implement
-}
-
-func getREFDepartment(qso QSO) string {
-	return "" // TODO implement
 }

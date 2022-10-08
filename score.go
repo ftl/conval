@@ -1,6 +1,11 @@
 package conval
 
-import "github.com/ftl/hamradio/callsign"
+import (
+	"log"
+	"strings"
+
+	"github.com/ftl/hamradio/callsign"
+)
 
 type Counter struct {
 	setup Setup
@@ -100,6 +105,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	getProperty := func(property Property) string {
 		getter, getterOK := PropertyGetters[property]
 		if !getterOK {
+			log.Printf("no property getter for %s", property)
 			return ""
 		}
 		return getter.GetProperty(qso)
@@ -107,6 +113,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 	// find the relevant QSO rules
 	qsoRules := filterScoringRules(c.rules.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	// log.Printf("found %d relevant QSO rules", len(qsoRules))
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
 	} else if len(qsoRules) > 1 {
@@ -120,6 +127,8 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		}
 		if allEqual {
 			result.Points = value
+		} else {
+			log.Printf("inconsistent QSO rules: %+v", qsoRules)
 		}
 	}
 
@@ -136,6 +145,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 	// find the relevant multi rules
 	multiRules := filterScoringRules(c.rules.MultiRules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	// log.Printf("found %d relevant multi rules", len(multiRules))
 	for _, rule := range multiRules {
 		if rule.Property == "" {
 			result.Multis += rule.Value
@@ -196,12 +206,14 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 
 		if myContinent != "" && len(rule.MyContinent) > 0 {
 			if !contains(rule.MyContinent, myContinent) {
+				// log.Printf("not my continent %s %v", myContinent, rule.MyContinent)
 				continue
 			}
 			ruleScore++
 		}
 		if myCountry != "" && len(rule.MyCountry) > 0 {
 			if !contains(rule.MyCountry, myCountry) {
+				// log.Printf("not my country %s %v", myCountry, rule.MyCountry)
 				continue
 			}
 			ruleScore++
@@ -214,6 +226,7 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			} else if contains(rule.TheirContinent, theirContinent) {
 				ruleScore++
 			} else {
+				// log.Printf("not their continent %s %v", theirContinent, rule.TheirContinent)
 				continue
 			}
 		}
@@ -225,6 +238,7 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			} else if contains(rule.TheirCountry, theirCountry) {
 				ruleScore++
 			} else {
+				// log.Printf("not their country %s %v", theirCountry, rule.TheirCountry)
 				continue
 			}
 		}
@@ -232,12 +246,22 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			if contains(rule.Bands, band) {
 				ruleScore++
 			} else {
+				// log.Printf("not a valid band %s %v", band, rule.Bands)
 				continue
 			}
+		}
+		if rule.TheirWorkingCondition != "" {
+			value := strings.ToLower(strings.TrimSpace(getProperty(WorkingConditionProperty)))
+			if value != rule.TheirWorkingCondition {
+				// log.Printf("not their working condition %q %q", value, rule.TheirWorkingCondition)
+				continue
+			}
+			ruleScore++
 		}
 		if rule.Property != "" {
 			value := getProperty(rule.Property)
 			if value == "" {
+				// log.Printf("empty property %s", rule.Property)
 				continue
 			}
 			ruleScore++

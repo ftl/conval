@@ -1,6 +1,8 @@
 identifier: REF-CW
-name: Coupe du REF CW
-official_rules: https://concours.r-e-f.org/contest/a-propos/
+name: Coupe du France, CW
+official_rules: https://concours.r-e-f.org/reglements/actuels/reg_cdfhfdx.pdf
+upload_url: http://concours.r-e-f.org/contest/logs/upload-form
+upload_format: Cabrillo
 durations:
 - duration: 36h
 breaks:
@@ -34,18 +36,257 @@ exchange:
 scoring:
   qsos:
   - their_country: [f]
-    my_continent: [eu]
+    their_continent: [same]
     value: 1
   - their_country: [f]
-    my_continent: [af, an, as, na, oc, sa]
+    their_continent: [other]
+    value: 3
+  - my_country: [f]
+    their_country: [other]
+    their_continent: [same]
+    value: 1
+  - my_country: [f]
+    their_country: [other]
+    their_contient: [other]
+    value: 2
+  - my_country: [f]
+    their_country: [f]
+    their_continent: [same]
+    additional_weight: 10
+    value: 6
+  - my_country: [f]
+    their_country: [f]
+    their_contient: [other]
+    additional_weight: 10
+    value: 15
+  - their_working_condition: mm
+    additional_weight: 100
     value: 3
   qso_band_rule: once_per_band
   multis:
   - property: dxcc_entity
     my_country: [f]
+    their_country: [other]
     band_rule: once_per_band
     value: 1
   - property: ref_department
     band_rule: once_per_band
     value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: f1abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: f2abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: tm1abc
+      their_exchange:
+        ref_department: 97
+      their_continent: af
+      their_country: f
+      band: 80m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: f1abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: f4abc/mm
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: false
+    score:
+      points: 9
+      multis: 3
+  - setup:
+      my_continent: af
+      my_country: zs
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: f1abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: f2abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 3
+      multis: 0
+      duplicate: false
+    - their_call: tm1abc
+      their_exchange:
+        ref_department: 97
+      their_continent: af
+      their_country: f
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: f1abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: f4abc/mm
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: false
+    score:
+      points: 13
+      multis: 3
+  - setup:
+      my_continent: eu
+      my_country: f
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: dl1abc
+      their_exchange:
+        serial: 1
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: f2abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: tm1abc
+      their_exchange:
+        ref_department: 97
+      their_continent: af
+      their_country: f
+      band: 80m
+      points: 15
+      multis: 1
+      duplicate: false
+    - their_call: f1abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: f4abc/mm
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: false
+    score:
+      points: 31
+      multis: 4
+  - setup:
+      my_continent: af
+      my_country: f
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+    - their_call: dl1abc
+      their_exchange:
+        serial: 1
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: f2abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 15
+      multis: 1
+      duplicate: false
+    - their_call: tm1abc
+      their_exchange:
+        ref_department: 97
+      their_continent: af
+      their_country: f
+      band: 80m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: f1abc
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 15
+      multis: 1
+      duplicate: false
+    - their_call: f4abc/mm
+      their_exchange:
+        ref_department: 1
+      their_continent: eu
+      their_countra: f
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: false
+    score:
+      points: 41
+      multis: 4
     

@@ -10,8 +10,10 @@ import (
 
 type Definition struct {
 	Name            string                `yaml:"name"`
-	Identifier      string                `yaml:"identifier"`
+	Identifier      string                `yaml:"identifier"` // see https://www.contestcalendar.com/cabnames.php
 	OfficialRules   string                `yaml:"official_rules"`
+	UploadURL       string                `yaml:"upload_url"`
+	UploadFormat    string                `yaml:"upload_format"`
 	Durations       []ConstrainedDuration `yaml:"durations"`
 	Breaks          []ConstrainedDuration `yaml:"breaks"`
 	Categories      []Category            `yaml:"categories"`
@@ -54,15 +56,16 @@ type Scoring struct {
 }
 
 type ScoringRule struct {
-	MyContinent      []Continent   `yaml:"my_continent"`
-	MyCountry        []DXCCEntity  `yaml:"my_country"`
-	TheirContinent   []Continent   `yaml:"their_continent"`
-	TheirCountry     []DXCCEntity  `yaml:"their_country"`
-	Bands            []ContestBand `yaml:"bands"`
-	Property         Property      `yaml:"property"`
-	BandRule         BandRule      `yaml:"band_rule"`
-	AdditionalWeight int           `yaml:"additional_weight"`
-	Value            int           `yaml:"value"`
+	MyContinent           []Continent   `yaml:"my_continent"`
+	MyCountry             []DXCCEntity  `yaml:"my_country"`
+	TheirContinent        []Continent   `yaml:"their_continent"`
+	TheirCountry          []DXCCEntity  `yaml:"their_country"`
+	TheirWorkingCondition string        `yaml:"their_working_condition"`
+	Bands                 []ContestBand `yaml:"bands"`
+	Property              Property      `yaml:"property"`
+	BandRule              BandRule      `yaml:"band_rule"`
+	AdditionalWeight      int           `yaml:"additional_weight"`
+	Value                 int           `yaml:"value"`
 }
 
 type Example struct {

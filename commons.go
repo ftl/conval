@@ -18,6 +18,7 @@ func init() {
 	PropertyGetters[CQZoneProperty] = PropertyGetterFunc(getCQZone)
 	PropertyGetters[ITUZoneProperty] = PropertyGetterFunc(getITUZone)
 	PropertyGetters[DXCCEntityProperty] = PropertyGetterFunc(getDXCCEntity)
+	PropertyGetters[WorkingConditionProperty] = PropertyGetterFunc(getCallsignWorkingCondition)
 }
 
 // Common Exchange Validators
@@ -72,6 +73,10 @@ func getDXCCEntity(qso QSO) string {
 	}
 	// TODO get DXCC entity from database
 	return ""
+}
+
+func getCallsignWorkingCondition(qso QSO) string {
+	return qso.TheirCall.WorkingCondition
 }
 
 func getTheirExchangeProperty(property Property) PropertyGetter {
