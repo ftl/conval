@@ -28,7 +28,15 @@ func validateWAGDOK(exchange string) error {
 }
 
 func getWAGDistrict(qso QSO) string {
-	return "" // TODO implement
+	dok, ok := qso.TheirExchange[WAGDOKProperty]
+	if !ok {
+		return ""
+	}
+	dok = strings.ToUpper(strings.TrimSpace(dok))
+	if len(dok) == 0 {
+		return ""
+	}
+	return string(dok[0])
 }
 
 func getWAEEntity(qso QSO) string {

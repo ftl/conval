@@ -1,6 +1,8 @@
 identifier: WAG
 name: Worked All Germany Contest
 official_rules: https://www.darc.de/der-club/referate/conteste/wag-contest/en/rules/
+upload_url: https://www.dxhf2.darc.de/~waglog/upload.cgi
+upload_format: cabrillo
 durations:
 - duration: 24h
 breaks:
@@ -65,6 +67,7 @@ exchange:
 scoring:
   qsos:
   - my_country: [dl]
+    their_continent: [eu]
     their_country: [dl]
     value: 1
   - my_country: [dl]
@@ -73,9 +76,10 @@ scoring:
   - my_country: [dl]
     their_continent: [other]
     value: 5
-  - their_country: [dl]
+  - their_continent: [eu]
+    their_country: [dl]
     value: 3
-  qso_band_rule: once_per_band
+  qso_band_rule: once_per_band_and_mode
   multis:
   - property: dxcc_entity
     my_country: [dl]
@@ -84,3 +88,189 @@ scoring:
   - property: wag_district
     band_rule: once_per_band
     value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 1
+        multis: 2
+      - their_call: dl2abc
+        their_exchange:
+          nm: nm
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 1
+        multis: 0
+      - their_call: dl3abc
+        their_exchange:
+          wag_dok: c02
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 1
+        multis: 1
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 0
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 1
+        multis: 2
+      - their_call: f1abc
+        their_exchange:
+          serial: 001
+        their_continent: eu
+        their_country: f
+        band: 40m
+        points: 3
+        multis: 1
+      - their_call: k1abc
+        their_exchange:
+          serial: 002
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 5
+        multis: 1
+      - their_call: k2abc
+        their_exchange:
+          serial: 123
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 5
+        multis: 0
+    score:
+      points: 17
+      multis: 7
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 2
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: ssb
+        points: 1
+        multis: 0
+    score:
+      points: 2
+      multis: 2
+  - setup:
+      my_continent: eu
+      my_country: f
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: dl2abc
+        their_exchange:
+          nm: nm
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 3
+        multis: 0
+      - their_call: dl3abc
+        their_exchange:
+          wag_dok: c02
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 0
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange:
+          wag_dok: b01
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 3
+        multis: 1
+      - their_call: f1abc
+        their_exchange:
+          serial: 001
+        their_continent: eu
+        their_country: f
+        band: 40m
+        points: 0
+        multis: 0
+      - their_call: k1abc
+        their_exchange:
+          serial: 002
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 0
+        multis: 0
+      - their_call: k2abc
+        their_exchange:
+          serial: 123
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 0
+        multis: 0
+    score:
+      points: 12
+      multis: 3

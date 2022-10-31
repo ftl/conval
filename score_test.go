@@ -275,9 +275,9 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL1ABC")},
 	}
 	expectedScores := []QSOScore{
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{Points: 2}
 
@@ -306,14 +306,60 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m},
 	}
 	expectedScores := []QSOScore{
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{Points: 4}
+
+	counter := NewCounter(setup, rules)
+
+	for i, qso := range qsos {
+		actualScore := counter.Add(qso)
+		assert.Equal(t, expectedScores[i], actualScore)
+	}
+	actualTotalScore := counter.TotalScore()
+	assert.Equal(t, expectedTotalScore, actualTotalScore)
+}
+
+func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
+	setup := Setup{}
+	rules := Scoring{
+		QSORules:    []ScoringRule{{Value: 1}},
+		QSOBandRule: OncePerBandAndMode,
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, Mode: ModeCW},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m, Mode: ModeCW},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, Mode: ModeCW},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, Mode: ModeSSB},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m, Mode: ModeSSB},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, Mode: ModeSSB},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, Mode: ModeCW},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, Mode: ModeCW},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, Mode: ModeCW},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, Mode: ModeSSB},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, Mode: ModeSSB},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, Mode: ModeSSB},
+	}
+	expectedScores := []QSOScore{
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+	}
+	expectedTotalScore := BandScore{Points: 8}
 
 	counter := NewCounter(setup, rules)
 
@@ -336,9 +382,9 @@ func TestCounter_Add_Multis_Once(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL2ABC"), TheirExchange: QSOExchange{"cq_zone": "14"}},
 	}
 	expectedScores := []QSOScore{
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBand: map[Property]ContestBand{"cq_zone": BandAll}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBand: map[Property]ContestBand{"cq_zone": BandAll}},
-		{Multis: 0, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{BandAll, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{BandAll, ModeALL}}},
+		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{Multis: 2}
 
@@ -367,12 +413,12 @@ func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
 	}
 	expectedScores := []QSOScore{
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBand: map[Property]ContestBand{"cq_zone": Band80m}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBand: map[Property]ContestBand{"cq_zone": Band80m}},
-		{Multis: 0, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBand: map[Property]ContestBand{"cq_zone": Band40m}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBand: map[Property]ContestBand{"cq_zone": Band40m}},
-		{Multis: 0, MultiValues: map[Property]string{}, MultiBand: map[Property]ContestBand{}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band80m, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band80m, ModeALL}}},
+		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band40m, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band40m, ModeALL}}},
+		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{Multis: 4}
 

@@ -103,8 +103,9 @@ const (
 type BandRule string
 
 const (
-	OncePerBand BandRule = "once_per_band"
-	Once        BandRule = "once"
+	Once               BandRule = "once"
+	OncePerBand        BandRule = "once_per_band"
+	OncePerBandAndMode BandRule = "once_per_band_and_mode"
 )
 
 type Overlay string

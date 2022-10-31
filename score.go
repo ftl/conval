@@ -7,21 +7,26 @@ import (
 	"github.com/ftl/hamradio/callsign"
 )
 
+type BandAndMode struct {
+	Band ContestBand
+	Mode Mode
+}
+
 type Counter struct {
 	setup Setup
 	rules Scoring
 
-	callsignsPerBand map[ContestBand]map[callsign.Callsign]bool
-	multisPerBand    map[ContestBand]map[Property]map[string]bool
-	scorePerBand     map[ContestBand]BandScore
+	callsignsPerBandAndMode map[BandAndMode]map[callsign.Callsign]bool
+	multisPerBandAndMode    map[BandAndMode]map[Property]map[string]bool
+	scorePerBand            map[ContestBand]BandScore
 }
 
 type QSOScore struct {
-	Points      int                      `yaml:"points"`
-	Multis      int                      `yaml:"multis"`
-	MultiValues map[Property]string      `yaml:"-"`
-	MultiBand   map[Property]ContestBand `yaml:"-"`
-	Duplicate   bool                     `yaml:"duplicate"`
+	Points           int                      `yaml:"points"`
+	Multis           int                      `yaml:"multis"`
+	MultiValues      map[Property]string      `yaml:"-"`
+	MultiBandAndMode map[Property]BandAndMode `yaml:"-"`
+	Duplicate        bool                     `yaml:"duplicate"`
 }
 
 func (s QSOScore) Equal(other QSOScore) bool {
@@ -38,9 +43,9 @@ func NewCounter(setup Setup, rules Scoring) *Counter {
 		setup: setup,
 		rules: rules,
 
-		callsignsPerBand: make(map[ContestBand]map[callsign.Callsign]bool),
-		multisPerBand:    make(map[ContestBand]map[Property]map[string]bool),
-		scorePerBand:     make(map[ContestBand]BandScore),
+		callsignsPerBandAndMode: make(map[BandAndMode]map[callsign.Callsign]bool),
+		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]bool),
+		scorePerBand:            make(map[ContestBand]BandScore),
 	}
 }
 
@@ -52,22 +57,22 @@ func (c *Counter) Add(qso QSO) QSOScore {
 	result := c.Probe(qso)
 
 	// apply the QSO band rule
-	band := effectiveBand(qso.Band, c.rules.QSOBandRule)
+	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.rules.QSOBandRule)
 
 	// update the callsign registry
 	var callsigns map[callsign.Callsign]bool
 	var callsignsOK bool
-	callsigns, callsignsOK = c.callsignsPerBand[band]
+	callsigns, callsignsOK = c.callsignsPerBandAndMode[bandAndMode]
 	if !callsignsOK {
 		callsigns = make(map[callsign.Callsign]bool)
 	}
 	callsigns[qso.TheirCall] = true
-	c.callsignsPerBand[band] = callsigns
+	c.callsignsPerBandAndMode[bandAndMode] = callsigns
 
 	// update the multi registry
 	for property, value := range result.MultiValues {
-		band := result.MultiBand[property]
-		properties, propertiesOK := c.multisPerBand[band]
+		bandAndMode := result.MultiBandAndMode[property]
+		properties, propertiesOK := c.multisPerBandAndMode[bandAndMode]
 		if !propertiesOK {
 			properties = make(map[Property]map[string]bool)
 		}
@@ -77,7 +82,7 @@ func (c *Counter) Add(qso QSO) QSOScore {
 		}
 		values[value] = true
 		properties[property] = values
-		c.multisPerBand[band] = properties
+		c.multisPerBandAndMode[bandAndMode] = properties
 	}
 
 	// update the scores
@@ -98,8 +103,8 @@ func (c *Counter) Add(qso QSO) QSOScore {
 
 func (c Counter) Probe(qso QSO) QSOScore {
 	result := QSOScore{
-		MultiValues: make(map[Property]string),
-		MultiBand:   make(map[Property]ContestBand),
+		MultiValues:      make(map[Property]string),
+		MultiBandAndMode: make(map[Property]BandAndMode),
 	}
 
 	getProperty := func(property Property) string {
@@ -133,18 +138,18 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// apply the QSO band rule
-	band := effectiveBand(qso.Band, c.rules.QSOBandRule)
+	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.rules.QSOBandRule)
 
 	// check the callsign registry for duplicate
 	var callsigns map[callsign.Callsign]bool
 	var bandOK bool
-	callsigns, bandOK = c.callsignsPerBand[band]
+	callsigns, bandOK = c.callsignsPerBandAndMode[bandAndMode]
 	if bandOK {
 		_, result.Duplicate = callsigns[qso.TheirCall]
 	}
 
 	// find the relevant multi rules
-	multiRules := filterScoringRules(c.rules.MultiRules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	multiRules := filterScoringRules(c.rules.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
 	// log.Printf("found %d relevant multi rules", len(multiRules))
 	for _, rule := range multiRules {
 		if rule.Property == "" {
@@ -156,11 +161,11 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		value := getProperty(rule.Property)
 
 		// apply the band rule
-		band := effectiveBand(qso.Band, rule.BandRule)
+		bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, rule.BandRule)
 
 		// check for duplicate values
 		var duplicateValue bool
-		properties, propertiesOK := c.multisPerBand[band]
+		properties, propertiesOK := c.multisPerBandAndMode[bandAndMode]
 		if propertiesOK {
 			values, propertyOK := properties[rule.Property]
 			if propertyOK {
@@ -172,7 +177,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		if !duplicateValue {
 			result.Multis += rule.Value
 			result.MultiValues[rule.Property] = value
-			result.MultiBand[rule.Property] = band
+			result.MultiBandAndMode[rule.Property] = bandAndMode
 		}
 	}
 
@@ -184,14 +189,16 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	return result
 }
 
-func effectiveBand(band ContestBand, rule BandRule) ContestBand {
+func effectiveBandAndMode(band ContestBand, mode Mode, rule BandRule) BandAndMode {
 	switch rule {
 	case Once:
-		return BandAll
+		return BandAndMode{BandAll, ModeALL}
 	case OncePerBand:
-		return band
+		return BandAndMode{band, ModeALL}
+	case OncePerBandAndMode:
+		return BandAndMode{band, mode}
 	default:
-		return ""
+		return BandAndMode{}
 	}
 }
 
