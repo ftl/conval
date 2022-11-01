@@ -49,7 +49,7 @@ func RegexpValidator(exp *regexp.Regexp, name string) PropertyValidator {
 	return PropertyValidatorFunc(func(exchange string) error {
 		exchange = strings.ToUpper(strings.TrimSpace(exchange))
 		value := exp.FindString(exchange)
-		if len(value) != len(exchange) {
+		if len(value) == 0 || len(value) != len(exchange) {
 			return fmt.Errorf("%s is not a valid %s", exchange, name)
 		}
 		return nil

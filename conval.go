@@ -4,6 +4,8 @@ The package conval helps to evaluate the log files from amateur radio contests.
 package conval
 
 import (
+	"log"
+	"strings"
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
@@ -145,6 +147,33 @@ type QSO struct {
 }
 
 type QSOExchange map[Property]string
+
+func ParseExchange(fields []ExchangeField, values []string) QSOExchange {
+	result := make(QSOExchange)
+	result.Add(fields, values)
+	return result
+}
+
+func (e QSOExchange) Add(fields []ExchangeField, values []string) {
+	for i, field := range fields {
+		if i >= len(values) {
+			break
+		}
+		value := strings.ToUpper(strings.TrimSpace(values[i]))
+		for _, property := range field {
+			validator, ok := PropertyValidators[property]
+			if !ok {
+				log.Printf("no validator for property %s", property)
+				continue
+			}
+			err := validator.ValidateProperty(value)
+			if err == nil {
+				e[property] = value
+				break
+			}
+		}
+	}
+}
 
 type Setup struct {
 	MyCall      callsign.Callsign

@@ -55,3 +55,39 @@ func TestValidateSDOKs(t *testing.T) {
 		})
 	}
 }
+
+func TestParseWAGExchange(t *testing.T) {
+	fields := []ExchangeField{[]Property{TheirRSTProperty}, []Property{SerialNumberProperty, NoMemberProperty, WAGDOKProperty}}
+	tt := []struct {
+		desc     string
+		values   []string
+		expected QSOExchange
+	}{
+		{
+			desc:     "rst and serial number",
+			values:   []string{"599", "123"},
+			expected: QSOExchange{TheirRSTProperty: "599", SerialNumberProperty: "123"},
+		},
+		{
+			desc:     "rst and dok",
+			values:   []string{"599", "B01"},
+			expected: QSOExchange{TheirRSTProperty: "599", WAGDOKProperty: "B01"},
+		},
+		{
+			desc:     "rst and no member",
+			values:   []string{"599", "nm"},
+			expected: QSOExchange{TheirRSTProperty: "599", NoMemberProperty: "NM"},
+		},
+		{
+			desc:     "rst and no no member",
+			values:   []string{"599"},
+			expected: QSOExchange{TheirRSTProperty: "599"},
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			actual := ParseExchange(fields, tc.values)
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}

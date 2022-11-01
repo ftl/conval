@@ -63,7 +63,7 @@ bandchange_rules:
   multiplier_exception: true
 exchange:
 - [rst]
-- [serial, wag_dok, nm]
+- [serial, nm, wag_dok]
 scoring:
   qsos:
   - my_country: [dl]
