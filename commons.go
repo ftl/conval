@@ -3,13 +3,35 @@ This file contains the implementation of the common properties used for contest 
 */
 package conval
 
+import (
+	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
+
+	"github.com/ftl/hamradio/callsign"
+)
+
+const (
+	TheirRSTProperty         Property = "rst"
+	SerialNumberProperty     Property = "serial"
+	MemberNumberProperty     Property = "member_number"
+	NoMemberProperty         Property = "nm"
+	CallsignProperty         Property = "callsign" // can be used as exchanges, e.g. in the silent key memorial contests
+	CQZoneProperty           Property = "cq_zone"
+	ITUZoneProperty          Property = "itu_zone"
+	DXCCEntityProperty       Property = "dxcc_entity"
+	WorkingConditionProperty Property = "working_condition"
+)
+
 func init() {
-	PropertyValidators[TheirRSTProperty] = PropertyValidatorFunc(validateRST)
-	PropertyValidators[SerialNumberProperty] = PropertyValidatorFunc(validateSerialNumber)
-	PropertyValidators[MemberNumberProperty] = PropertyValidatorFunc(validateMemberNumber)
-	PropertyValidators[CQZoneProperty] = PropertyValidatorFunc(validateCQZone)
-	PropertyValidators[ITUZoneProperty] = PropertyValidatorFunc(validateITUZone)
-	PropertyValidators[NoMemberProperty] = PropertyValidatorFunc(validateNoMember)
+	PropertyValidators[TheirRSTProperty] = RegexpValidator(validRST, "report")
+	PropertyValidators[SerialNumberProperty] = RegexpValidator(validSerialNumber, "serial number")
+	PropertyValidators[MemberNumberProperty] = RegexpValidator(validMemberNumber, "member number")
+	PropertyValidators[NoMemberProperty] = RegexpValidator(validNoMember, "no member")
+	PropertyValidators[CallsignProperty] = CallsignValidator
+	PropertyValidators[CQZoneProperty] = NumberRangeValidator(1, 40, "CQ zone")
+	PropertyValidators[ITUZoneProperty] = NumberRangeValidator(1, 90, "ITU zone")
 
 	PropertyGetters[TheirRSTProperty] = getTheirExchangeProperty(TheirRSTProperty)
 	PropertyGetters[SerialNumberProperty] = getTheirExchangeProperty(SerialNumberProperty)
@@ -23,29 +45,45 @@ func init() {
 
 // Common Exchange Validators
 
-func validateRST(exchange string) error {
-	return nil // TODO implement
+func RegexpValidator(exp *regexp.Regexp, name string) PropertyValidator {
+	return PropertyValidatorFunc(func(exchange string) error {
+		exchange = strings.ToUpper(strings.TrimSpace(exchange))
+		value := exp.FindString(exchange)
+		if len(value) != len(exchange) {
+			return fmt.Errorf("%s is not a valid %s", exchange, name)
+		}
+		return nil
+	})
 }
 
-func validateSerialNumber(exchange string) error {
-	return nil // TODO implement
+func NumberRangeValidator(from, to int, name string) PropertyValidator {
+	return PropertyValidatorFunc(func(exchange string) error {
+		exchange = strings.ToUpper(strings.TrimSpace(exchange))
+		value, err := strconv.Atoi(exchange)
+		if err != nil {
+			return fmt.Errorf("%s is not a valid %s: %w", exchange, name, err)
+		}
+		if value < from || value > to {
+			return fmt.Errorf("%s is not a valid %s", exchange, name)
+		}
+		return nil
+	})
 }
 
-func validateMemberNumber(exchange string) error {
-	return nil // TODO implement
-}
+var (
+	validRST          = regexp.MustCompile(`[1-5][1-9][1-9]*`)
+	validSerialNumber = regexp.MustCompile(`\d+`)
+	validMemberNumber = regexp.MustCompile(`\d+`)
+	validNoMember     = regexp.MustCompile(`(NM)?`)
 
-func validateNoMember(exchange string) error {
-	return nil // TODO implement
-}
-
-func validateCQZone(exchange string) error {
-	return nil // TODO implement
-}
-
-func validateITUZone(exchange string) error {
-	return nil // TODO implement
-}
+	CallsignValidator = PropertyValidatorFunc(func(exchange string) error {
+		_, err := callsign.Parse(exchange)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+)
 
 // Common Property Getters
 
@@ -54,7 +92,7 @@ func getCQZone(qso QSO) string {
 	if ok {
 		return exchange
 	}
-	// TODO get CQ zone from database
+	// TODO get CQ zone from a database
 	return ""
 }
 
@@ -63,7 +101,7 @@ func getITUZone(qso QSO) string {
 	if ok {
 		return exchange
 	}
-	// TODO get ITU zone from database
+	// TODO get ITU zone from a database
 	return ""
 }
 
@@ -71,7 +109,7 @@ func getDXCCEntity(qso QSO) string {
 	if qso.TheirCountry != "" {
 		return string(qso.TheirCountry)
 	}
-	// TODO get DXCC entity from database
+	// TODO get DXCC entity from a database
 	return ""
 }
 

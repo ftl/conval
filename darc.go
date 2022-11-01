@@ -4,7 +4,6 @@ This file contains the implementation of the specific things for contests announ
 package conval
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -12,7 +11,7 @@ import (
 )
 
 func init() {
-	PropertyValidators[WAGDOKProperty] = PropertyValidatorFunc(validateWAGDOK)
+	PropertyValidators[WAGDOKProperty] = RegexpValidator(validDOK, "DOK")
 
 	PropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
 	PropertyGetters[WAGDistrictProperty] = PropertyGetterFunc(getWAGDistrict)
@@ -24,15 +23,7 @@ const (
 	WAEEntityProperty   Property = "wae_entity"
 )
 
-var dokExp = regexp.MustCompile(`\d*[A-Za-z][A-Za-z0-9ÄÖÜäöü-]*`)
-
-func validateWAGDOK(exchange string) error {
-	dok := dokExp.FindString(exchange)
-	if len(dok) != len(exchange) {
-		return fmt.Errorf("%s is not a valid DOK: it does not match the naming rules", exchange)
-	}
-	return nil
-}
+var validDOK = regexp.MustCompile(`\d*[A-Z][A-Z0-9ÄÖÜ-]*`)
 
 func getWAGDistrict(qso QSO) string {
 	dok, ok := qso.TheirExchange[WAGDOKProperty]

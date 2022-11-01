@@ -3,6 +3,7 @@ package conval
 import (
 	"bufio"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/ftl/hamradio/callsign"
@@ -40,15 +41,17 @@ func TestWAECallAreaNumber(t *testing.T) {
 }
 
 func TestValidateSDOKs(t *testing.T) {
+	validateWAGDOK := PropertyValidators[WAGDOKProperty]
+
 	sdokFile, err := os.Open("testdata/sdok.txt")
 	require.NoError(t, err)
 	defer sdokFile.Close()
 
 	scanner := bufio.NewScanner(sdokFile)
 	for scanner.Scan() {
-		sdok := scanner.Text()
+		sdok := strings.ToLower(scanner.Text())
 		t.Run(sdok, func(t *testing.T) {
-			assert.NoError(t, validateWAGDOK(sdok))
+			assert.NoError(t, validateWAGDOK.ValidateProperty(sdok))
 		})
 	}
 }
