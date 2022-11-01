@@ -31,7 +31,7 @@ bands:
 - 10m
 band_change_rules:
 exchange:
-- their_country: [f]
+- their_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
   fields:
   - [rst]
   - [ref_department]
@@ -40,27 +40,27 @@ exchange:
   - [serial]
 scoring:
   qsos:
-  - their_country: [f]
+  - their_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     their_continent: [same]
     value: 1
-  - their_country: [f]
+  - their_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     their_continent: [other]
     value: 3
-  - my_country: [f]
+  - my_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     their_country: [other]
     their_continent: [same]
     value: 1
-  - my_country: [f]
+  - my_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     their_country: [other]
     their_contient: [other]
     value: 2
-  - my_country: [f]
-    their_country: [f]
+  - my_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
+    their_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     their_continent: [same]
     additional_weight: 10
     value: 6
-  - my_country: [f]
-    their_country: [f]
+  - my_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
+    their_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     their_contient: [other]
     additional_weight: 10
     value: 15
@@ -70,8 +70,8 @@ scoring:
   qso_band_rule: once_per_band
   multis:
   - property: dxcc_entity
-    my_country: [f]
-    their_country: [other]
+    my_country: [f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
+    their_country: [not, f, fg, fj, fh, fk, fm, fo, fp, fr, fw, fy, tk]
     band_rule: once_per_band
     value: 1
   - property: ref_department
@@ -100,10 +100,10 @@ examples:
       points: 1
       multis: 0
       duplicate: false
-    - their_call: tm1abc
-      their_exchange: [599, 97]
+    - their_call: fr1abc
+      their_exchange: [599, fr]
       their_continent: af
-      their_country: f
+      their_country: fr
       band: 80m
       points: 3
       multis: 1
@@ -149,10 +149,10 @@ examples:
       points: 3
       multis: 0
       duplicate: false
-    - their_call: tm1abc
-      their_exchange: [599, 97]
+    - their_call: fr1abc
+      their_exchange: [599, fr]
       their_continent: af
-      their_country: f
+      their_country: fr
       band: 80m
       points: 1
       multis: 1
@@ -198,10 +198,10 @@ examples:
       points: 6
       multis: 1
       duplicate: false
-    - their_call: tm1abc
-      their_exchange: [599, 97]
+    - their_call: fr1abc
+      their_exchange: [599, fr]
       their_continent: af
-      their_country: f
+      their_country: fr
       band: 80m
       points: 15
       multis: 1
@@ -227,7 +227,7 @@ examples:
       multis: 4
   - setup:
       my_continent: af
-      my_country: f
+      my_country: fr
       bands: [80m, 40m, 20m, 15m, 10m]
       modes: [cw]
     qsos:
@@ -247,8 +247,8 @@ examples:
       points: 15
       multis: 1
       duplicate: false
-    - their_call: tm1abc
-      their_exchange: [599, 97]
+    - their_call: fr1abc
+      their_exchange: [599, fr]
       their_continent: af
       their_country: f
       band: 80m

@@ -218,14 +218,22 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 		ruleScore := 0
 
 		if myContinent != "" && len(rule.MyContinent) > 0 {
-			if !contains(rule.MyContinent, myContinent) {
+			if len(rule.MyContinent) > 1 && rule.MyContinent[0] == NotContinent {
+				if contains(rule.MyContinent, myContinent) {
+					continue
+				}
+			} else if !contains(rule.MyContinent, myContinent) {
 				// log.Printf("not my continent %s %v", myContinent, rule.MyContinent)
 				continue
 			}
 			ruleScore++
 		}
 		if myCountry != "" && len(rule.MyCountry) > 0 {
-			if !contains(rule.MyCountry, myCountry) {
+			if len(rule.MyCountry) > 1 && rule.MyCountry[0] == NotCountry {
+				if contains(rule.MyCountry, myCountry) {
+					continue
+				}
+			} else if !contains(rule.MyCountry, myCountry) {
 				// log.Printf("not my country %s %v", myCountry, rule.MyCountry)
 				continue
 			}
@@ -236,6 +244,12 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 				((rule.TheirContinent[0] == SameContinent && myContinent == theirContinent) ||
 					(rule.TheirContinent[0] == OtherContinent && myContinent != theirContinent)) {
 				ruleScore++
+			} else if len(rule.TheirContinent) > 1 && rule.TheirContinent[0] == NotContinent {
+				if !contains(rule.TheirContinent, theirContinent) {
+					ruleScore++
+				} else {
+					continue
+				}
 			} else if contains(rule.TheirContinent, theirContinent) {
 				ruleScore++
 			} else {
@@ -248,10 +262,15 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 				((rule.TheirCountry[0] == SameCountry && myCountry == theirCountry) ||
 					(rule.TheirCountry[0] == OtherCountry && myCountry != theirCountry)) {
 				ruleScore++
+			} else if len(rule.TheirCountry) > 1 && rule.TheirCountry[0] == NotCountry {
+				if !contains(rule.TheirCountry, theirCountry) {
+					ruleScore++
+				} else {
+					continue
+				}
 			} else if contains(rule.TheirCountry, theirCountry) {
 				ruleScore++
 			} else {
-				// log.Printf("not their country %s %v", theirCountry, rule.TheirCountry)
 				continue
 			}
 		}
@@ -295,6 +314,7 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			result = append(result, rule)
 		}
 	}
+
 	return result
 }
 
@@ -307,14 +327,22 @@ func filterExchangeFields(definitions []ExchangeDefinition, myContinent Continen
 		definitionScore := 0
 
 		if myContinent != "" && len(definition.MyContinent) > 0 {
-			if !contains(definition.MyContinent, myContinent) {
+			if len(definition.MyContinent) > 1 && definition.MyContinent[0] == NotContinent {
+				if contains(definition.MyContinent, myContinent) {
+					continue
+				}
+			} else if !contains(definition.MyContinent, myContinent) {
 				// log.Printf("not my continent %s %v", myContinent, definition.MyContinent)
 				continue
 			}
 			definitionScore++
 		}
 		if myCountry != "" && len(definition.MyCountry) > 0 {
-			if !contains(definition.MyCountry, myCountry) {
+			if len(definition.MyCountry) > 1 && definition.MyCountry[0] == NotCountry {
+				if contains(definition.MyCountry, myCountry) {
+					continue
+				}
+			} else if !contains(definition.MyCountry, myCountry) {
 				// log.Printf("not my country %s %v", myCountry, definition.MyCountry)
 				continue
 			}
@@ -325,6 +353,12 @@ func filterExchangeFields(definitions []ExchangeDefinition, myContinent Continen
 				((definition.TheirContinent[0] == SameContinent && myContinent == theirContinent) ||
 					(definition.TheirContinent[0] == OtherContinent && myContinent != theirContinent)) {
 				definitionScore++
+			} else if len(definition.TheirContinent) > 1 && definition.TheirContinent[0] == NotContinent {
+				if !contains(definition.TheirContinent, theirContinent) {
+					definitionScore++
+				} else {
+					continue
+				}
 			} else if contains(definition.TheirContinent, theirContinent) {
 				definitionScore++
 			} else {
@@ -337,6 +371,12 @@ func filterExchangeFields(definitions []ExchangeDefinition, myContinent Continen
 				((definition.TheirCountry[0] == SameCountry && myCountry == theirCountry) ||
 					(definition.TheirCountry[0] == OtherCountry && myCountry != theirCountry)) {
 				definitionScore++
+			} else if len(definition.TheirCountry) > 1 && definition.TheirCountry[0] == NotCountry {
+				if !contains(definition.TheirCountry, theirCountry) {
+					definitionScore++
+				} else {
+					continue
+				}
 			} else if contains(definition.TheirCountry, theirCountry) {
 				definitionScore++
 			} else {

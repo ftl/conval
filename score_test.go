@@ -54,6 +54,17 @@ func TestFilterScoringRules(t *testing.T) {
 			},
 		},
 		{
+			desc: "my continent not matching the excluded continent",
+			rules: []ScoringRule{
+				{MyContinent: []Continent{NotContinent, Europa}, Value: 2},
+				{Value: 1},
+			},
+			myContinent: Africa,
+			expected: []ScoringRule{
+				{MyContinent: []Continent{NotContinent, Europa}, Value: 2},
+			},
+		},
+		{
 			desc: "my country matching the specified country",
 			rules: []ScoringRule{
 				{MyCountry: []DXCCEntity{"dl"}, Value: 2},
@@ -63,6 +74,18 @@ func TestFilterScoringRules(t *testing.T) {
 			myCountry:   "dl",
 			expected: []ScoringRule{
 				{MyCountry: []DXCCEntity{"dl"}, Value: 2},
+			},
+		},
+		{
+			desc: "my country not matching the excluded country",
+			rules: []ScoringRule{
+				{MyCountry: []DXCCEntity{"not", "dl"}, Value: 2},
+				{Value: 1},
+			},
+			myContinent: Europa,
+			myCountry:   "f",
+			expected: []ScoringRule{
+				{MyCountry: []DXCCEntity{"not", "dl"}, Value: 2},
 			},
 		},
 		{
@@ -80,6 +103,20 @@ func TestFilterScoringRules(t *testing.T) {
 			},
 		},
 		{
+			desc: "their continent not matching the excluded continent",
+			rules: []ScoringRule{
+				{TheirContinent: []Continent{NotContinent, Africa, Antarctica, Asia, NorthAmerica, Oceania, SouthAmerica}, Value: 2},
+				{Value: 1},
+			},
+			myContinent:    Europa,
+			myCountry:      "dl",
+			theirContinent: Europa,
+			theirCountry:   "dl",
+			expected: []ScoringRule{
+				{TheirContinent: []Continent{NotContinent, Africa, Antarctica, Asia, NorthAmerica, Oceania, SouthAmerica}, Value: 2},
+			},
+		},
+		{
 			desc: "their country matching the specified country",
 			rules: []ScoringRule{
 				{TheirCountry: []DXCCEntity{"f"}, Value: 2},
@@ -91,6 +128,20 @@ func TestFilterScoringRules(t *testing.T) {
 			theirCountry:   "f",
 			expected: []ScoringRule{
 				{TheirCountry: []DXCCEntity{"f"}, Value: 2},
+			},
+		},
+		{
+			desc: "their country not matching the excluded country",
+			rules: []ScoringRule{
+				{TheirCountry: []DXCCEntity{"not", "f"}, Value: 2},
+				{Value: 1},
+			},
+			myContinent:    Europa,
+			myCountry:      "dl",
+			theirContinent: Europa,
+			theirCountry:   "dl",
+			expected: []ScoringRule{
+				{TheirCountry: []DXCCEntity{"not", "f"}, Value: 2},
 			},
 		},
 		{

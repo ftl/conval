@@ -3,6 +3,11 @@ This file contains the implementation of the specific things for contests announ
 */
 package conval
 
+import (
+	"fmt"
+	"strconv"
+)
+
 func init() {
 	PropertyValidators[REFDepartmentProperty] = PropertyValidatorFunc(validateREFDepartment)
 
@@ -14,5 +19,17 @@ const (
 )
 
 func validateREFDepartment(exchange string) error {
-	return nil // TODO implement
+	numeric, err := strconv.Atoi(exchange)
+	if err == nil {
+		if numeric < 0 || numeric > 95 {
+			return fmt.Errorf("%s is not a valid numeric department", exchange)
+		}
+		return nil
+	}
+	switch exchange {
+	case "2A", "2B", "FG", "FJ", "FH", "FK", "FM", "FO", "FP", "FR", "FT", "FW", "FY":
+		return nil
+	default:
+		return fmt.Errorf("%s is not a valid department", exchange)
+	}
 }

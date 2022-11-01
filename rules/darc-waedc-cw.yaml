@@ -38,28 +38,28 @@ scoring:
   - my_continent: [eu]
     their_continent: [other]
     value: 1
-  - my_continent: [af, an, as, na, oc, sa]
+  - my_continent: [not, eu]
     their_continent: [eu]
     value: 1
   qso_band_rule: once_per_band
   multis: 
   - property: wae_entity
     my_continent: [eu]
-    their_continent: [af, an, as, na, oc, sa]
+    their_continent: [not, eu]
     band_rule: once_per_band
     bands:
     - 80m
     value: 4
   - property: wae_entity
     my_continent: [eu]
-    their_continent: [af, an, as, na, oc, sa]
+    their_continent: [not, eu]
     band_rule: once_per_band
     bands:
     - 40m
     value: 3
   - property: wae_entity
     my_continent: [eu]
-    their_continent: [af, an, as, na, oc, sa]
+    their_continent: [not, eu]
     band_rule: once_per_band
     bands:
     - 20m
@@ -67,21 +67,21 @@ scoring:
     - 10m
     value: 2
   - property: wae_entity
-    my_continent: [af, an, as, na, oc, sa]
+    my_continent: [not, eu]
     their_contient: [eu]
     band_rule: once_per_band
     bands:
     - 80m
     value: 4
   - property: wae_entity
-    my_continent: [af, an, as, na, oc, sa]
+    my_continent: [not, eu]
     their_continent: [eu]
     band_rule: once_per_band
     bands:
     - 40m
     value: 3
   - property: wae_entity
-    my_continent: [af, an, as, na, oc, sa]
+    my_continent: [not, eu]
     their_continent: [eu]
     band_rule: once_per_band
     bands:

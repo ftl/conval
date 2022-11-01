@@ -93,6 +93,7 @@ const (
 
 	SameContinent  Continent = "same"
 	OtherContinent Continent = "other"
+	NotContinent   Continent = "not"
 )
 
 type DXCCEntity string
@@ -100,6 +101,7 @@ type DXCCEntity string
 const (
 	SameCountry  DXCCEntity = "same"
 	OtherCountry DXCCEntity = "other"
+	NotCountry   DXCCEntity = "not"
 )
 
 type BandRule string
