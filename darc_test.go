@@ -1,10 +1,13 @@
 package conval
 
 import (
+	"bufio"
+	"os"
 	"testing"
 
 	"github.com/ftl/hamradio/callsign"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWAECallAreaNumber(t *testing.T) {
@@ -32,6 +35,20 @@ func TestWAECallAreaNumber(t *testing.T) {
 		t.Run(tc.call, func(t *testing.T) {
 			actual := waeCallAreaNumber(callsign.MustParse(tc.call), tc.dxccEntity)
 			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
+func TestValidateSDOKs(t *testing.T) {
+	sdokFile, err := os.Open("testdata/sdok.txt")
+	require.NoError(t, err)
+	defer sdokFile.Close()
+
+	scanner := bufio.NewScanner(sdokFile)
+	for scanner.Scan() {
+		sdok := scanner.Text()
+		t.Run(sdok, func(t *testing.T) {
+			assert.NoError(t, validateWAGDOK(sdok))
 		})
 	}
 }
