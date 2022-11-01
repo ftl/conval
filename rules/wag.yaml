@@ -62,8 +62,13 @@ bandchange_rules:
   grace_period: 10m
   multiplier_exception: true
 exchange:
-- [rst]
-- [serial, nm, wag_dok]
+- their_country: [dl]
+  fields:
+  - [rst]
+  - [nm, wag_dok]
+- fields:
+  - [rst]
+  - [serial]
 scoring:
   qsos:
   - my_country: [dl]
@@ -96,32 +101,28 @@ examples:
       modes: [cw]
     qsos:
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 80m
         points: 1
         multis: 2
       - their_call: dl2abc
-        their_exchange:
-          nm: nm
+        their_exchange: [599, nm]
         their_continent: eu
         their_country: dl
         band: 80m
         points: 1
         multis: 0
       - their_call: dl3abc
-        their_exchange:
-          wag_dok: c02
+        their_exchange: [599, c02]
         their_continent: eu
         their_country: dl
         band: 80m
         points: 1
         multis: 1
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 80m
@@ -129,32 +130,28 @@ examples:
         multis: 0
         duplicate: true
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 40m
         points: 1
         multis: 2
       - their_call: f1abc
-        their_exchange:
-          serial: 001
+        their_exchange: [599, 001]
         their_continent: eu
         their_country: f
         band: 40m
         points: 3
         multis: 1
       - their_call: k1abc
-        their_exchange:
-          serial: 002
+        their_exchange: [599, 002]
         their_continent: na
         their_country: k
         band: 40m
         points: 5
         multis: 1
       - their_call: k2abc
-        their_exchange:
-          serial: 123
+        their_exchange: [599, 123]
         their_continent: na
         their_country: k
         band: 40m
@@ -170,8 +167,7 @@ examples:
       modes: [cw, ssb]
     qsos:
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 80m
@@ -179,8 +175,7 @@ examples:
         points: 1
         multis: 2
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 80m
@@ -189,8 +184,7 @@ examples:
         multis: 0
         duplicate: true
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [59, b01]
         their_continent: eu
         their_country: dl
         band: 80m
@@ -207,32 +201,28 @@ examples:
       modes: [cw]
     qsos:
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 80m
         points: 3
         multis: 1
       - their_call: dl2abc
-        their_exchange:
-          nm: nm
+        their_exchange: [599, nm]
         their_continent: eu
         their_country: dl
         band: 80m
         points: 3
         multis: 0
       - their_call: dl3abc
-        their_exchange:
-          wag_dok: c02
+        their_exchange: [599, c02]
         their_continent: eu
         their_country: dl
         band: 80m
         points: 3
         multis: 1
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 80m
@@ -240,32 +230,28 @@ examples:
         multis: 0
         duplicate: true
       - their_call: dl1abc
-        their_exchange:
-          wag_dok: b01
+        their_exchange: [599, b01]
         their_continent: eu
         their_country: dl
         band: 40m
         points: 3
         multis: 1
       - their_call: f1abc
-        their_exchange:
-          serial: 001
+        their_exchange: [599, 001]
         their_continent: eu
         their_country: f
         band: 40m
         points: 0
         multis: 0
       - their_call: k1abc
-        their_exchange:
-          serial: 002
+        their_exchange: [599, 002]
         their_continent: na
         their_country: k
         band: 40m
         points: 0
         multis: 0
       - their_call: k2abc
-        their_exchange:
-          serial: 123
+        their_exchange: [599, 123]
         their_continent: na
         their_country: k
         band: 40m

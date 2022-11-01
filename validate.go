@@ -16,10 +16,11 @@ func ValidateExamples(definition *Definition) error {
 }
 
 func validateExample(definition *Definition, example Example) error {
-	counter := NewCounter(example.Setup.ToSetup(), definition.Scoring)
+	counter := NewCounter(example.Setup.ToSetup(), definition.Exchange, definition.Scoring)
 	for i, qso := range example.QSOs {
-		// log.Printf("QSO #%d", i+1)
-		qsoScore := counter.Add(qso.ToQSO())
+		exchangeFields := counter.EffectiveExchangeFields(qso.TheirContinent, qso.TheirCountry)
+		// log.Printf("QSO #%d with exchange fields %v", i+1, exchangeFields)
+		qsoScore := counter.Add(qso.ToQSO(exchangeFields))
 		if !(qso.Score.Equal(qsoScore)) {
 			return fmt.Errorf("the score of QSO #%d is wrong, expected %d points * %d multis, duplicate should be %t, but got %d points * %d multis, duplicate is %t", i+1, qso.Score.Points, qso.Score.Multis, qso.Score.Duplicate, qsoScore.Points, qsoScore.Multis, qsoScore.Duplicate)
 		}

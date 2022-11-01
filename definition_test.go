@@ -122,15 +122,20 @@ band_change_rules:
 			desc: "three exchange field, one with two alternatives",
 			yaml: `name: Test Contest
 exchange:
-- [rst]
-- [serial]
-- [member_number, nm]`,
+- fields:
+  - [rst]
+  - [serial]
+  - [member_number, nm]`,
 			expected: Definition{
 				Name: "Test Contest",
-				Exhange: []ExchangeField{
-					{TheirRSTProperty},
-					{SerialNumberProperty},
-					{MemberNumberProperty, NoMemberProperty},
+				Exchange: []ExchangeDefinition{
+					{
+						Fields: []ExchangeField{
+							{TheirRSTProperty},
+							{SerialNumberProperty},
+							{MemberNumberProperty, NoMemberProperty},
+						},
+					},
 				},
 			},
 		},

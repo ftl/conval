@@ -9,6 +9,7 @@ import (
 
 func TestCounter_SimplestHappyPath(t *testing.T) {
 	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
 	rules := Scoring{
 		QSORules:    []ScoringRule{{Value: 1}},
 		QSOBandRule: OncePerBand,
@@ -16,7 +17,7 @@ func TestCounter_SimplestHappyPath(t *testing.T) {
 	}
 	qso := QSO{}
 
-	counter := NewCounter(setup, rules)
+	counter := NewCounter(setup, exchange, rules)
 
 	qsoScore := counter.Add(qso)
 
@@ -263,8 +264,54 @@ func TestFilterScoringRules(t *testing.T) {
 	}
 }
 
+func TestFilterExchangeFields(t *testing.T) {
+	tt := []struct {
+		desc           string
+		definitions    []ExchangeDefinition
+		myContinent    Continent
+		myCountry      DXCCEntity
+		theirContinent Continent
+		theirCountry   DXCCEntity
+		expected       []ExchangeField
+	}{
+		{
+			desc: "single definition, no constraints",
+			definitions: []ExchangeDefinition{
+				{Fields: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}}},
+			},
+			expected: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}},
+		},
+		{
+			desc: "one country-specific, one general, get specific",
+			definitions: []ExchangeDefinition{
+				{TheirCountry: []DXCCEntity{"f"}, Fields: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}}},
+				{Fields: []ExchangeField{{TheirRSTProperty}, {CQZoneProperty}}},
+			},
+			theirCountry: "f",
+			expected:     []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}},
+		},
+		{
+			desc: "one country-specific, one general, get general",
+			definitions: []ExchangeDefinition{
+				{TheirCountry: []DXCCEntity{"f"}, Fields: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}}},
+				{Fields: []ExchangeField{{TheirRSTProperty}, {CQZoneProperty}}},
+			},
+			theirCountry: "dl",
+			expected:     []ExchangeField{{TheirRSTProperty}, {CQZoneProperty}},
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			actual := filterExchangeFields(tc.definitions, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry)
+
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
 func TestCounter_Add_Points_Once(t *testing.T) {
 	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
 	rules := Scoring{
 		QSORules:    []ScoringRule{{Value: 1}},
 		QSOBandRule: Once,
@@ -281,7 +328,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{Points: 2}
 
-	counter := NewCounter(setup, rules)
+	counter := NewCounter(setup, exchange, rules)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -293,6 +340,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 
 func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
 	rules := Scoring{
 		QSORules:    []ScoringRule{{Value: 1}},
 		QSOBandRule: OncePerBand,
@@ -315,7 +363,7 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{Points: 4}
 
-	counter := NewCounter(setup, rules)
+	counter := NewCounter(setup, exchange, rules)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -327,6 +375,7 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 
 func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
 	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
 	rules := Scoring{
 		QSORules:    []ScoringRule{{Value: 1}},
 		QSOBandRule: OncePerBandAndMode,
@@ -361,7 +410,7 @@ func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{Points: 8}
 
-	counter := NewCounter(setup, rules)
+	counter := NewCounter(setup, exchange, rules)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -373,6 +422,7 @@ func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
 
 func TestCounter_Add_Multis_Once(t *testing.T) {
 	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
 	rules := Scoring{
 		MultiRules: []ScoringRule{{Property: "cq_zone", BandRule: Once, Value: 1}},
 	}
@@ -382,13 +432,13 @@ func TestCounter_Add_Multis_Once(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL2ABC"), TheirExchange: QSOExchange{"cq_zone": "14"}},
 	}
 	expectedScores := []QSOScore{
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{BandAll, ModeALL}}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{BandAll, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {BandAll, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {BandAll, ModeALL}}},
 		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{Multis: 2}
 
-	counter := NewCounter(setup, rules)
+	counter := NewCounter(setup, exchange, rules)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -400,6 +450,7 @@ func TestCounter_Add_Multis_Once(t *testing.T) {
 
 func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
 	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
 	rules := Scoring{
 		QSOBandRule: OncePerBand,
 		MultiRules:  []ScoringRule{{Property: "cq_zone", BandRule: OncePerBand, Value: 1}},
@@ -413,16 +464,16 @@ func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
 	}
 	expectedScores := []QSOScore{
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band80m, ModeALL}}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band80m, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {Band80m, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {Band80m, ModeALL}}},
 		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band40m, ModeALL}}},
-		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": BandAndMode{Band40m, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "14"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {Band40m, ModeALL}}},
+		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {Band40m, ModeALL}}},
 		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{Multis: 4}
 
-	counter := NewCounter(setup, rules)
+	counter := NewCounter(setup, exchange, rules)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)

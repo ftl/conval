@@ -13,8 +13,9 @@ type BandAndMode struct {
 }
 
 type Counter struct {
-	setup Setup
-	rules Scoring
+	setup    Setup
+	exchange []ExchangeDefinition
+	rules    Scoring
 
 	callsignsPerBandAndMode map[BandAndMode]map[callsign.Callsign]bool
 	multisPerBandAndMode    map[BandAndMode]map[Property]map[string]bool
@@ -38,10 +39,11 @@ type BandScore struct {
 	Multis int `yaml:"multis"`
 }
 
-func NewCounter(setup Setup, rules Scoring) *Counter {
+func NewCounter(setup Setup, exchange []ExchangeDefinition, rules Scoring) *Counter {
 	return &Counter{
-		setup: setup,
-		rules: rules,
+		setup:    setup,
+		exchange: exchange,
+		rules:    rules,
 
 		callsignsPerBandAndMode: make(map[BandAndMode]map[callsign.Callsign]bool),
 		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]bool),
@@ -51,6 +53,10 @@ func NewCounter(setup Setup, rules Scoring) *Counter {
 
 func (c Counter) TotalScore() BandScore {
 	return c.scorePerBand[BandAll]
+}
+
+func (c Counter) EffectiveExchangeFields(theirContinent Continent, theirCountry DXCCEntity) []ExchangeField {
+	return filterExchangeFields(c.exchange, c.setup.MyContinent, c.setup.MyCountry, theirContinent, theirCountry)
 }
 
 func (c *Counter) Add(qso QSO) QSOScore {
@@ -290,6 +296,70 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 		}
 	}
 	return result
+}
+
+func filterExchangeFields(definitions []ExchangeDefinition, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity) []ExchangeField {
+	matchingDefinitions := make([]ExchangeDefinition, 0, len(definitions))
+	definitionScores := make([]int, 0, len(matchingDefinitions))
+	maxDefinitionScore := 0
+
+	for _, definition := range definitions {
+		definitionScore := 0
+
+		if myContinent != "" && len(definition.MyContinent) > 0 {
+			if !contains(definition.MyContinent, myContinent) {
+				// log.Printf("not my continent %s %v", myContinent, definition.MyContinent)
+				continue
+			}
+			definitionScore++
+		}
+		if myCountry != "" && len(definition.MyCountry) > 0 {
+			if !contains(definition.MyCountry, myCountry) {
+				// log.Printf("not my country %s %v", myCountry, definition.MyCountry)
+				continue
+			}
+			definitionScore++
+		}
+		if theirContinent != "" && len(definition.TheirContinent) > 0 {
+			if len(definition.TheirContinent) == 1 &&
+				((definition.TheirContinent[0] == SameContinent && myContinent == theirContinent) ||
+					(definition.TheirContinent[0] == OtherContinent && myContinent != theirContinent)) {
+				definitionScore++
+			} else if contains(definition.TheirContinent, theirContinent) {
+				definitionScore++
+			} else {
+				// log.Printf("not their continent %s %v", theirContinent, definition.TheirContinent)
+				continue
+			}
+		}
+		if theirCountry != "" && len(definition.TheirCountry) > 0 {
+			if len(definition.TheirCountry) == 1 &&
+				((definition.TheirCountry[0] == SameCountry && myCountry == theirCountry) ||
+					(definition.TheirCountry[0] == OtherCountry && myCountry != theirCountry)) {
+				definitionScore++
+			} else if contains(definition.TheirCountry, theirCountry) {
+				definitionScore++
+			} else {
+				// log.Printf("not their country %s %v", theirCountry, definition.TheirCountry)
+				continue
+			}
+		}
+
+		definitionScore += definition.AdditionalWeight
+
+		matchingDefinitions = append(matchingDefinitions, definition)
+		definitionScores = append(definitionScores, definitionScore)
+		if maxDefinitionScore < definitionScore {
+			maxDefinitionScore = definitionScore
+		}
+	}
+
+	for i, definition := range matchingDefinitions {
+		if definitionScores[i] == maxDefinitionScore {
+			return definition.Fields
+		}
+	}
+	return nil
 }
 
 func contains[T comparable](elems []T, v T) bool {

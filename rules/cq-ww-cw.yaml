@@ -95,8 +95,9 @@ bands:
 - 15m
 - 10m
 exchange:
-- [rst]
-- [cq_zone]
+- fields:
+  - [rst]
+  - [cq_zone]
 scoring:
   qsos:
   - their_continent: [other]
@@ -123,7 +124,7 @@ examples:
   - setup:
       my_continent: na
       my_country: k
-      my_exchange:
+      my_exchange: 
         cq_zone: 5
       bands: [15m]
       modes: [cw]
@@ -131,8 +132,7 @@ examples:
     - their_call: k1ab
       their_continent: na
       their_country: k
-      their_exchange:
-        cq_zone: 5
+      their_exchange: [599, 5]
       band: 15m
       mode: cw
       points: 0
@@ -141,8 +141,7 @@ examples:
     - their_call: ve1abc
       their_continent: na
       their_country: ve
-      their_exchange:
-        cq_zone: 5
+      their_exchange: [599, 5]
       band: 15m
       mode: cw
       points: 2
@@ -151,8 +150,7 @@ examples:
     - their_call: ve2abc
       their_continent: na
       their_country: ve
-      their_exchange:
-        cq_zone: 5
+      their_exchange: [599, 5]
       band: 15m
       mode: cw
       points: 2
@@ -161,8 +159,7 @@ examples:
     - their_call: py1abc
       their_continent: sa
       their_country: py
-      their_exchange:
-        cq_zone: 11
+      their_exchange: [599, 11]
       band: 15m
       mode: cw
       points: 3
@@ -171,8 +168,7 @@ examples:
     - their_call: lu1abc
       their_continent: sa
       their_country: lu
-      their_exchange:
-        cq_zone: 13
+      their_exchange: [599, 13]
       band: 15m
       mode: cw
       points: 3
@@ -192,8 +188,7 @@ examples:
     - their_call: k1ab
       their_continent: na
       their_country: k
-      their_exchange:
-        cq_zone: 5
+      their_exchange: [599, 5]
       band: 15m
       mode: cw
       points: 3
@@ -202,8 +197,7 @@ examples:
     - their_call: ve1abc
       their_continent: na
       their_country: ve
-      their_exchange:
-        cq_zone: 5
+      their_exchange: [599, 5]
       band: 15m
       mode: cw
       points: 3
@@ -212,8 +206,7 @@ examples:
     - their_call: ve2abc
       their_continent: na
       their_country: ve
-      their_exchange:
-        cq_zone: 5
+      their_exchange: [599, 5]
       band: 15m
       mode: cw
       points: 3
@@ -222,8 +215,7 @@ examples:
     - their_call: py1abc
       their_continent: sa
       their_country: py
-      their_exchange:
-        cq_zone: 11
+      their_exchange: [599, 11]
       band: 15m
       mode: cw
       points: 0
@@ -232,8 +224,7 @@ examples:
     - their_call: lu1abc
       their_continent: sa
       their_country: lu
-      their_exchange:
-        cq_zone: 13
+      their_exchange: [599, 13]
       band: 15m
       mode: cw
       points: 1

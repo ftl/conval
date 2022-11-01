@@ -31,8 +31,13 @@ bands:
 - 10m
 band_change_rules:
 exchange:
-- [rst]
-- [serial, ref_department]
+- their_country: [f]
+  fields:
+  - [rst]
+  - [ref_department]
+- fields:
+  - [rst]
+  - [serial]
 scoring:
   qsos:
   - their_country: [f]
@@ -80,8 +85,7 @@ examples:
       modes: [cw]
     qsos:
     - their_call: f1abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_country: f
       band: 80m
@@ -89,8 +93,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f2abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_country: f
       band: 80m
@@ -98,8 +101,7 @@ examples:
       multis: 0
       duplicate: false
     - their_call: tm1abc
-      their_exchange:
-        ref_department: 97
+      their_exchange: [599, 97]
       their_continent: af
       their_country: f
       band: 80m
@@ -107,8 +109,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f1abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -116,8 +117,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f4abc/mm
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -134,8 +134,7 @@ examples:
       modes: [cw]
     qsos:
     - their_call: f1abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_country: f
       band: 80m
@@ -143,8 +142,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f2abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_country: f
       band: 80m
@@ -152,8 +150,7 @@ examples:
       multis: 0
       duplicate: false
     - their_call: tm1abc
-      their_exchange:
-        ref_department: 97
+      their_exchange: [599, 97]
       their_continent: af
       their_country: f
       band: 80m
@@ -161,8 +158,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f1abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -170,8 +166,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f4abc/mm
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -188,8 +183,7 @@ examples:
       modes: [cw]
     qsos:
     - their_call: dl1abc
-      their_exchange:
-        serial: 1
+      their_exchange: [599, 001]
       their_continent: eu
       their_country: dl
       band: 80m
@@ -197,8 +191,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f2abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_country: f
       band: 80m
@@ -206,8 +199,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: tm1abc
-      their_exchange:
-        ref_department: 97
+      their_exchange: [599, 97]
       their_continent: af
       their_country: f
       band: 80m
@@ -215,8 +207,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f1abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -224,8 +215,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f4abc/mm
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -242,8 +232,7 @@ examples:
       modes: [cw]
     qsos:
     - their_call: dl1abc
-      their_exchange:
-        serial: 1
+      their_exchange: [599, 001]
       their_continent: eu
       their_country: dl
       band: 80m
@@ -251,8 +240,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f2abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_country: f
       band: 80m
@@ -260,8 +248,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: tm1abc
-      their_exchange:
-        ref_department: 97
+      their_exchange: [599, 97]
       their_continent: af
       their_country: f
       band: 80m
@@ -269,8 +256,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f1abc
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m
@@ -278,8 +264,7 @@ examples:
       multis: 1
       duplicate: false
     - their_call: f4abc/mm
-      their_exchange:
-        ref_department: 1
+      their_exchange: [599, 1]
       their_continent: eu
       their_countra: f
       band: 40m

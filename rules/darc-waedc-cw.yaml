@@ -30,8 +30,9 @@ bands:
 - 15m
 - 10m
 exchange:
-- [rst]
-- [serial]
+- fields:
+  - [rst]
+  - [serial]
 scoring:
   qsos:
   - my_continent: [eu]

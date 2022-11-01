@@ -21,7 +21,7 @@ type Definition struct {
 	Modes           []Mode                `yaml:"modes"`
 	Bands           []ContestBand         `yaml:"bands"`
 	BandChangeRules []BandChangeRule      `yaml:"band_change_rules"`
-	Exhange         []ExchangeField       `yaml:"exchange"`
+	Exchange        []ExchangeDefinition  `yaml:"exchange"`
 	Scoring         Scoring               `yaml:"scoring"`
 	Examples        []Example             `yaml:"examples"`
 }
@@ -45,6 +45,16 @@ type Category struct {
 	Bands    BandMode     `yaml:"bands"`
 	Modes    []Mode       `yaml:"modes"`
 	Assisted bool         `yaml:"assisted"`
+}
+
+type ExchangeDefinition struct {
+	MyContinent           []Continent     `yaml:"my_continent"`
+	MyCountry             []DXCCEntity    `yaml:"my_country"`
+	TheirContinent        []Continent     `yaml:"their_continent"`
+	TheirCountry          []DXCCEntity    `yaml:"their_country"`
+	TheirWorkingCondition string          `yaml:"their_working_condition"`
+	AdditionalWeight      int             `yaml:"additional_weight"`
+	Fields                []ExchangeField `yaml:"fields"`
 }
 
 type ExchangeField []Property
@@ -115,12 +125,12 @@ type QSOExample struct {
 	Mode      Mode        `yaml:"mode"`
 
 	MyExchange    QSOExchange `yaml:"my_exchange"`
-	TheirExchange QSOExchange `yaml:"their_exchange"`
+	TheirExchange []string    `yaml:"their_exchange"`
 
 	Score QSOScore `yaml:",inline"`
 }
 
-func (q QSOExample) ToQSO() QSO {
+func (q QSOExample) ToQSO(fields []ExchangeField) QSO {
 	return QSO{
 		TheirCall:      callsign.MustParse(q.TheirCall),
 		TheirContinent: q.TheirContinent,
@@ -129,7 +139,7 @@ func (q QSOExample) ToQSO() QSO {
 		Band:           q.Band,
 		Mode:           q.Mode,
 		MyExchange:     q.MyExchange,
-		TheirExchange:  q.TheirExchange,
+		TheirExchange:  ParseExchange(fields, q.TheirExchange),
 	}
 }
 
