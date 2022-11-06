@@ -13,14 +13,14 @@ import (
 var definitions embed.FS
 
 func IncludedDefinition(name string) (*Definition, error) {
-	filename := fmt.Sprintf("rules/%s.yaml", strings.ToLower(name))
+	filename := fmt.Sprintf("rules/%s.yaml", strings.ToLower(strings.TrimSpace(name)))
 	f, err := definitions.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	return LoadYAML(f)
+	return LoadDefinitionYAML(f)
 }
 
 func IncludedDefinitionNames() ([]string, error) {

@@ -36,7 +36,7 @@ func runValidate(cmd *cobra.Command, args []string) {
 	}
 	defer file.Close()
 
-	definition, err := conval.LoadYAML(file)
+	definition, err := conval.LoadDefinitionYAML(file)
 	if err != nil {
 		log.Fatal(err)
 	}

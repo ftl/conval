@@ -167,7 +167,7 @@ func (q QSOExample) ToQSO(fields []ExchangeField) QSO {
 	}
 }
 
-func LoadYAML(r io.Reader) (*Definition, error) {
+func LoadDefinitionYAML(r io.Reader) (*Definition, error) {
 	decoder := yaml.NewDecoder(r)
 
 	var result Definition
@@ -176,5 +176,18 @@ func LoadYAML(r io.Reader) (*Definition, error) {
 		return nil, err
 	}
 
+	return &result, nil
+}
+
+func LoadSetupYAML(r io.Reader) (*Setup, error) {
+	decoder := yaml.NewDecoder(r)
+
+	var setup SetupExample
+	err := decoder.Decode(&setup)
+	if err != nil {
+		return nil, err
+	}
+
+	result := setup.ToSetup()
 	return &result, nil
 }

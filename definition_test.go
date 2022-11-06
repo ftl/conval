@@ -188,7 +188,7 @@ scoring:
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
 			buffer := bytes.NewBufferString(tc.yaml)
-			actual, err := LoadYAML(buffer)
+			actual, err := LoadDefinitionYAML(buffer)
 			assert.NoError(t, err)
 
 			assert.Equal(t, tc.expected, *actual)
