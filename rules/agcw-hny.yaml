@@ -6,19 +6,19 @@ durations:
 breaks:
 categories:
 - name: Class 1, High Power
-  operator: single
+  operator_mode: single
   power: high
   bands: all
 - name: Class 2, Low Power
-  operator: single
+  operator_mode: single
   power: low
   bands: all
 - name: Class 3, QRP
-  operator: single
+  operator_mode: single
   power: qrp
   bands: all
 - name: Class 4, SWL
-  operator: single
+  operator_mode: single
   bands: all
 overlays:
 modes:

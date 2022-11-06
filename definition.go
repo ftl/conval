@@ -5,12 +5,18 @@ import (
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
+	"github.com/ftl/hamradio/locator"
 	"gopkg.in/yaml.v3"
 )
 
+// A ContestIdentifier aka. Cabrillo name is a unique identifier for a contest.
+// See https://www.contestcalendar.com/cabnames.php
+type ContestIdentifier string
+
+// A Definition of a contest.
 type Definition struct {
 	Name            string                `yaml:"name"`
-	Identifier      string                `yaml:"identifier"` // see https://www.contestcalendar.com/cabnames.php
+	Identifier      ContestIdentifier     `yaml:"identifier"`
 	OfficialRules   string                `yaml:"official_rules"`
 	UploadURL       string                `yaml:"upload_url"`
 	UploadFormat    string                `yaml:"upload_format"`
@@ -89,10 +95,14 @@ type SetupExample struct {
 	MyContinent Continent  `yaml:"my_continent"`
 	MyCountry   DXCCEntity `yaml:"my_country"`
 
-	Operator OperatorMode  `yaml:"operator"`
-	Overlay  Overlay       `yaml:"overlay"`
-	Bands    []ContestBand `yaml:"bands"`
-	Modes    []Mode        `yaml:"modes"`
+	GridLocator string   `yaml:"grid_locator"`
+	Operators   []string `yaml:"operators"`
+
+	OperatorMode OperatorMode  `yaml:"operator_mode"`
+	Overlay      Overlay       `yaml:"overlay"`
+	Power        PowerMode     `yaml:"power"`
+	Bands        []ContestBand `yaml:"bands"`
+	Modes        []Mode        `yaml:"modes"`
 
 	MyExchange QSOExchange `yaml:"my_exchange"`
 }
@@ -102,16 +112,30 @@ func (s SetupExample) ToSetup() Setup {
 	if err != nil {
 		myCall = callsign.Callsign{}
 	}
+	gridLocator, err := locator.Parse(s.GridLocator)
+	if err != nil {
+		gridLocator = locator.Locator{}
+	}
+	operators := make([]callsign.Callsign, 0, len(s.Operators))
+	for _, operator := range s.Operators {
+		operatorCall, err := callsign.Parse(operator)
+		if err == nil {
+			operators = append(operators, operatorCall)
+		}
+	}
 
 	return Setup{
-		MyCall:      myCall,
-		MyContinent: s.MyContinent,
-		MyCountry:   s.MyCountry,
-		Operator:    s.Operator,
-		Overlay:     s.Overlay,
-		Bands:       s.Bands,
-		Modes:       s.Modes,
-		MyExchange:  s.MyExchange,
+		MyCall:       myCall,
+		MyContinent:  s.MyContinent,
+		MyCountry:    s.MyCountry,
+		GridLocator:  gridLocator,
+		Operators:    operators,
+		OperatorMode: s.OperatorMode,
+		Overlay:      s.Overlay,
+		Power:        s.Power,
+		Bands:        s.Bands,
+		Modes:        s.Modes,
+		MyExchange:   s.MyExchange,
 	}
 }
 

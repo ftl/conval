@@ -2,52 +2,52 @@ identifier: CQ-WPX-CW
 name: CQ World Wide WPX Contest CW
 official_rules: https://www.cqwpx.com/rules.htm
 durations:
-- operator: single
+- operator_mode: single
   overlay: classic
   duration: 24h
-- operator: single
+- operator_mode: single
   duration: 36h
-- operator: multi
+- operator_mode: multi
   duration: 48h
 breaks:
-- operator: single
+- operator_mode: single
   duration: 1h
 categories:
 - name: Single Operator High Power All Band
-  operator: single
+  operator_mode: single
   power: high
   bands: all
 - name: Single Operator High Power Single Band
-  operator: single
+  operator_mode: single
   power: high
   bands: single
 - name: Single Operator Low Power All Band
-  operator: single
+  operator_mode: single
   power: low
   bands: all
 - name: Single Operator Low Power Single Band
-  operator: single
+  operator_mode: single
   power: low
   bands: single
 - name: Single Operator QRP All Band
-  operator: single
+  operator_mode: single
   power: qrp
   bands: all
 - name: Single Operator QRP Single Band
-  operator: single
+  operator_mode: single
   power: qrp
   bands: single
 - name: MULTI-ONE
-  operator: multi
+  operator_mode: multi
   tx: one
 - name: MULTI-TWO
-  operator: multi
+  operator_mode: multi
   tx: two
 - name: MULTI-UNLIMITED
-  operator: multi
+  operator_mode: multi
   tx: multi
 - name: MULTI-DISTRIBUTED
-  operator: multi
+  operator_mode: multi
   tx: distributed
 - name: Checklog
 overlays:

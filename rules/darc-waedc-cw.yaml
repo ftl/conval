@@ -2,23 +2,23 @@ identifier: DARC-WAEDC-CW
 name: Worked All Europe DX Contest
 official_rules: https://www.darc.de/der-club/referate/conteste/wae-dx-contest/en/wae-rules/
 durations:
-- operator: single
+- operator_mode: single
   duration: 36h
-- operator: multi
+- operator_mode: multi
   duration: 48h
 breaks:
 - duration: 1h
 categories:
 - name: Single-Op High
-  operator: single
+  operator_mode: single
   power: high
   bands: all
 - name: Single-Op Low
-  operator: single
+  operator_mode: single
   power: low
   bands: all
 - name: Multi-Op
-  operator: multi
+  operator_mode: multi
   bands: all
 overlays:
 modes:

@@ -2,82 +2,82 @@ identifier: CQ-WW-CW
 name: CQ World Wide DX Contest CW
 official_rules: https://www.cqww.com/rules.htm
 durations:
-- operator: single
+- operator_mode: single
   overlay: classic
   duration: 24h
 - duration: 48h
 breaks:
-- operator: single
+- operator_mode: single
   overlay: classic
   duration: 1h
 categories:
 - name: Single Operator High Power All Band
-  operator: single
+  operator_mode: single
   power: high
   bands: all
 - name: Single Operator High Power Single Band
-  operator: single
+  operator_mode: single
   power: high
   bands: single
 - name: Single Operator Low Power All Band
-  operator: single
+  operator_mode: single
   power: low
   bands: all
 - name: Single Operator Low Power Single Band
-  operator: single
+  operator_mode: single
   power: low
   bands: single
 - name: Single Operator QRP All Band
-  operator: single
+  operator_mode: single
   power: qrp
   bands: all
 - name: Single Operator QRP Single Band
-  operator: single
+  operator_mode: single
   power: qrp
   bands: single
 - name: Single Operator High Power All Band Assisted
-  operator: single
+  operator_mode: single
   power: high
   bands: all
   assisted: true
 - name: Single Operator High Power Single Band Assisted
-  operator: single
+  operator_mode: single
   power: high
   bands: single
   assisted: true
 - name: Single Operator Low Power All Band Assisted
-  operator: single
+  operator_mode: single
   power: low
   bands: all
   assisted: true
 - name: Single Operator Low Power Single band Assisted
-  operator: single
+  operator_mode: single
   power: low
   bands: single
   assisted: true
 - name: Single Operator QRP All Band Assisted
-  operator: single
+  operator_mode: single
   power: qrp
   bands: all
   assisted: true
 - name: Single Operator QRP Single Band Assisted
-  operator: single
+  operator_mode: single
   power: qrp
   bands: single
   assisted: true
 - name: Multi-Single High Power
-  operator: multi
+  operator_mode: multi
   tx: one
   power: high
 - name: Multi-Single Low Power
-  operator: multi
+  operator_mode: multi
   tx: one
   power: high
 - name: Multi-Two
-  operator: multi
+  operator_mode: multi
   tx: two
 - name: Multi-Multi
-  operator: multi
+  operator_mode: multi
   tx: multi
 - name: Checklog
 overlays:

@@ -8,15 +8,15 @@ durations:
 breaks:
 categories:
 - name: Single Op All Band
-  operator: single
+  operator_mode: single
   bands: all
   modes: [all]
 - name: Single Op Single Band
-  operator: single
+  operator_mode: single
   bands: single
   modes: [all]
 - name: Multi-Single
-  operator: multi
+  operator_mode: multi
   bands: all
   modes: [all]
 - name: SWL

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
+	"github.com/ftl/hamradio/locator"
 )
 
 type OperatorMode string
@@ -182,15 +183,19 @@ type Setup struct {
 	MyContinent Continent
 	MyCountry   DXCCEntity
 
-	Operator OperatorMode
-	Overlay  Overlay
-	Bands    []ContestBand
-	Modes    []Mode
+	GridLocator locator.Locator
+	Operators   []callsign.Callsign
+
+	OperatorMode OperatorMode
+	Overlay      Overlay
+	Power        PowerMode
+	Bands        []ContestBand
+	Modes        []Mode
 
 	MyExchange QSOExchange
 }
 
 type Constraint struct {
-	Operator OperatorMode `yaml:"operator"`
-	Overlay  Overlay      `yaml:"overlay"`
+	OperatorMode OperatorMode `yaml:"operator_mode"`
+	Overlay      Overlay      `yaml:"overlay"`
 }

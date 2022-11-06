@@ -8,42 +8,42 @@ durations:
 breaks:
 categories:
 - name: Single operator, CW, low power
-  operator: single
+  operator_mode: single
   power: low
   bands: all
   modes: [cw]
 - name: Single operator, CW, high power
-  operator: single
+  operator_mode: single
   power: high
   bands: all
   modes: [cw]
 - name: Single operator, SSB, low power
-  operator: single
+  operator_mode: single
   power: low
   bands: all
   modes: [ssb]
 - name: Single operator, SSB, high power
-  operator: single
+  operator_mode: single
   power: high
   bands: all
   modes: [ssb]
 - name: Single operator, mixed, low power
-  operator: single
+  operator_mode: single
   power: low
   bands: all
   modes: [all]
 - name: Single operator, mixed, high power
-  operator: single
+  operator_mode: single
   power: high
   bands: all
   modes: [all]
 - name: Single operator, mixed, QRP
-  operator: single
+  operator_mode: single
   power: qrp
   bands: all
   modes: [all]
 - name: Multi operator
-  operator: multi
+  operator_mode: multi
   bands: all
   modes: [all]
 - name: SWL, single operator
@@ -58,7 +58,7 @@ bands:
 - 15m
 - 10m
 bandchange_rules:
-- operator: multi
+- operator_mode: multi
   grace_period: 10m
   multiplier_exception: true
 exchange:

@@ -30,12 +30,12 @@ official_rules: https://github.com/ftl/conval/testdata`,
 			yaml: `name: Test Contest
 durations:
 - duration: 24h
-  operator: single
+  operator_mode: single
 - duration: 48h`,
 			expected: Definition{
 				Name: "Test Contest",
 				Durations: []ConstrainedDuration{
-					{Constraint: Constraint{Operator: SingleOperator}, Duration: 24 * time.Hour},
+					{Constraint: Constraint{OperatorMode: SingleOperator}, Duration: 24 * time.Hour},
 					{Duration: 48 * time.Hour},
 				},
 			},
@@ -44,13 +44,13 @@ durations:
 			desc: "constrained break",
 			yaml: `name: Test Contest
 breaks:
-- operator: single
+- operator_mode: single
   overlay: classic
   duration: 1h`,
 			expected: Definition{
 				Name: "Test Contest",
 				Breaks: []ConstrainedDuration{
-					{Constraint: Constraint{Operator: SingleOperator, Overlay: ClassicOverlay}, Duration: 1 * time.Hour},
+					{Constraint: Constraint{OperatorMode: SingleOperator, Overlay: ClassicOverlay}, Duration: 1 * time.Hour},
 				},
 			},
 		},
@@ -104,7 +104,7 @@ bands:
 			desc: "multiple band change rules",
 			yaml: `name: Test Contest
 band_change_rules:
-- operator: single
+- operator_mode: single
   overlay: classic
   grace_period: 10m
   multiplier_exception: false
@@ -113,7 +113,7 @@ band_change_rules:
 			expected: Definition{
 				Name: "Test Contest",
 				BandChangeRules: []BandChangeRule{
-					{Constraint: Constraint{Operator: SingleOperator, Overlay: ClassicOverlay}, GracePeriod: 10 * time.Minute},
+					{Constraint: Constraint{OperatorMode: SingleOperator, Overlay: ClassicOverlay}, GracePeriod: 10 * time.Minute},
 					{GracePeriod: 10 * time.Minute, MultiplierException: true},
 				},
 			},
