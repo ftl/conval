@@ -12,26 +12,36 @@ import (
 	"github.com/ftl/hamradio/locator"
 )
 
-type Logfile struct {
-	Callsign     callsign.Callsign
-	Contest      ContestIdentifier
-	Category     Category
-	Certificate  bool
-	ClaimedScore int
-	Club         string
-	CreatedBy    string
-	Email        string
-	GridLocator  locator.Locator
-	Location     string
-	Name         string
-	Address      Address
-	Operators    []callsign.Callsign
-	Host         callsign.Callsign
-	Offtime      Offtime
-	Soapbox      string
-	Debug        int
-	Custom       map[Tag]string
-	QSOData      []QSO
+func NewLog() *Log {
+	return &Log{
+		Custom:      make(map[Tag]string),
+		QSOData:     make([]QSO, 0, 2000),
+		IgnoredQSOs: make([]QSO, 0, 2000),
+	}
+}
+
+type Log struct {
+	CabrilloVersion string
+	Callsign        callsign.Callsign
+	Contest         ContestIdentifier
+	Category        Category
+	Certificate     bool
+	ClaimedScore    int
+	Club            string
+	CreatedBy       string
+	Email           string
+	GridLocator     locator.Locator
+	Location        string
+	Name            string
+	Address         Address
+	Operators       []callsign.Callsign
+	Host            callsign.Callsign
+	Offtime         Offtime
+	Soapbox         string
+	Debug           int
+	Custom          map[Tag]string
+	QSOData         []QSO
+	IgnoredQSOs     []QSO
 }
 
 type Tag string
@@ -223,7 +233,7 @@ type Address struct {
 	Text          string
 	City          string
 	StateProvince string
-	PostalCode    string
+	Postalcode    string
 	Country       string
 }
 
