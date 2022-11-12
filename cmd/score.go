@@ -140,9 +140,10 @@ type prefixDatabase interface {
 }
 
 func toConvalContinentAndCountry(entities []dxcc.Prefix, found bool) (conval.Continent, conval.DXCCEntity) {
-	if !found || len(entities) != 1 {
+	if !found || len(entities) == 0 {
 		return "", ""
 	}
+
 	return conval.Continent(strings.ToLower(entities[0].Continent)), conval.DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix))
 }
 
