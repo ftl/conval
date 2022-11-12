@@ -34,7 +34,15 @@ func getWAGDistrict(qso QSO) string {
 	if len(dok) == 0 {
 		return ""
 	}
-	return string(dok[0])
+	isLetter := func(b byte) bool {
+		return b >= 'A' && b <= 'Z'
+	}
+	for i := range dok {
+		if isLetter(dok[i]) {
+			return string(dok[i])
+		}
+	}
+	return ""
 }
 
 func getWAEEntity(qso QSO) string {

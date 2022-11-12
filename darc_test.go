@@ -91,3 +91,26 @@ func TestParseWAGExchange(t *testing.T) {
 		})
 	}
 }
+
+func TestWAGDistrictProperty(t *testing.T) {
+	tt := []struct {
+		value    string
+		expected string
+	}{
+		{"", ""},
+		{"b01", "B"},
+		{"70darc", "D"},
+	}
+	for _, tc := range tt {
+		t.Run(tc.value, func(t *testing.T) {
+			qso := QSO{
+				TheirExchange: QSOExchange{
+					WAGDOKProperty: tc.value,
+				},
+			}
+			actual := getWAGDistrict(qso)
+
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
