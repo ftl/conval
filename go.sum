@@ -2,8 +2,8 @@ github.com/cpuguy83/go-md2man/v2 v2.0.1/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46t
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/ftl/hamradio v0.2.1 h1:EraJGw5WCb8LPyWlBPXIzSfFL0oUe+gA8i7LL04Jt8U=
-github.com/ftl/hamradio v0.2.1/go.mod h1:FOZkf8liaM/H8F8Vyp36EN9iVzikKpaOJ5AqrW77cEo=
+github.com/ftl/hamradio v0.2.2 h1:XOs7XPiRgsZIRFqypf9N/p2wj9SxdBBkBqGZRRud7Rc=
+github.com/ftl/hamradio v0.2.2/go.mod h1:FOZkf8liaM/H8F8Vyp36EN9iVzikKpaOJ5AqrW77cEo=
 github.com/ftl/localcopy v0.0.0-20190616142648-8915fb81f0d9 h1:ORI3EUKpLTsfA372C6xpuZFDXw+ckmCzLaCcJvakG24=
 github.com/ftl/localcopy v0.0.0-20190616142648-8915fb81f0d9/go.mod h1:4sZLCxjgn++exy5u0muVzlvnahfanPuiHLQo0GJQnPA=
 github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NHg9XEKhtSvM=

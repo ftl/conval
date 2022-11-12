@@ -2,8 +2,10 @@ module github.com/ftl/conval
 
 go 1.19
 
+// replace github.com/ftl/hamradio => ../hamradio
+
 require (
-	github.com/ftl/hamradio v0.2.1
+	github.com/ftl/hamradio v0.2.2
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.8.0
 	gopkg.in/yaml.v3 v3.0.1
