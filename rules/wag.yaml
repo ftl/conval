@@ -91,6 +91,7 @@ scoring:
     band_rule: once_per_band
     value: 1
   - property: wag_district
+    my_country: [not, dl]
     band_rule: once_per_band
     value: 1
 examples:
@@ -106,7 +107,7 @@ examples:
         their_country: dl
         band: 80m
         points: 1
-        multis: 2
+        multis: 1
       - their_call: dl2abc
         their_exchange: [599, nm]
         their_continent: eu
@@ -120,7 +121,7 @@ examples:
         their_country: dl
         band: 80m
         points: 1
-        multis: 1
+        multis: 0
       - their_call: dl1abc
         their_exchange: [599, b01]
         their_continent: eu
@@ -135,7 +136,7 @@ examples:
         their_country: dl
         band: 40m
         points: 1
-        multis: 2
+        multis: 1
       - their_call: f1abc
         their_exchange: [599, 001]
         their_continent: eu
@@ -159,7 +160,7 @@ examples:
         multis: 0
     score:
       points: 17
-      multis: 7
+      multis: 4
   - setup:
       my_continent: eu
       my_country: dl
@@ -173,7 +174,7 @@ examples:
         band: 80m
         mode: cw
         points: 1
-        multis: 2
+        multis: 1
       - their_call: dl1abc
         their_exchange: [599, b01]
         their_continent: eu
@@ -193,7 +194,7 @@ examples:
         multis: 0
     score:
       points: 2
-      multis: 2
+      multis: 1
   - setup:
       my_continent: eu
       my_country: f
