@@ -139,7 +139,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		if allEqual {
 			result.Points = value
 		} else {
-			log.Printf("inconsistent QSO rules: %+v", qsoRules)
+			log.Printf("inconsistent QSO rules for QSO with %s (%s, %s) at %v: %+v", qso.TheirCall, qso.TheirContinent, qso.TheirCountry, qso.Timestamp, qsoRules)
 		}
 	}
 
@@ -165,6 +165,9 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 		// get the property value
 		value := getProperty(rule.Property)
+		if value == "" {
+			continue
+		}
 
 		// apply the band rule
 		bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, rule.BandRule)
