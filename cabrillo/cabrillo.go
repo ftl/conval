@@ -140,7 +140,7 @@ const (
 	Band122G       CategoryBand = "122G"
 	Band134G       CategoryBand = "134G"
 	Band241G       CategoryBand = "241G"
-	BandLight      CategoryBand = "Light"
+	BandLight      CategoryBand = "LIGHT"
 	BandVHF_3Band  CategoryBand = "VHF-3-BAND"
 	BandVHF_FMOnly CategoryBand = "VHF-FM-ONLY"
 )
@@ -270,6 +270,36 @@ func (f QSOFrequency) ToKilohertz() int {
 		return 0
 	}
 	return kHz
+}
+
+func (f QSOFrequency) ToBand() CategoryBand {
+	if f.IsFrequency() {
+		kHz := f.ToKilohertz()
+		switch {
+		case kHz < 3500:
+			return Band160m
+		case kHz < 7000:
+			return Band80m
+		case kHz < 14000:
+			return Band40m
+		case kHz < 21000:
+			return Band20m
+		case kHz < 28000:
+			return Band15m
+		default:
+			return Band10m
+		}
+	}
+	switch f {
+	case "50":
+		return Band6m
+	case "70":
+		return Band4m
+	case "144":
+		return Band2m
+	default:
+		return CategoryBand(strings.ToUpper(string(f)))
+	}
 }
 
 type QSOMode string

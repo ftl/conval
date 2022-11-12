@@ -8,7 +8,7 @@ import (
 
 type Logfile interface {
 	Identifier() conval.ContestIdentifier
-	Setup() conval.Setup
+	Setup() *conval.Setup
 	QSOs() []conval.QSO
 }
 

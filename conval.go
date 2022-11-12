@@ -65,6 +65,7 @@ const (
 
 	ModeCW      Mode = "cw"
 	ModeSSB     Mode = "ssb"
+	ModeFM      Mode = "fm"
 	ModeRTTY    Mode = "rtty"
 	ModeDigital Mode = "digital"
 )
@@ -116,6 +117,7 @@ const (
 type Overlay string
 
 const (
+	NoOverlay                Overlay = ""
 	ClassicOverlay           Overlay = "classic"
 	ThreeBandAndWiresOverlay Overlay = "tb_wires"
 	RookieOverlay            Overlay = "rookie"
