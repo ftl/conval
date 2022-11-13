@@ -17,6 +17,7 @@ var scoreFlags = struct {
 	setupFilename      string
 	definitionFilename string
 	cabrilloName       string
+	verbose            bool
 }{}
 
 var scoreCmd = &cobra.Command{
@@ -29,6 +30,7 @@ func init() {
 	scoreCmd.Flags().StringVar(&scoreFlags.setupFilename, "setup", "", "the setup file")
 	scoreCmd.Flags().StringVar(&scoreFlags.definitionFilename, "definition", "", "the contest definition file")
 	scoreCmd.Flags().StringVar(&scoreFlags.cabrilloName, "cabrillo", "", "the cabrillo name (see https://www.contestcalendar.com/cabnames.php)")
+	scoreCmd.Flags().BoolVar(&scoreFlags.verbose, "verbose", false, "enable verbose output")
 
 	rootCmd.AddCommand(scoreCmd)
 }
@@ -104,7 +106,12 @@ func runScore(cmd *cobra.Command, args []string) {
 			counter.Add(qso)
 		}
 		totalScore := counter.TotalScore()
-		log.Printf("QSOs: %d Score: %d * %d = %d", len(qsos), totalScore.Multis, totalScore.Points, totalScore.Multis*totalScore.Points)
+
+		if scoreFlags.verbose {
+			fmt.Printf("QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", len(qsos), totalScore.Multis, totalScore.Points, totalScore.Multis*totalScore.Points)
+		} else {
+			fmt.Printf("%d\n", totalScore.Multis*totalScore.Points)
+		}
 	}
 }
 
