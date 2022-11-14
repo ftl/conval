@@ -2,6 +2,7 @@ package conval
 
 import (
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/ftl/hamradio/callsign"
@@ -23,11 +24,11 @@ type Counter struct {
 }
 
 type QSOScore struct {
-	Points           int                      `yaml:"points"`
-	Multis           int                      `yaml:"multis"`
-	MultiValues      map[Property]string      `yaml:"-"`
-	MultiBandAndMode map[Property]BandAndMode `yaml:"-"`
-	Duplicate        bool                     `yaml:"duplicate"`
+	Points           int                      `yaml:"points" json:"points"`
+	Multis           int                      `yaml:"multis" json:"multis"`
+	MultiValues      map[Property]string      `yaml:"-" json:"-"`
+	MultiBandAndMode map[Property]BandAndMode `yaml:"-" json:"-"`
+	Duplicate        bool                     `yaml:"duplicate" json:"duplicate"`
 }
 
 func (s QSOScore) Equal(other QSOScore) bool {
@@ -35,8 +36,13 @@ func (s QSOScore) Equal(other QSOScore) bool {
 }
 
 type BandScore struct {
-	Points int `yaml:"points"`
-	Multis int `yaml:"multis"`
+	QSOs   int `yaml:"qsos" json:"qsos"`
+	Points int `yaml:"points" json:"points"`
+	Multis int `yaml:"multis" json:"multis"`
+}
+
+func (s BandScore) Total() int {
+	return s.Points * s.Multis
 }
 
 func NewCounter(setup Setup, exchange []ExchangeDefinition, rules Scoring) *Counter {
@@ -49,6 +55,54 @@ func NewCounter(setup Setup, exchange []ExchangeDefinition, rules Scoring) *Coun
 		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]bool),
 		scorePerBand:            make(map[ContestBand]BandScore),
 	}
+}
+
+func (c Counter) UsedBands() []ContestBand {
+	result := make([]ContestBand, 0, len(c.scorePerBand)-1)
+	for band := range c.scorePerBand {
+		if band == BandAll {
+			continue
+		}
+		result = append(result, band)
+	}
+	return result
+}
+
+func (c Counter) MultiProperties() []Property {
+	properties := make(map[Property]bool)
+	for _, multisPerProperty := range c.multisPerBandAndMode {
+		for property := range multisPerProperty {
+			properties[property] = true
+		}
+	}
+	result := make([]Property, 0, len(properties))
+	for property := range properties {
+		result = append(result, property)
+	}
+	return result
+}
+
+func (c Counter) MultisPerBand(band ContestBand, property Property) []string {
+	multis := make(map[string]bool)
+	for bam, multisPerProperty := range c.multisPerBandAndMode {
+		if bam.Band != band {
+			continue
+		}
+		for multi := range multisPerProperty[property] {
+			multis[multi] = true
+		}
+	}
+
+	result := make([]string, 0, len(multis))
+	for multi := range multis {
+		result = append(result, multi)
+	}
+	sort.Strings(result)
+	return result
+}
+
+func (c Counter) BandScore(band ContestBand) BandScore {
+	return c.scorePerBand[band]
 }
 
 func (c Counter) TotalScore() BandScore {
@@ -92,17 +146,21 @@ func (c *Counter) Add(qso QSO) QSOScore {
 	}
 
 	// update the scores
+	totalScore := c.scorePerBand[BandAll]
+	scorePerBand := c.scorePerBand[qso.Band]
+
+	totalScore.QSOs += 1
+	scorePerBand.QSOs += 1
 	if !result.Duplicate {
-		totalScore := c.scorePerBand[BandAll]
 		totalScore.Points += result.Points
 		totalScore.Multis += result.Multis
-		c.scorePerBand[BandAll] = totalScore
 
-		scorePerBand := c.scorePerBand[qso.Band]
 		scorePerBand.Points += result.Points
 		scorePerBand.Multis += result.Multis
-		c.scorePerBand[qso.Band] = scorePerBand
 	}
+
+	c.scorePerBand[BandAll] = totalScore
+	c.scorePerBand[qso.Band] = scorePerBand
 
 	return result
 }

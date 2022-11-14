@@ -105,12 +105,30 @@ func runScore(cmd *cobra.Command, args []string) {
 		for _, qso := range qsos {
 			counter.Add(qso)
 		}
-		totalScore := counter.TotalScore()
 
+		// print the total score
+		totalScore := counter.TotalScore()
 		if scoreFlags.verbose {
-			fmt.Printf("QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", len(qsos), totalScore.Multis, totalScore.Points, totalScore.Multis*totalScore.Points)
+			fmt.Printf("QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", totalScore.QSOs, totalScore.Multis, totalScore.Points, totalScore.Total())
 		} else {
 			fmt.Printf("%d\n", totalScore.Multis*totalScore.Points)
+		}
+
+		// print the multis per band
+		if scoreFlags.verbose {
+			properties := counter.MultiProperties()
+			bands := append(counter.UsedBands(), conval.BandAll)
+			for _, property := range properties {
+				fmt.Printf("%s:\n", property)
+				for _, band := range bands {
+					multis := counter.MultisPerBand(band, property)
+					if len(multis) == 0 {
+						continue
+					}
+					fmt.Printf("% 5s (% 3d): %s\n", band, len(multis), strings.ToUpper(strings.Join(multis, ", ")))
+				}
+				fmt.Printf("\n")
+			}
 		}
 	}
 }
