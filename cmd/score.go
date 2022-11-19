@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/ftl/hamradio/dxcc"
@@ -15,7 +15,7 @@ import (
 var scoreFlags = struct {
 	setupFilename      string
 	definitionFilename string
-	verbose            bool
+	outputFormat       string
 }{}
 
 var scoreCmd = &cobra.Command{
@@ -27,7 +27,7 @@ var scoreCmd = &cobra.Command{
 func init() {
 	scoreCmd.Flags().StringVar(&scoreFlags.setupFilename, "setup", "", "the setup file")
 	scoreCmd.Flags().StringVar(&scoreFlags.definitionFilename, "definition", "", "the contest definition as filename or cabrillo name")
-	scoreCmd.Flags().BoolVar(&scoreFlags.verbose, "verbose", false, "enable verbose output")
+	scoreCmd.Flags().StringVar(&scoreFlags.outputFormat, "output", "total", "select the output format (total, text, yaml, json, csv)")
 
 	rootCmd.AddCommand(scoreCmd)
 }
@@ -63,25 +63,9 @@ func runScore(cmd *cobra.Command, args []string) {
 			log.Fatal(err)
 		}
 
-		// print the multis board
-		if scoreFlags.verbose {
-			for _, row := range result.MultisBoard {
-				var bands strings.Builder
-				for i, band := range row.Bands {
-					if i > 0 {
-						bands.WriteString(", ")
-					}
-					bands.WriteString(strings.ToUpper(string(band)))
-				}
-				fmt.Printf("%s %-3s (%2d): %s\n", row.Property, strings.ToUpper(row.Multi), len(row.Bands), bands.String())
-			}
-		}
-
-		// print the total score
-		if scoreFlags.verbose {
-			fmt.Printf("QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", result.QSOs, result.Multis, result.Points, result.Total)
-		} else {
-			fmt.Printf("%d\n", result.Multis*result.Points)
+		err = score.WriteOutput(os.Stdout, score.OutputFormat(strings.ToLower(scoreFlags.outputFormat)), result)
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 }

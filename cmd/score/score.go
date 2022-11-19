@@ -17,12 +17,12 @@ type Logfile interface {
 type MultisBoardRow struct {
 	Property conval.Property      `yaml:"property" json:"property"`
 	Multi    string               `yaml:"multi" json:"multi"`
-	Bands    []conval.ContestBand `yaml:"bands" json:"bands"`
+	Bands    []conval.ContestBand `yaml:"bands,flow" json:"bands"`
 }
 
 type Result struct {
-	MultiProperties []conval.Property    `yaml:"multi_properties" json:"multi_properties"`
-	Bands           []conval.ContestBand `yaml:"bands" json:"bands"`
+	MultiProperties []conval.Property    `yaml:"multi_properties,flow" json:"multi_properties"`
+	Bands           []conval.ContestBand `yaml:"bands,flow" json:"bands"`
 
 	MultisBoard []MultisBoardRow `yaml:"multis_board" json:"multis_board"`
 	QSOs        int              `yaml:"qsos" json:"qsos"`

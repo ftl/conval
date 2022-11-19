@@ -1,7 +1,6 @@
 package score
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -20,8 +19,6 @@ func ReadCabrilloLogFromFile(filename string, prefixes conval.PrefixDatabase) (*
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("claimed score: %d\n", log.ClaimedScore) // TODO remove
 
 	return &CabrilloLogfile{log, prefixes}, nil
 }
