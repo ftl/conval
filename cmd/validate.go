@@ -14,7 +14,7 @@ import (
 
 var validateCmd = &cobra.Command{
 	Use:   "validate <filename>",
-	Short: "validate the given contest definition file using the examples",
+	Short: "validate the given contest definition file using the included examples",
 	Run:   runValidate,
 }
 
