@@ -1,7 +1,9 @@
 package score
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/ftl/conval"
 )
@@ -29,14 +31,23 @@ type Result struct {
 	Total       int              `yaml:"total" json:"total"`
 }
 
-func PrepareDefinition(filename string, cabrilloName string) (*conval.Definition, error) {
-	if filename != "" {
-		return conval.LoadDefinitionFromFile(filename)
+func PrepareDefinition(name string) (*conval.Definition, error) {
+	if name == "" {
+		return nil, nil
 	}
-	if cabrilloName != "" {
-		return conval.IncludedDefinition(cabrilloName)
+
+	result, err := conval.LoadDefinitionFromFile(name)
+	if err == nil {
+		return result, nil
 	}
-	return nil, nil
+	if !errors.Is(err, os.ErrNotExist) {
+		return nil, err
+	}
+	result, err = conval.IncludedDefinition(name)
+	if errors.Is(err, os.ErrNotExist) {
+		return nil, fmt.Errorf("the contest definition %s does not exist", name)
+	}
+	return result, err
 }
 
 func PrepareSetup(filename string, prefixes conval.PrefixDatabase) (*conval.Setup, error) {

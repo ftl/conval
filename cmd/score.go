@@ -15,7 +15,6 @@ import (
 var scoreFlags = struct {
 	setupFilename      string
 	definitionFilename string
-	cabrilloName       string
 	verbose            bool
 }{}
 
@@ -27,8 +26,7 @@ var scoreCmd = &cobra.Command{
 
 func init() {
 	scoreCmd.Flags().StringVar(&scoreFlags.setupFilename, "setup", "", "the setup file")
-	scoreCmd.Flags().StringVar(&scoreFlags.definitionFilename, "definition", "", "the contest definition file")
-	scoreCmd.Flags().StringVar(&scoreFlags.cabrilloName, "cabrillo", "", "the cabrillo name (see https://www.contestcalendar.com/cabnames.php)")
+	scoreCmd.Flags().StringVar(&scoreFlags.definitionFilename, "definition", "", "the contest definition as filename or cabrillo name")
 	scoreCmd.Flags().BoolVar(&scoreFlags.verbose, "verbose", false, "enable verbose output")
 
 	rootCmd.AddCommand(scoreCmd)
@@ -40,7 +38,7 @@ func runScore(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	definition, err := score.PrepareDefinition(scoreFlags.definitionFilename, scoreFlags.cabrilloName)
+	definition, err := score.PrepareDefinition(scoreFlags.definitionFilename)
 	if err != nil {
 		log.Fatal(err)
 	}
