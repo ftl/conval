@@ -106,6 +106,10 @@ const (
 	NotCountry   DXCCEntity = "not"
 )
 
+type PrefixDatabase interface {
+	Find(s string) (Continent, DXCCEntity, bool)
+}
+
 type BandRule string
 
 const (

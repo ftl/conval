@@ -2,6 +2,7 @@ package conval
 
 import (
 	"io"
+	"os"
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
@@ -167,6 +168,16 @@ func (q QSOExample) ToQSO(fields []ExchangeField) QSO {
 	}
 }
 
+func LoadDefinitionFromFile(filename string) (*Definition, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	return LoadDefinitionYAML(file)
+}
+
 func LoadDefinitionYAML(r io.Reader) (*Definition, error) {
 	decoder := yaml.NewDecoder(r)
 
@@ -177,6 +188,16 @@ func LoadDefinitionYAML(r io.Reader) (*Definition, error) {
 	}
 
 	return &result, nil
+}
+
+func LoadSetupFromFile(filename string) (*Setup, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	return LoadSetupYAML(file)
 }
 
 func LoadSetupYAML(r io.Reader) (*Setup, error) {

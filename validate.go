@@ -28,7 +28,7 @@ func validateExample(definition *Definition, example Example) error {
 
 	totalScore := counter.TotalScore()
 	if example.Score != totalScore {
-		return fmt.Errorf("the total score is wrong, expected %d points * %d multis, but got %d points * %d multis", example.Score.Points, example.Score.Multis, totalScore.Points, totalScore.Multis)
+		return fmt.Errorf("the total score is wrong, expected %d qsos with %d points * %d multis, but got %d qsos with %d points * %d multis", example.Score.QSOs, example.Score.Points, example.Score.Multis, totalScore.QSOs, totalScore.Points, totalScore.Multis)
 	}
 
 	return nil

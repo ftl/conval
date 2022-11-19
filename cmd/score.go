@@ -11,6 +11,7 @@ import (
 
 	"github.com/ftl/conval"
 	"github.com/ftl/conval/cabrillo"
+	"github.com/ftl/conval/cmd/score"
 )
 
 var scoreFlags = struct {
@@ -37,36 +38,23 @@ func init() {
 
 func runScore(cmd *cobra.Command, args []string) {
 	var err error
-
 	prefixes, err := newPrefixDatabase()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// Prepare the CLI information
-
-	var definition *conval.Definition
-	if scoreFlags.definitionFilename != "" {
-		definition, err = loadDefinitionFromFile(scoreFlags.definitionFilename)
-	} else if scoreFlags.cabrilloName != "" {
-		definition, err = conval.IncludedDefinition(scoreFlags.cabrilloName)
+	definition, err := score.PrepareDefinition(scoreFlags.definitionFilename, scoreFlags.cabrilloName)
+	if err != nil {
+		log.Fatal(err)
 	}
+	setup, err := score.PrepareSetup(scoreFlags.setupFilename, prefixes)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var setup *conval.Setup
-	if scoreFlags.setupFilename != "" {
-		setup, err = loadSetupFromFile(scoreFlags.setupFilename, prefixes)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	// TODO override the setup information with values given with explicit CLI flags
-
 	if len(args) < 1 {
 		log.Fatal("missing input filename")
 	}
+
 	for _, filename := range args {
 		log.Printf("evaluating %s", filename)
 
@@ -133,62 +121,28 @@ func runScore(cmd *cobra.Command, args []string) {
 	}
 }
 
-func loadDefinitionFromFile(filename string) (*conval.Definition, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	return conval.LoadDefinitionYAML(file)
-}
-
-func loadSetupFromFile(filename string, prefixes prefixDatabase) (*conval.Setup, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	result, err := conval.LoadSetupYAML(file)
+func newPrefixDatabase() (*prefixDatabase, error) {
+	prefixes, _, err := dxcc.DefaultPrefixes(true)
 	if err != nil {
 		return nil, err
 	}
-
-	result.MyContinent, result.MyCountry = toConvalContinentAndCountry(prefixes.Find(result.MyCall.String()))
-
-	return result, nil
+	return &prefixDatabase{prefixes}, nil
 }
 
-type prefixDatabase interface {
-	Find(s string) ([]dxcc.Prefix, bool)
+type prefixDatabase struct {
+	prefixes *dxcc.Prefixes
 }
 
-func toConvalContinentAndCountry(entities []dxcc.Prefix, found bool) (conval.Continent, conval.DXCCEntity) {
+func (d prefixDatabase) Find(s string) (conval.Continent, conval.DXCCEntity, bool) {
+	entities, found := d.prefixes.Find(s)
 	if !found || len(entities) == 0 {
-		return "", ""
+		return "", "", false
 	}
 
-	return conval.Continent(strings.ToLower(entities[0].Continent)), conval.DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix))
+	return conval.Continent(strings.ToLower(entities[0].Continent)), conval.DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix)), true
 }
 
-func newPrefixDatabase() (prefixDatabase, error) {
-	localFilename, err := dxcc.LocalFilename()
-	if err != nil {
-		return nil, err
-	}
-	updated, err := dxcc.Update(dxcc.DefaultURL, localFilename)
-	if err != nil {
-		fmt.Printf("update of local copy failed: %v\n", err)
-	}
-	if updated {
-		fmt.Printf("updated local copy: %v\n", localFilename)
-	}
-
-	return dxcc.LoadLocal(localFilename)
-}
-
-func readCabrilloLogFromFile(filename string, prefixes prefixDatabase) (*cabrilloLogfile, error) {
+func readCabrilloLogFromFile(filename string, prefixes conval.PrefixDatabase) (*cabrilloLogfile, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -205,7 +159,7 @@ func readCabrilloLogFromFile(filename string, prefixes prefixDatabase) (*cabrill
 
 type cabrilloLogfile struct {
 	log      *cabrillo.Log
-	prefixes prefixDatabase
+	prefixes conval.PrefixDatabase
 }
 
 func (l cabrilloLogfile) Identifier() conval.ContestIdentifier {
@@ -215,7 +169,11 @@ func (l cabrilloLogfile) Identifier() conval.ContestIdentifier {
 func (l cabrilloLogfile) Setup() *conval.Setup {
 	result := new(conval.Setup)
 	result.MyCall = l.log.Callsign
-	result.MyContinent, result.MyCountry = toConvalContinentAndCountry(l.prefixes.Find(result.MyCall.String()))
+	myContinent, myCountry, found := l.prefixes.Find(result.MyCall.String())
+	if found {
+		result.MyContinent = myContinent
+		result.MyCountry = myCountry
+	}
 
 	result.GridLocator = l.log.GridLocator
 	result.Operators = l.log.Operators
@@ -238,7 +196,11 @@ func (l cabrilloLogfile) QSOs(exchangeFields func(conval.Continent, conval.DXCCE
 			Band:      toBand(qso.Frequency),
 			Mode:      toQSOMode(qso.Mode),
 		}
-		resultQSO.TheirContinent, resultQSO.TheirCountry = toConvalContinentAndCountry(l.prefixes.Find(resultQSO.TheirCall.String()))
+		theirContinent, theirCountry, found := l.prefixes.Find(resultQSO.TheirCall.String())
+		if found {
+			resultQSO.TheirContinent = theirContinent
+			resultQSO.TheirCountry = theirCountry
+		}
 		fields := exchangeFields(resultQSO.TheirContinent, resultQSO.TheirCountry)
 		resultQSO.TheirExchange = toQSOExchange(fields, qso.Received)
 

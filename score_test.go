@@ -377,7 +377,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
-	expectedTotalScore := BandScore{Points: 2}
+	expectedTotalScore := BandScore{QSOs: 3, Points: 2}
 
 	counter := NewCounter(setup, exchange, rules)
 
@@ -412,7 +412,7 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
-	expectedTotalScore := BandScore{Points: 4}
+	expectedTotalScore := BandScore{QSOs: 6, Points: 4}
 
 	counter := NewCounter(setup, exchange, rules)
 
@@ -459,7 +459,7 @@ func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
-	expectedTotalScore := BandScore{Points: 8}
+	expectedTotalScore := BandScore{QSOs: 12, Points: 8}
 
 	counter := NewCounter(setup, exchange, rules)
 
@@ -487,7 +487,7 @@ func TestCounter_Add_Multis_Once(t *testing.T) {
 		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {BandAll, ModeALL}}},
 		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
-	expectedTotalScore := BandScore{Multis: 2}
+	expectedTotalScore := BandScore{QSOs: 3, Multis: 2}
 
 	counter := NewCounter(setup, exchange, rules)
 
@@ -522,7 +522,7 @@ func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
 		{Multis: 1, MultiValues: map[Property]string{"cq_zone": "5"}, MultiBandAndMode: map[Property]BandAndMode{"cq_zone": {Band40m, ModeALL}}},
 		{Multis: 0, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
-	expectedTotalScore := BandScore{Multis: 4}
+	expectedTotalScore := BandScore{QSOs: 6, Multis: 4}
 
 	counter := NewCounter(setup, exchange, rules)
 

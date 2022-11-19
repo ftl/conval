@@ -170,6 +170,7 @@ examples:
       multis: 0
       duplicate: false
     score:
+      qsos: 6
       points: 14
       multis: 4
   - setup:
@@ -221,5 +222,6 @@ examples:
       multis: 0
       duplicate: false
     score:
+      qsos: 6
       points: 17
       multis: 4

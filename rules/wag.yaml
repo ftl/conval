@@ -159,6 +159,7 @@ examples:
         points: 5
         multis: 0
     score:
+      qsos: 8
       points: 17
       multis: 4
   - setup:
@@ -193,6 +194,7 @@ examples:
         points: 1
         multis: 0
     score:
+      qsos: 3
       points: 2
       multis: 1
   - setup:
@@ -259,5 +261,6 @@ examples:
         points: 0
         multis: 0
     score:
+      qsos: 8
       points: 12
       multis: 3

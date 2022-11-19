@@ -82,5 +82,6 @@ examples:
       points: 1
       multis: 0
     score:
+      qsos: 6
       points: 5
       multis: 2
