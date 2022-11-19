@@ -533,3 +533,31 @@ func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
 	actualTotalScore := counter.TotalScore()
 	assert.Equal(t, expectedTotalScore, actualTotalScore)
 }
+
+func TestCounter_BandsPerMulti(t *testing.T) {
+	setup := Setup{}
+	exchange := []ExchangeDefinition{{Fields: []ExchangeField{}}}
+	rules := Scoring{
+		QSOBandRule: OncePerBand,
+		MultiRules:  []ScoringRule{{Property: CQZoneProperty, BandRule: OncePerBand, Value: 1}},
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("AB1C"), Band: Band80m, TheirExchange: QSOExchange{"cq_zone": "5"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
+	}
+
+	counter := NewCounter(setup, exchange, rules)
+	for _, qso := range qsos {
+		counter.Add(qso)
+	}
+
+	bandsPerZone8 := counter.BandsPerMulti(CQZoneProperty, "8")
+	assert.ElementsMatch(t, []ContestBand{}, bandsPerZone8)
+	bandsPerZone5 := counter.BandsPerMulti(CQZoneProperty, "5")
+	assert.ElementsMatch(t, []ContestBand{Band80m}, bandsPerZone5)
+	bandsPerZone14 := counter.BandsPerMulti(CQZoneProperty, "14")
+	assert.ElementsMatch(t, []ContestBand{Band80m, Band40m}, bandsPerZone14)
+}

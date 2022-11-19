@@ -56,67 +56,39 @@ func runScore(cmd *cobra.Command, args []string) {
 	}
 
 	for _, filename := range args {
-		log.Printf("evaluating %s", filename)
-
 		// TODO: detect the input file format
 		logfile, err := readCabrilloLogFromFile(filename, prefixes)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("claimed score: %d", logfile.log.ClaimedScore)
+		if scoreFlags.verbose {
+			fmt.Printf("claimed score: %d\n", logfile.log.ClaimedScore)
+		}
 
-		definitionForFile := definition
-		if definitionForFile == nil {
-			definitionForFile, err = conval.IncludedDefinition(string(logfile.Identifier()))
-			if err != nil {
-				log.Fatal(err)
+		result, err := score.Evaluate(logfile, definition, setup)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// print the multis board
+		if scoreFlags.verbose {
+			for _, row := range result.MultisBoard {
+				var bands strings.Builder
+				for i, band := range row.Bands {
+					if i > 0 {
+						bands.WriteString(", ")
+					}
+					bands.WriteString(strings.ToUpper(string(band)))
+				}
+				fmt.Printf("%s %-3s (%2d): %s\n", row.Property, strings.ToUpper(row.Multi), len(row.Bands), bands.String())
 			}
-		}
-		if definitionForFile == nil {
-			log.Fatal("no contest definition found")
-		} else {
-			log.Printf("%s: %s", definitionForFile.Identifier, definitionForFile.Name)
-		}
-
-		setupForFile := setup
-		if setupForFile == nil {
-			setupForFile = logfile.Setup()
-		}
-		if setupForFile == nil {
-			log.Fatal("no setup defined")
-		} else {
-			log.Printf("setup: %+v", setupForFile)
-		}
-
-		counter := conval.NewCounter(*setupForFile, definitionForFile.Exchange, definitionForFile.Scoring)
-		qsos := logfile.QSOs(counter.EffectiveExchangeFields)
-		for _, qso := range qsos {
-			counter.Add(qso)
 		}
 
 		// print the total score
-		totalScore := counter.TotalScore()
 		if scoreFlags.verbose {
-			fmt.Printf("QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", totalScore.QSOs, totalScore.Multis, totalScore.Points, totalScore.Total())
+			fmt.Printf("QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", result.QSOs, result.Multis, result.Points, result.Total)
 		} else {
-			fmt.Printf("%d\n", totalScore.Multis*totalScore.Points)
-		}
-
-		// print the multis per band
-		if scoreFlags.verbose {
-			properties := counter.MultiProperties()
-			bands := append(counter.UsedBands(), conval.BandAll)
-			for _, property := range properties {
-				fmt.Printf("%s:\n", property)
-				for _, band := range bands {
-					multis := counter.MultisPerBand(band, property)
-					if len(multis) == 0 {
-						continue
-					}
-					fmt.Printf("% 5s (% 3d): %s\n", band, len(multis), strings.ToUpper(strings.Join(multis, ", ")))
-				}
-				fmt.Printf("\n")
-			}
+			fmt.Printf("%d\n", result.Multis*result.Points)
 		}
 	}
 }

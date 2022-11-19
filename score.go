@@ -82,7 +82,7 @@ func (c Counter) MultiProperties() []Property {
 	return result
 }
 
-func (c Counter) MultisPerBand(band ContestBand, property Property) []string {
+func (c Counter) MultisPerBand(property Property, band ContestBand) []string {
 	multis := make(map[string]bool)
 	for bam, multisPerProperty := range c.multisPerBandAndMode {
 		if bam.Band != band {
@@ -98,6 +98,38 @@ func (c Counter) MultisPerBand(band ContestBand, property Property) []string {
 		result = append(result, multi)
 	}
 	sort.Strings(result)
+	return result
+}
+
+func (c Counter) MultisPerProperty(property Property) []string {
+	multis := make(map[string]bool)
+	for _, multisPerProperty := range c.multisPerBandAndMode {
+		for multi := range multisPerProperty[property] {
+			multis[multi] = true
+		}
+	}
+
+	result := make([]string, 0, len(multis))
+	for multi := range multis {
+		result = append(result, multi)
+	}
+	sort.Strings(result)
+	return result
+}
+
+func (c Counter) BandsPerMulti(property Property, multi string) []ContestBand {
+	bands := make(map[ContestBand]bool)
+	for bam, multisPerProperty := range c.multisPerBandAndMode {
+		multis := multisPerProperty[property]
+		if multis[multi] {
+			bands[bam.Band] = true
+		}
+	}
+	result := make([]ContestBand, 0, len(bands))
+	for band := range bands {
+		result = append(result, band)
+	}
+	// TODO sort the bands
 	return result
 }
 
