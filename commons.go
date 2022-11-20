@@ -13,15 +13,20 @@ import (
 )
 
 const (
+	TheirCallProperty        Property = "their_call"
 	TheirRSTProperty         Property = "rst"
 	SerialNumberProperty     Property = "serial"
 	MemberNumberProperty     Property = "member_number"
 	NoMemberProperty         Property = "nm"
-	CallsignProperty         Property = "callsign" // can be used as exchanges, e.g. in the silent key memorial contests
+	CallsignProperty         Property = "callsign" // can be used as exchange, e.g. in the silent key memorial contests
 	CQZoneProperty           Property = "cq_zone"
 	ITUZoneProperty          Property = "itu_zone"
 	DXCCEntityProperty       Property = "dxcc_entity"
 	WorkingConditionProperty Property = "working_condition"
+	NameProperty             Property = "name"
+	StateProvinceProperty    Property = "state_province"
+	DXCCPrefixProperty       Property = "dxcc_prefix" // can be used as exchange, e.g. in the CWops contests
+	AlphanumProperty         Property = "alphanum"
 )
 
 func init() {
@@ -32,7 +37,12 @@ func init() {
 	PropertyValidators[CallsignProperty] = CallsignValidator
 	PropertyValidators[CQZoneProperty] = NumberRangeValidator(1, 40, "CQ zone")
 	PropertyValidators[ITUZoneProperty] = NumberRangeValidator(1, 90, "ITU zone")
+	PropertyValidators[NameProperty] = RegexpValidator(validName, "name")
+	PropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
+	PropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
+	PropertyValidators[AlphanumProperty] = RegexpValidator(validAlphanum, "alpha numeric")
 
+	PropertyGetters[TheirCallProperty] = PropertyGetterFunc(getTheirCall)
 	PropertyGetters[TheirRSTProperty] = getTheirExchangeProperty(TheirRSTProperty)
 	PropertyGetters[SerialNumberProperty] = getTheirExchangeProperty(SerialNumberProperty)
 	PropertyGetters[MemberNumberProperty] = getTheirExchangeProperty(MemberNumberProperty)
@@ -41,6 +51,10 @@ func init() {
 	PropertyGetters[ITUZoneProperty] = PropertyGetterFunc(getITUZone)
 	PropertyGetters[DXCCEntityProperty] = PropertyGetterFunc(getDXCCEntity)
 	PropertyGetters[WorkingConditionProperty] = PropertyGetterFunc(getCallsignWorkingCondition)
+	PropertyGetters[NameProperty] = getTheirExchangeProperty(NameProperty)
+	PropertyGetters[StateProvinceProperty] = getTheirExchangeProperty(StateProvinceProperty)
+	PropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
+	PropertyGetters[AlphanumProperty] = getTheirExchangeProperty(AlphanumProperty)
 }
 
 // Common Exchange Validators
@@ -71,10 +85,13 @@ func NumberRangeValidator(from, to int, name string) PropertyValidator {
 }
 
 var (
-	validRST          = regexp.MustCompile(`[1-5][1-9][1-9]*`)
-	validSerialNumber = regexp.MustCompile(`\d+`)
-	validMemberNumber = regexp.MustCompile(`\d+`)
-	validNoMember     = regexp.MustCompile(`(NM)?`)
+	validRST           = regexp.MustCompile(`[1-5][1-9][1-9]*`)
+	validSerialNumber  = regexp.MustCompile(`\d+`)
+	validMemberNumber  = regexp.MustCompile(`\d+`)
+	validNoMember      = regexp.MustCompile(`(NM)?`)
+	validName          = regexp.MustCompile(`[A-Z]+`)
+	validStateProvince = regexp.MustCompile(`AB|AL|AK|AZ|AR|BC|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MB|MI|MN|MS|MO|MT|NB|NE|NV|NH|NJ|NL|NM|NS|NY|NC|ND|OH|OK|ON|OR|PA|PE|QC|RI|SC|SD|SK|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
+	validAlphanum      = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
 
 	CallsignValidator = PropertyValidatorFunc(func(exchange string) error {
 		_, err := callsign.Parse(exchange)
@@ -83,9 +100,17 @@ var (
 		}
 		return nil
 	})
+	DXCCPrefixValidator = PropertyValidatorFunc(func(exchange string) error {
+		// TODO How do I use the prefix database in a static way?
+		return nil
+	})
 )
 
 // Common Property Getters
+
+func getTheirCall(qso QSO) string {
+	return qso.TheirCall.String()
+}
 
 func getCQZone(qso QSO) string {
 	exchange, ok := qso.TheirExchange[CQZoneProperty]

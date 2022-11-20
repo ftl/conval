@@ -1,0 +1,75 @@
+identifier: CW-OPS
+name: CWops Test (CWT)
+official_rules: https://cwops.org/cwops-tests/
+upload_url: http://www.3830scores.com/
+upload_format: cabrillo
+duration: 1h
+duration-constraints:
+breaks:
+categories:
+- name: HP
+  power: high
+- name: LP
+  power: low
+- name: QRP
+  power: qrp
+overlays:
+modes:
+- cw
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+bandchange_rules:
+exchange:
+- fields:
+  - [name]
+  - [member_number, state_province, dxcc_prefix]
+scoring:
+  qsos:
+  - value: 1
+  qso_band_rule: once_per_band
+  multis:
+  - property: their_call
+    band_rule: once
+    value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m]
+      modes: [cw]
+      my_exchange:
+        name: karl
+        alphanum: dl
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [hans, dl]
+      band: 80m
+      points: 1
+      multis: 1
+    - their_call: dl2abc
+      their_exchange: [fritz, dl]
+      band: 80m
+      points: 1
+      multis: 1
+    - their_call: dl1abc
+      their_exchange: [hans, dl]
+      band: 80m
+      points: 0
+      multis: 0
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [hans, dl]
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    score:
+      qsos: 4
+      points: 3
+      multis: 2
+
