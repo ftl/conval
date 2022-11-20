@@ -2,12 +2,12 @@
 
 This little Go library helps to evaluate the log files from amateur radio contests in several ways:
 
-- calculate the score of a log file based on a given rule set (work in progress)
+- calculate the score of a log file based on a given rule set
 - show the performance over time during the contest (not yet implemented)
 - calculate statistics (not yet implemented)
 - compare the performance of two log files (not yet implemented)
 
-Log files can be provided in [ADIF](https://www.adif.org/) or [Cabrillo](https://wwrof.org/cabrillo/) format. The results are either provided as plain text, CSV, or JSON.
+Log files can be provided in [Cabrillo](https://wwrof.org/cabrillo/) format. The results are either provided as plain text, YAML, or JSON, and, where applicable, as CSV.
 
 ## Use as a Go Library
 

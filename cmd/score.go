@@ -52,7 +52,6 @@ func runScore(cmd *cobra.Command, args []string) {
 	}
 
 	for _, filename := range args {
-		// TODO: detect the input file format
 		logfile, err := score.ReadCabrilloLogFromFile(filename, prefixes)
 		if err != nil {
 			log.Fatal(err)
