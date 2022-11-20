@@ -8,9 +8,9 @@ import (
 
 func TestValidateNoMember(t *testing.T) {
 	validator := PropertyValidators[NoMemberProperty]
-	assert.NoError(t, validator.ValidateProperty("nm"), "nm")
-	assert.NoError(t, validator.ValidateProperty("NM"), "NM")
-	assert.Error(t, validator.ValidateProperty(""), "empty")
-	assert.Error(t, validator.ValidateProperty("   "), "whitespace")
-	assert.Error(t, validator.ValidateProperty("12345"), "number")
+	assert.NoError(t, validator.ValidateProperty("nm", nil), "nm")
+	assert.NoError(t, validator.ValidateProperty("NM", nil), "NM")
+	assert.Error(t, validator.ValidateProperty("", nil), "empty")
+	assert.Error(t, validator.ValidateProperty("   ", nil), "whitespace")
+	assert.Error(t, validator.ValidateProperty("12345", nil), "number")
 }

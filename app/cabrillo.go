@@ -69,7 +69,7 @@ func (l CabrilloLogfile) QSOs(exchangeFields func(conval.Continent, conval.DXCCE
 			resultQSO.TheirCountry = theirCountry
 		}
 		fields := exchangeFields(resultQSO.TheirContinent, resultQSO.TheirCountry)
-		resultQSO.TheirExchange = cabrilloToQSOExchange(fields, qso.Received)
+		resultQSO.TheirExchange = cabrilloToQSOExchange(fields, qso.Received, l.prefixes)
 
 		result[i] = resultQSO
 	}
@@ -127,9 +127,9 @@ func cabrilloToQSOMode(mode cabrillo.QSOMode) conval.Mode {
 	}
 }
 
-func cabrilloToQSOExchange(fields []conval.ExchangeField, info cabrillo.QSOInfo) conval.QSOExchange {
+func cabrilloToQSOExchange(fields []conval.ExchangeField, info cabrillo.QSOInfo, prefixes conval.PrefixDatabase) conval.QSOExchange {
 	values := make([]string, 0, len(info.Exchange)+1)
 	values = append(values, info.RST)
 	values = append(values, info.Exchange...)
-	return conval.ParseExchange(fields, values)
+	return conval.ParseExchange(fields, values, prefixes)
 }

@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/ftl/conval"
-	"github.com/ftl/hamradio/dxcc"
 )
 
 type Logfile interface {
@@ -27,27 +26,6 @@ const (
 
 func ParseOutputFormat(s string) OutputFormat {
 	return OutputFormat(strings.ToLower(strings.TrimSpace(s)))
-}
-
-func NewPrefixDatabase() (*prefixDatabase, error) {
-	prefixes, _, err := dxcc.DefaultPrefixes(true)
-	if err != nil {
-		return nil, err
-	}
-	return &prefixDatabase{prefixes}, nil
-}
-
-type prefixDatabase struct {
-	prefixes *dxcc.Prefixes
-}
-
-func (d prefixDatabase) Find(s string) (conval.Continent, conval.DXCCEntity, bool) {
-	entities, found := d.prefixes.Find(s)
-	if !found || len(entities) == 0 {
-		return "", "", false
-	}
-
-	return conval.Continent(strings.ToLower(entities[0].Continent)), conval.DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix)), true
 }
 
 func PrepareDefinition(name string) (*conval.Definition, error) {

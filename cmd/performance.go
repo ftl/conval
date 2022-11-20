@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/ftl/conval"
 	"github.com/ftl/conval/app"
 	"github.com/ftl/conval/cmd/performance"
 	"github.com/spf13/cobra"
@@ -32,7 +33,7 @@ func init() {
 
 func runPerformance(cmd *cobra.Command, args []string) {
 	var err error
-	prefixes, err := app.NewPrefixDatabase()
+	prefixes, err := conval.NewPrefixDatabase()
 	if err != nil {
 		log.Fatal(err)
 	}

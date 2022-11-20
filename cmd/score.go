@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ftl/conval"
 	"github.com/ftl/conval/app"
 	"github.com/ftl/conval/cmd/score"
 )
@@ -28,7 +29,7 @@ func init() {
 
 func runScore(cmd *cobra.Command, args []string) {
 	var err error
-	prefixes, err := app.NewPrefixDatabase()
+	prefixes, err := conval.NewPrefixDatabase()
 	if err != nil {
 		log.Fatal(err)
 	}

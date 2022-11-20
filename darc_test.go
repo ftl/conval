@@ -51,7 +51,7 @@ func TestValidateSDOKs(t *testing.T) {
 	for scanner.Scan() {
 		sdok := strings.ToLower(scanner.Text())
 		t.Run(sdok, func(t *testing.T) {
-			assert.NoError(t, validateWAGDOK.ValidateProperty(sdok))
+			assert.NoError(t, validateWAGDOK.ValidateProperty(sdok, nil))
 		})
 	}
 }
@@ -86,7 +86,7 @@ func TestParseWAGExchange(t *testing.T) {
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			actual := ParseExchange(fields, tc.values)
+			actual := ParseExchange(fields, tc.values, nil)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

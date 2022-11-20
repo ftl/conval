@@ -60,7 +60,7 @@ func init() {
 // Common Exchange Validators
 
 func RegexpValidator(exp *regexp.Regexp, name string) PropertyValidator {
-	return PropertyValidatorFunc(func(exchange string) error {
+	return PropertyValidatorFunc(func(exchange string, prefixes PrefixDatabase) error {
 		exchange = strings.ToUpper(strings.TrimSpace(exchange))
 		value := exp.FindString(exchange)
 		if len(value) == 0 || len(value) != len(exchange) {
@@ -71,7 +71,7 @@ func RegexpValidator(exp *regexp.Regexp, name string) PropertyValidator {
 }
 
 func NumberRangeValidator(from, to int, name string) PropertyValidator {
-	return PropertyValidatorFunc(func(exchange string) error {
+	return PropertyValidatorFunc(func(exchange string, _ PrefixDatabase) error {
 		exchange = strings.ToUpper(strings.TrimSpace(exchange))
 		value, err := strconv.Atoi(exchange)
 		if err != nil {
@@ -93,15 +93,21 @@ var (
 	validStateProvince = regexp.MustCompile(`AB|AL|AK|AZ|AR|BC|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MB|MI|MN|MS|MO|MT|NB|NE|NV|NH|NJ|NL|NM|NS|NY|NC|ND|OH|OK|ON|OR|PA|PE|QC|RI|SC|SD|SK|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
 	validAlphanum      = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
 
-	CallsignValidator = PropertyValidatorFunc(func(exchange string) error {
+	CallsignValidator = PropertyValidatorFunc(func(exchange string, _ PrefixDatabase) error {
 		_, err := callsign.Parse(exchange)
 		if err != nil {
 			return err
 		}
 		return nil
 	})
-	DXCCPrefixValidator = PropertyValidatorFunc(func(exchange string) error {
-		// TODO How do I use the prefix database in a static way?
+	DXCCPrefixValidator = PropertyValidatorFunc(func(exchange string, prefixes PrefixDatabase) error {
+		_, entity, found := prefixes.Find(exchange)
+		if !found {
+			return fmt.Errorf("%s is not a valid DXCC prefix", exchange)
+		}
+		if exchange != string(entity) {
+			return fmt.Errorf("%s is not a primary DXCC prefix", exchange)
+		}
 		return nil
 	})
 )

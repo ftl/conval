@@ -156,7 +156,7 @@ type QSOExample struct {
 	Score QSOScore `yaml:",inline"`
 }
 
-func (q QSOExample) ToQSO(fields []ExchangeField) QSO {
+func (q QSOExample) ToQSO(fields []ExchangeField, prefixes PrefixDatabase) QSO {
 	return QSO{
 		TheirCall:      callsign.MustParse(q.TheirCall),
 		TheirContinent: q.TheirContinent,
@@ -165,7 +165,7 @@ func (q QSOExample) ToQSO(fields []ExchangeField) QSO {
 		Band:           q.Band,
 		Mode:           q.Mode,
 		MyExchange:     q.MyExchange,
-		TheirExchange:  ParseExchange(fields, q.TheirExchange),
+		TheirExchange:  ParseExchange(fields, q.TheirExchange, prefixes),
 	}
 }
 

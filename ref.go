@@ -18,7 +18,7 @@ const (
 	REFDepartmentProperty Property = "ref_department"
 )
 
-func validateREFDepartment(exchange string) error {
+func validateREFDepartment(exchange string, _ PrefixDatabase) error {
 	numeric, err := strconv.Atoi(exchange)
 	if err == nil {
 		if numeric < 0 || numeric > 95 {

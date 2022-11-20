@@ -4,8 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/ftl/conval"
 	"github.com/spf13/cobra"
+
+	"github.com/ftl/conval"
 )
 
 // var validateFlags = struct {
@@ -25,6 +26,12 @@ func init() {
 }
 
 func runValidate(cmd *cobra.Command, args []string) {
+	var err error
+	prefixes, err := conval.NewPrefixDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if len(args) < 1 {
 		log.Fatal("missing filename")
 	}
@@ -45,7 +52,7 @@ func runValidate(cmd *cobra.Command, args []string) {
 		log.Fatalf("%s does not contain any examples to validate\n", filename)
 	}
 
-	err = conval.ValidateExamples(definition)
+	err = conval.ValidateExamples(definition, prefixes)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -58,7 +58,7 @@ func TestParseExchange(t *testing.T) {
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			actual := ParseExchange(tc.fields, tc.values)
+			actual := ParseExchange(tc.fields, tc.values, nil)
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

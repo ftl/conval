@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
+	"github.com/ftl/hamradio/dxcc"
 	"github.com/ftl/hamradio/locator"
 )
 
@@ -71,13 +72,13 @@ const (
 )
 
 type PropertyValidator interface {
-	ValidateProperty(string) error
+	ValidateProperty(string, PrefixDatabase) error
 }
 
-type PropertyValidatorFunc func(string) error
+type PropertyValidatorFunc func(string, PrefixDatabase) error
 
-func (f PropertyValidatorFunc) ValidateProperty(exchange string) error {
-	return f(exchange)
+func (f PropertyValidatorFunc) ValidateProperty(exchange string, prefixes PrefixDatabase) error {
+	return f(exchange, prefixes)
 }
 
 var PropertyValidators = map[Property]PropertyValidator{}
@@ -108,6 +109,27 @@ const (
 
 type PrefixDatabase interface {
 	Find(s string) (Continent, DXCCEntity, bool)
+}
+
+func NewPrefixDatabase() (*prefixDatabase, error) {
+	prefixes, _, err := dxcc.DefaultPrefixes(true)
+	if err != nil {
+		return nil, err
+	}
+	return &prefixDatabase{prefixes}, nil
+}
+
+type prefixDatabase struct {
+	prefixes *dxcc.Prefixes
+}
+
+func (d prefixDatabase) Find(s string) (Continent, DXCCEntity, bool) {
+	entities, found := d.prefixes.Find(s)
+	if !found || len(entities) == 0 {
+		return "", "", false
+	}
+
+	return Continent(strings.ToLower(entities[0].Continent)), DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix)), true
 }
 
 type BandRule string
@@ -157,13 +179,13 @@ type QSO struct {
 
 type QSOExchange map[Property]string
 
-func ParseExchange(fields []ExchangeField, values []string) QSOExchange {
+func ParseExchange(fields []ExchangeField, values []string, prefixes PrefixDatabase) QSOExchange {
 	result := make(QSOExchange)
-	result.Add(fields, values)
+	result.Add(fields, values, prefixes)
 	return result
 }
 
-func (e QSOExchange) Add(fields []ExchangeField, values []string) {
+func (e QSOExchange) Add(fields []ExchangeField, values []string, prefixes PrefixDatabase) {
 	for i, field := range fields {
 		if i >= len(values) {
 			break
@@ -175,7 +197,7 @@ func (e QSOExchange) Add(fields []ExchangeField, values []string) {
 				log.Printf("no validator for property %s", property)
 				continue
 			}
-			err := validator.ValidateProperty(value)
+			err := validator.ValidateProperty(value, prefixes)
 			if err == nil {
 				e[property] = value
 				break
