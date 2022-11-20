@@ -4,8 +4,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ftl/cabrillo"
+
 	"github.com/ftl/conval"
-	"github.com/ftl/conval/cabrillo"
 )
 
 func ReadCabrilloLogFromFile(filename string, prefixes conval.PrefixDatabase) (*CabrilloLogfile, error) {
