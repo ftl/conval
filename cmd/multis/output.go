@@ -1,9 +1,10 @@
-package score
+package multis
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 
@@ -21,7 +22,6 @@ func (f OutputFunc) Write(w io.Writer, result Result) error {
 }
 
 var outputFormats = map[app.OutputFormat]Output{
-	"total":        OutputFunc(writeTotal),
 	app.TextOutput: OutputFunc(writeText),
 	app.YamlOutput: OutputFunc(writeYAML),
 	app.JsonOutput: OutputFunc(writeJSON),
@@ -44,14 +44,21 @@ func WriteOutput(w io.Writer, format app.OutputFormat, result Result) error {
 	return output.Write(w, result)
 }
 
-func writeTotal(w io.Writer, result Result) error {
-	_, err := fmt.Fprintf(w, "%d\n", result.Total)
-	return err
-}
-
 func writeText(w io.Writer, result Result) error {
-	_, err := fmt.Fprintf(w, "QSOs   : % 8d\nMultis : % 8d\nPoints : % 8d\nTotal  : % 8d\n", result.QSOs, result.Multis, result.Points, result.Total)
-	return err
+	for _, row := range result.Rows {
+		var bands strings.Builder
+		for i, band := range row.Bands {
+			if i > 0 {
+				bands.WriteString(", ")
+			}
+			bands.WriteString(strings.ToUpper(string(band)))
+		}
+		_, err := fmt.Fprintf(w, "%s %-3s (%2d): %s\n", row.Property, strings.ToUpper(row.Multi), len(row.Bands), bands.String())
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func writeYAML(w io.Writer, result Result) error {

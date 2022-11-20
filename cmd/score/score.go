@@ -7,21 +7,11 @@ import (
 	"github.com/ftl/conval/app"
 )
 
-type MultisBoardRow struct {
-	Property conval.Property      `yaml:"property" json:"property"`
-	Multi    string               `yaml:"multi" json:"multi"`
-	Bands    []conval.ContestBand `yaml:"bands,flow" json:"bands"`
-}
-
 type Result struct {
-	MultiProperties []conval.Property    `yaml:"multi_properties,flow" json:"multi_properties"`
-	Bands           []conval.ContestBand `yaml:"bands,flow" json:"bands"`
-
-	MultisBoard []MultisBoardRow `yaml:"multis_board" json:"multis_board"`
-	QSOs        int              `yaml:"qsos" json:"qsos"`
-	Points      int              `yaml:"points" json:"points"`
-	Multis      int              `yaml:"multis" json:"multis"`
-	Total       int              `yaml:"total" json:"total"`
+	QSOs   int `yaml:"qsos" json:"qsos"`
+	Points int `yaml:"points" json:"points"`
+	Multis int `yaml:"multis" json:"multis"`
+	Total  int `yaml:"total" json:"total"`
 }
 
 func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.Setup) (Result, error) {
@@ -52,23 +42,11 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 		counter.Add(qso)
 	}
 
-	multiProperties := counter.MultiProperties()
-	bands := counter.UsedBands()
-	multisBoard := make([]MultisBoardRow, 0, len(multiProperties)*len(bands))
-	for _, property := range multiProperties {
-		for _, multi := range counter.MultisPerProperty(property) {
-			bandsPerMulti := counter.BandsPerMulti(property, multi)
-			multisBoard = append(multisBoard, MultisBoardRow{property, multi, bandsPerMulti})
-		}
-	}
 	totalScore := counter.TotalScore()
 	return Result{
-		MultiProperties: multiProperties,
-		Bands:           bands,
-		MultisBoard:     multisBoard,
-		QSOs:            totalScore.QSOs,
-		Points:          totalScore.Points,
-		Multis:          totalScore.Multis,
-		Total:           totalScore.Total(),
+		QSOs:   totalScore.QSOs,
+		Points: totalScore.Points,
+		Multis: totalScore.Multis,
+		Total:  totalScore.Total(),
 	}, nil
 }
