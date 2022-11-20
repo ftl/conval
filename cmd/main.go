@@ -7,6 +7,8 @@ import (
 )
 
 var rootFlags = struct {
+	setupFilename  string
+	definitionName string
 }{}
 
 var rootCmd = &cobra.Command{
@@ -21,6 +23,8 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.PersistentFlags().StringVar(&rootFlags.setupFilename, "setup", "", "the setup file")
+	rootCmd.PersistentFlags().StringVar(&rootFlags.definitionName, "definition", "", "the contest definition as filename or cabrillo name")
 }
 
 func main() {
