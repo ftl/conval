@@ -16,7 +16,7 @@ func ValidateExamples(definition *Definition) error {
 }
 
 func validateExample(definition *Definition, example Example) error {
-	counter := NewCounter(example.Setup.ToSetup(), definition.Exchange, definition.Scoring)
+	counter := NewCounter(*definition, example.Setup.ToSetup())
 	for i, qso := range example.QSOs {
 		exchangeFields := counter.EffectiveExchangeFields(qso.TheirContinent, qso.TheirCountry)
 		// log.Printf("QSO #%d with exchange fields %v", i+1, exchangeFields)

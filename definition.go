@@ -16,21 +16,22 @@ type ContestIdentifier string
 
 // A Definition of a contest.
 type Definition struct {
-	Name            string                `yaml:"name"`
-	Identifier      ContestIdentifier     `yaml:"identifier"`
-	OfficialRules   string                `yaml:"official_rules"`
-	UploadURL       string                `yaml:"upload_url"`
-	UploadFormat    string                `yaml:"upload_format"`
-	Durations       []ConstrainedDuration `yaml:"durations"`
-	Breaks          []ConstrainedDuration `yaml:"breaks"`
-	Categories      []Category            `yaml:"categories"`
-	Overlays        []Overlay             `yaml:"overlays"`
-	Modes           []Mode                `yaml:"modes"`
-	Bands           []ContestBand         `yaml:"bands"`
-	BandChangeRules []BandChangeRule      `yaml:"band_change_rules"`
-	Exchange        []ExchangeDefinition  `yaml:"exchange"`
-	Scoring         Scoring               `yaml:"scoring"`
-	Examples        []Example             `yaml:"examples"`
+	Name                string                `yaml:"name"`
+	Identifier          ContestIdentifier     `yaml:"identifier"`
+	OfficialRules       string                `yaml:"official_rules"`
+	UploadURL           string                `yaml:"upload_url"`
+	UploadFormat        string                `yaml:"upload_format"`
+	Duration            time.Duration         `yaml:"duration"`
+	DurationConstraints []ConstrainedDuration `yaml:"duration-constraints"`
+	Breaks              []ConstrainedDuration `yaml:"breaks"`
+	Categories          []Category            `yaml:"categories"`
+	Overlays            []Overlay             `yaml:"overlays"`
+	Modes               []Mode                `yaml:"modes"`
+	Bands               []ContestBand         `yaml:"bands"`
+	BandChangeRules     []BandChangeRule      `yaml:"band_change_rules"`
+	Exchange            []ExchangeDefinition  `yaml:"exchange"`
+	Scoring             Scoring               `yaml:"scoring"`
+	Examples            []Example             `yaml:"examples"`
 }
 
 type ConstrainedDuration struct {

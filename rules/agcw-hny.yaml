@@ -1,8 +1,8 @@
 identifier: AGCW-HNY
 name: AGCW Happy New Year Contest
 official_rules: https://www.agcw.de/contest/hnyc/
-durations:
-- duration: 3h
+duration: 3h
+duration-constraints:
 breaks:
 categories:
 - name: Class 1, High Power

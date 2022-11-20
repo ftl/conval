@@ -1,7 +1,8 @@
 identifier: DARC-WAEDC-CW
 name: Worked All Europe DX Contest
 official_rules: https://www.darc.de/der-club/referate/conteste/wae-dx-contest/en/wae-rules/
-durations:
+duration: 48h
+duration-constraints:
 - operator_mode: single
   duration: 36h
 - operator_mode: multi

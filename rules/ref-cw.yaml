@@ -3,8 +3,8 @@ name: Coupe du France, CW
 official_rules: https://concours.r-e-f.org/reglements/actuels/reg_cdfhfdx.pdf
 upload_url: http://concours.r-e-f.org/contest/logs/upload-form
 upload_format: cabrillo
-durations:
-- duration: 36h
+duration: 36h
+duration-constraints:
 breaks:
 categories:
 - name: Single Op All Band

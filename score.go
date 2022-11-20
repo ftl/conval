@@ -1,7 +1,6 @@
 package conval
 
 import (
-	"log"
 	"sort"
 	"strings"
 
@@ -14,13 +13,18 @@ type BandAndMode struct {
 }
 
 type Counter struct {
-	setup    Setup
-	exchange []ExchangeDefinition
-	rules    Scoring
+	definition Definition
+	setup      Setup
 
+	qsos                    []ScoredQSO
 	callsignsPerBandAndMode map[BandAndMode]map[callsign.Callsign]bool
 	multisPerBandAndMode    map[BandAndMode]map[Property]map[string]bool
 	scorePerBand            map[ContestBand]BandScore
+}
+
+type ScoredQSO struct {
+	QSO
+	QSOScore
 }
 
 type QSOScore struct {
@@ -45,12 +49,12 @@ func (s BandScore) Total() int {
 	return s.Points * s.Multis
 }
 
-func NewCounter(setup Setup, exchange []ExchangeDefinition, rules Scoring) *Counter {
+func NewCounter(definition Definition, setup Setup) *Counter {
 	return &Counter{
-		setup:    setup,
-		exchange: exchange,
-		rules:    rules,
+		definition: definition,
+		setup:      setup,
 
+		qsos:                    make([]ScoredQSO, 0, 10000),
 		callsignsPerBandAndMode: make(map[BandAndMode]map[callsign.Callsign]bool),
 		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]bool),
 		scorePerBand:            make(map[ContestBand]BandScore),
@@ -142,14 +146,15 @@ func (c Counter) TotalScore() BandScore {
 }
 
 func (c Counter) EffectiveExchangeFields(theirContinent Continent, theirCountry DXCCEntity) []ExchangeField {
-	return filterExchangeFields(c.exchange, c.setup.MyContinent, c.setup.MyCountry, theirContinent, theirCountry)
+	return filterExchangeFields(c.definition.Exchange, c.setup.MyContinent, c.setup.MyCountry, theirContinent, theirCountry)
 }
 
 func (c *Counter) Add(qso QSO) QSOScore {
 	result := c.Probe(qso)
+	c.qsos = append(c.qsos, ScoredQSO{QSO: qso, QSOScore: result})
 
 	// apply the QSO band rule
-	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.rules.QSOBandRule)
+	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.definition.Scoring.QSOBandRule)
 
 	// update the callsign registry
 	var callsigns map[callsign.Callsign]bool
@@ -206,14 +211,14 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	getProperty := func(property Property) string {
 		getter, getterOK := PropertyGetters[property]
 		if !getterOK {
-			log.Printf("no property getter for %s", property)
+			// log.Printf("no property getter for %s", property)
 			return ""
 		}
 		return getter.GetProperty(qso)
 	}
 
 	// find the relevant QSO rules
-	qsoRules := filterScoringRules(c.rules.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	qsoRules := filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
 	// log.Printf("found %d relevant QSO rules", len(qsoRules))
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
@@ -229,12 +234,12 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		if allEqual {
 			result.Points = value
 		} else {
-			log.Printf("inconsistent QSO rules for QSO with %s (%s, %s) at %v: %+v", qso.TheirCall, qso.TheirContinent, qso.TheirCountry, qso.Timestamp, qsoRules)
+			// log.Printf("inconsistent QSO rules for QSO with %s (%s, %s) at %v: %+v", qso.TheirCall, qso.TheirContinent, qso.TheirCountry, qso.Timestamp, qsoRules)
 		}
 	}
 
 	// apply the QSO band rule
-	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.rules.QSOBandRule)
+	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.definition.Scoring.QSOBandRule)
 
 	// check the callsign registry for duplicate
 	var callsigns map[callsign.Callsign]bool
@@ -245,7 +250,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant multi rules
-	multiRules := filterScoringRules(c.rules.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	multiRules := filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
 	// log.Printf("found %d relevant multi rules", len(multiRules))
 	for _, rule := range multiRules {
 		if rule.Property == "" {

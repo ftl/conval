@@ -28,15 +28,15 @@ official_rules: https://github.com/ftl/conval/testdata`,
 		{
 			desc: "constrained and unconstrained duration",
 			yaml: `name: Test Contest
-durations:
+duration: 48h
+duration-constraints:
 - duration: 24h
-  operator_mode: single
-- duration: 48h`,
+  operator_mode: single`,
 			expected: Definition{
-				Name: "Test Contest",
-				Durations: []ConstrainedDuration{
+				Name:     "Test Contest",
+				Duration: 48 * time.Hour,
+				DurationConstraints: []ConstrainedDuration{
 					{Constraint: Constraint{OperatorMode: SingleOperator}, Duration: 24 * time.Hour},
-					{Duration: 48 * time.Hour},
 				},
 			},
 		},

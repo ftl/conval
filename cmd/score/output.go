@@ -6,8 +6,9 @@ import (
 	"io"
 	"strings"
 
-	"github.com/ftl/conval/app"
 	"gopkg.in/yaml.v3"
+
+	"github.com/ftl/conval/app"
 )
 
 type Output interface {

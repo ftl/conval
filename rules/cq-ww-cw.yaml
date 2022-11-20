@@ -1,11 +1,11 @@
 identifier: CQ-WW-CW
 name: CQ World Wide DX Contest CW
 official_rules: https://www.cqww.com/rules.htm
-durations:
+duration: 48h
+duration-constraints:
 - operator_mode: single
   overlay: classic
   duration: 24h
-- duration: 48h
 breaks:
 - operator_mode: single
   overlay: classic

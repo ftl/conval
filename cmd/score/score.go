@@ -46,7 +46,7 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 		return Result{}, fmt.Errorf("no setup defined")
 	}
 
-	counter := conval.NewCounter(*setupForFile, definitionForFile.Exchange, definitionForFile.Scoring)
+	counter := conval.NewCounter(*definitionForFile, *setupForFile)
 	qsos := logfile.QSOs(counter.EffectiveExchangeFields)
 	for _, qso := range qsos {
 		counter.Add(qso)
