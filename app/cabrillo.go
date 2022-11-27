@@ -128,8 +128,7 @@ func cabrilloToQSOMode(mode cabrillo.QSOMode) conval.Mode {
 }
 
 func cabrilloToQSOExchange(fields []conval.ExchangeField, info cabrillo.QSOInfo, prefixes conval.PrefixDatabase) conval.QSOExchange {
-	values := make([]string, 0, len(info.Exchange)+1)
-	values = append(values, info.RST)
+	values := make([]string, 0, len(info.Exchange))
 	values = append(values, info.Exchange...)
 	return conval.ParseExchange(fields, values, prefixes)
 }
