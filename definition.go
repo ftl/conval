@@ -21,17 +21,17 @@ type Definition struct {
 	OfficialRules       string                `yaml:"official_rules"`
 	UploadURL           string                `yaml:"upload_url"`
 	UploadFormat        string                `yaml:"upload_format"`
-	Duration            time.Duration         `yaml:"duration"`
-	DurationConstraints []ConstrainedDuration `yaml:"duration-constraints"`
-	Breaks              []ConstrainedDuration `yaml:"breaks"`
-	Categories          []Category            `yaml:"categories"`
-	Overlays            []Overlay             `yaml:"overlays"`
-	Modes               []Mode                `yaml:"modes"`
-	Bands               []ContestBand         `yaml:"bands"`
-	BandChangeRules     []BandChangeRule      `yaml:"band_change_rules"`
+	Duration            time.Duration         `yaml:"duration,omitempty"`
+	DurationConstraints []ConstrainedDuration `yaml:"duration-constraints,omitempty"`
+	Breaks              []ConstrainedDuration `yaml:"breaks,omitempty"`
+	Categories          []Category            `yaml:"categories,omitempty"`
+	Overlays            []Overlay             `yaml:"overlays,omitempty"`
+	Modes               []Mode                `yaml:"modes,omitempty"`
+	Bands               []ContestBand         `yaml:"bands,omitempty"`
+	BandChangeRules     []BandChangeRule      `yaml:"band_change_rules,omitempty"`
 	Exchange            []ExchangeDefinition  `yaml:"exchange"`
 	Scoring             Scoring               `yaml:"scoring"`
-	Examples            []Example             `yaml:"examples"`
+	Examples            []Example             `yaml:"examples,omitempty"`
 }
 
 type ConstrainedDuration struct {
@@ -47,22 +47,22 @@ type BandChangeRule struct {
 
 type Category struct {
 	Name     string       `yaml:"name"`
-	Operator OperatorMode `yaml:"operator"`
-	TX       TXMode       `yaml:"tx"`
-	Power    PowerMode    `yaml:"power"`
-	Bands    BandMode     `yaml:"bands"`
-	Modes    []Mode       `yaml:"modes"`
-	Assisted bool         `yaml:"assisted"`
+	Operator OperatorMode `yaml:"operator,omitempty"`
+	TX       TXMode       `yaml:"tx,omitempty"`
+	Power    PowerMode    `yaml:"power,omitempty"`
+	Bands    BandMode     `yaml:"bands,omitempty"`
+	Modes    []Mode       `yaml:"modes,omitempty"`
+	Assisted bool         `yaml:"assisted,omitempty"`
 }
 
 type ExchangeDefinition struct {
-	MyContinent           []Continent     `yaml:"my_continent"`
-	MyCountry             []DXCCEntity    `yaml:"my_country"`
-	TheirContinent        []Continent     `yaml:"their_continent"`
-	TheirCountry          []DXCCEntity    `yaml:"their_country"`
-	TheirWorkingCondition string          `yaml:"their_working_condition"`
-	AdditionalWeight      int             `yaml:"additional_weight"`
-	Fields                []ExchangeField `yaml:"fields"`
+	MyContinent           []Continent     `yaml:"my_continent,omitempty"`
+	MyCountry             []DXCCEntity    `yaml:"my_country,omitempty"`
+	TheirContinent        []Continent     `yaml:"their_continent,omitempty"`
+	TheirCountry          []DXCCEntity    `yaml:"their_country,omitempty"`
+	TheirWorkingCondition string          `yaml:"their_working_condition,omitempty"`
+	AdditionalWeight      int             `yaml:"additional_weight,omitempty"`
+	Fields                []ExchangeField `yaml:"fields,omitempty"`
 }
 
 type ExchangeField []Property
@@ -74,16 +74,16 @@ type Scoring struct {
 }
 
 type ScoringRule struct {
-	MyContinent           []Continent   `yaml:"my_continent"`
-	MyCountry             []DXCCEntity  `yaml:"my_country"`
-	TheirContinent        []Continent   `yaml:"their_continent"`
-	TheirCountry          []DXCCEntity  `yaml:"their_country"`
-	TheirWorkingCondition string        `yaml:"their_working_condition"`
-	Bands                 []ContestBand `yaml:"bands"`
-	Property              Property      `yaml:"property"`
-	BandRule              BandRule      `yaml:"band_rule"`
-	AdditionalWeight      int           `yaml:"additional_weight"`
-	Value                 int           `yaml:"value"`
+	MyContinent           []Continent   `yaml:"my_continent,omitempty"`
+	MyCountry             []DXCCEntity  `yaml:"my_country,omitempty"`
+	TheirContinent        []Continent   `yaml:"their_continent,omitempty"`
+	TheirCountry          []DXCCEntity  `yaml:"their_country,omitempty"`
+	TheirWorkingCondition string        `yaml:"their_working_condition,omitempty"`
+	Bands                 []ContestBand `yaml:"bands,omitempty"`
+	Property              Property      `yaml:"property,omitempty"`
+	BandRule              BandRule      `yaml:"band_rule,omitempty"`
+	AdditionalWeight      int           `yaml:"additional_weight,omitempty"`
+	Value                 int           `yaml:"value,omitempty"`
 }
 
 type Example struct {
@@ -93,20 +93,20 @@ type Example struct {
 }
 
 type SetupExample struct {
-	MyCall      string     `yaml:"my_call"`
-	MyContinent Continent  `yaml:"my_continent"`
-	MyCountry   DXCCEntity `yaml:"my_country"`
+	MyCall      string     `yaml:"my_call,omitempty"`
+	MyContinent Continent  `yaml:"my_continent,omitempty"`
+	MyCountry   DXCCEntity `yaml:"my_country,omitempty"`
 
-	GridLocator string   `yaml:"grid_locator"`
-	Operators   []string `yaml:"operators"`
+	GridLocator string   `yaml:"grid_locator,omitempty"`
+	Operators   []string `yaml:"operators,omitempty"`
 
-	OperatorMode OperatorMode  `yaml:"operator_mode"`
-	Overlay      Overlay       `yaml:"overlay"`
-	Power        PowerMode     `yaml:"power"`
-	Bands        []ContestBand `yaml:"bands"`
-	Modes        []Mode        `yaml:"modes"`
+	OperatorMode OperatorMode  `yaml:"operator_mode,omitempty"`
+	Overlay      Overlay       `yaml:"overlay,omitempty"`
+	Power        PowerMode     `yaml:"power,omitempty"`
+	Bands        []ContestBand `yaml:"bands,omitempty"`
+	Modes        []Mode        `yaml:"modes,omitempty"`
 
-	MyExchange QSOExchange `yaml:"my_exchange"`
+	MyExchange QSOExchange `yaml:"my_exchange,omitempty"`
 }
 
 func (s SetupExample) ToSetup() Setup {
@@ -142,16 +142,16 @@ func (s SetupExample) ToSetup() Setup {
 }
 
 type QSOExample struct {
-	TheirCall      string     `yaml:"their_call"`
-	TheirContinent Continent  `yaml:"their_continent"`
-	TheirCountry   DXCCEntity `yaml:"their_country"`
+	TheirCall      string     `yaml:"their_call,omitempty"`
+	TheirContinent Continent  `yaml:"their_continent,omitempty"`
+	TheirCountry   DXCCEntity `yaml:"their_country,omitempty"`
 
-	Timestamp time.Time   `yaml:"time"`
-	Band      ContestBand `yaml:"band"`
-	Mode      Mode        `yaml:"mode"`
+	Timestamp time.Time   `yaml:"time,omitempty"`
+	Band      ContestBand `yaml:"band,omitempty"`
+	Mode      Mode        `yaml:"mode,omitempty"`
 
-	MyExchange    QSOExchange `yaml:"my_exchange"`
-	TheirExchange []string    `yaml:"their_exchange"`
+	MyExchange    QSOExchange `yaml:"my_exchange,omitempty"`
+	TheirExchange []string    `yaml:"their_exchange,omitempty"`
 
 	Score QSOScore `yaml:",inline"`
 }
@@ -189,6 +189,22 @@ func LoadDefinitionYAML(r io.Reader) (*Definition, error) {
 	}
 
 	return &result, nil
+}
+
+func SaveDefinitionYAML(w io.Writer, definition *Definition, withExamples bool) error {
+	if definition == nil {
+		return nil
+	}
+
+	encoder := yaml.NewEncoder(w)
+
+	if withExamples {
+		return encoder.Encode(definition)
+	}
+
+	definitionWithoutExamples := *definition
+	definitionWithoutExamples.Examples = nil
+	return encoder.Encode(definitionWithoutExamples)
 }
 
 func LoadSetupFromFile(filename string) (*Setup, error) {

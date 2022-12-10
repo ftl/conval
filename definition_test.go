@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLoadYAML(t *testing.T) {
@@ -192,6 +193,51 @@ scoring:
 			assert.NoError(t, err)
 
 			assert.Equal(t, tc.expected, *actual)
+		})
+	}
+}
+
+func TestSaveLoadYAMLRoundtrip(t *testing.T) {
+	names, err := IncludedDefinitionNames()
+	require.NoError(t, err)
+
+	for _, name := range names {
+		t.Run(name, func(t *testing.T) {
+			definition, err := IncludedDefinition(name)
+			require.NoError(t, err)
+
+			buffer := bytes.NewBuffer([]byte{})
+			err = SaveDefinitionYAML(buffer, definition, true)
+			assert.NoError(t, err, "save")
+
+			loadedDefinition, err := LoadDefinitionYAML(buffer)
+			assert.NoError(t, err, "load")
+
+			assert.Equal(t, *definition, *loadedDefinition)
+		})
+	}
+}
+
+func TestSaveYAMLWithoutExamples(t *testing.T) {
+	names, err := IncludedDefinitionNames()
+	require.NoError(t, err)
+
+	for _, name := range names {
+		t.Run(name, func(t *testing.T) {
+			definition, err := IncludedDefinition(name)
+			require.NoError(t, err)
+
+			definitionWithoutExamples := *definition
+			definitionWithoutExamples.Examples = nil
+
+			buffer := bytes.NewBuffer([]byte{})
+			err = SaveDefinitionYAML(buffer, definition, false)
+			assert.NoError(t, err, "save")
+
+			loadedDefinition, err := LoadDefinitionYAML(buffer)
+			assert.NoError(t, err, "load")
+
+			assert.Equal(t, definitionWithoutExamples, *loadedDefinition)
 		})
 	}
 }
