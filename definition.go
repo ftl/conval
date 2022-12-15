@@ -34,6 +34,32 @@ type Definition struct {
 	Examples            []Example             `yaml:"examples,omitempty"`
 }
 
+func (d Definition) ExchangeFields() []ExchangeField {
+	result := make([]ExchangeField, 0, 3)
+	usedProperties := make([]map[Property]bool, 0, 3)
+	for _, definition := range d.Exchange {
+		for i, field := range definition.Fields {
+			if i >= len(result) {
+				result = append(result, field)
+				usedProperties = append(usedProperties, make(map[Property]bool))
+				for _, property := range field {
+					usedProperties[i][property] = true
+				}
+				continue
+			}
+
+			for _, property := range field {
+				if usedProperties[i][property] {
+					continue
+				}
+				result[i] = append(result[i], property)
+				usedProperties[i][property] = true
+			}
+		}
+	}
+	return result
+}
+
 type ConstrainedDuration struct {
 	Constraint `yaml:",inline"`
 	Duration   time.Duration `yaml:"duration"`

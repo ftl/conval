@@ -9,6 +9,83 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestDefinition_ExchangeFields(t *testing.T) {
+	tt := []struct {
+		desc     string
+		exchange []ExchangeDefinition
+		expected []ExchangeField
+	}{
+		{
+			desc: "one definition",
+			exchange: []ExchangeDefinition{
+				{
+					Fields: []ExchangeField{
+						{TheirRSTProperty},
+						{SerialNumberProperty},
+					},
+				},
+			},
+			expected: []ExchangeField{
+				{TheirRSTProperty},
+				{SerialNumberProperty},
+			},
+		},
+		{
+			desc: "two definitions, common RST field",
+			exchange: []ExchangeDefinition{
+				{
+					Fields: []ExchangeField{
+						{TheirRSTProperty},
+						{SerialNumberProperty},
+					},
+				},
+				{
+					Fields: []ExchangeField{
+						{TheirRSTProperty},
+						{NoMemberProperty, WAGDOKProperty},
+					},
+				},
+			},
+			expected: []ExchangeField{
+				{TheirRSTProperty},
+				{SerialNumberProperty, NoMemberProperty, WAGDOKProperty},
+			},
+		},
+		{
+			desc: "two definitions, different field count",
+			exchange: []ExchangeDefinition{
+				{
+					Fields: []ExchangeField{
+						{TheirRSTProperty},
+						{SerialNumberProperty},
+					},
+				},
+				{
+					Fields: []ExchangeField{
+						{TheirRSTProperty},
+						{NameProperty},
+						{StateProvinceProperty},
+					},
+				},
+			},
+			expected: []ExchangeField{
+				{TheirRSTProperty},
+				{SerialNumberProperty, NameProperty},
+				{StateProvinceProperty},
+			},
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			definition := Definition{
+				Exchange: tc.exchange,
+			}
+			actual := definition.ExchangeFields()
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
 func TestLoadYAML(t *testing.T) {
 	tt := []struct {
 		desc     string
