@@ -93,6 +93,14 @@ type ExchangeDefinition struct {
 
 type ExchangeField []Property
 
+func (f ExchangeField) Strings() []string {
+	result := make([]string, len(f))
+	for i, p := range f {
+		result[i] = string(p)
+	}
+	return result
+}
+
 type Scoring struct {
 	QSORules    []ScoringRule `yaml:"qsos"`
 	QSOBandRule BandRule      `yaml:"qso_band_rule"`
