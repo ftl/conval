@@ -330,27 +330,27 @@ func TestFilterExchangeFields(t *testing.T) {
 		{
 			desc: "single definition, no constraints",
 			definitions: []ExchangeDefinition{
-				{Fields: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}}},
+				{Fields: []ExchangeField{{RSTProperty}, {SerialNumberProperty}}},
 			},
-			expected: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}},
+			expected: []ExchangeField{{RSTProperty}, {SerialNumberProperty}},
 		},
 		{
 			desc: "one country-specific, one general, get specific",
 			definitions: []ExchangeDefinition{
-				{TheirCountry: []DXCCEntity{"f"}, Fields: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}}},
-				{Fields: []ExchangeField{{TheirRSTProperty}, {CQZoneProperty}}},
+				{TheirCountry: []DXCCEntity{"f"}, Fields: []ExchangeField{{RSTProperty}, {SerialNumberProperty}}},
+				{Fields: []ExchangeField{{RSTProperty}, {CQZoneProperty}}},
 			},
 			theirCountry: "f",
-			expected:     []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}},
+			expected:     []ExchangeField{{RSTProperty}, {SerialNumberProperty}},
 		},
 		{
 			desc: "one country-specific, one general, get general",
 			definitions: []ExchangeDefinition{
-				{TheirCountry: []DXCCEntity{"f"}, Fields: []ExchangeField{{TheirRSTProperty}, {SerialNumberProperty}}},
-				{Fields: []ExchangeField{{TheirRSTProperty}, {CQZoneProperty}}},
+				{TheirCountry: []DXCCEntity{"f"}, Fields: []ExchangeField{{RSTProperty}, {SerialNumberProperty}}},
+				{Fields: []ExchangeField{{RSTProperty}, {CQZoneProperty}}},
 			},
 			theirCountry: "dl",
-			expected:     []ExchangeField{{TheirRSTProperty}, {CQZoneProperty}},
+			expected:     []ExchangeField{{RSTProperty}, {CQZoneProperty}},
 		},
 	}
 	for _, tc := range tt {

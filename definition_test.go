@@ -20,13 +20,13 @@ func TestDefinition_ExchangeFields(t *testing.T) {
 			exchange: []ExchangeDefinition{
 				{
 					Fields: []ExchangeField{
-						{TheirRSTProperty},
+						{RSTProperty},
 						{SerialNumberProperty},
 					},
 				},
 			},
 			expected: []ExchangeField{
-				{TheirRSTProperty},
+				{RSTProperty},
 				{SerialNumberProperty},
 			},
 		},
@@ -35,19 +35,19 @@ func TestDefinition_ExchangeFields(t *testing.T) {
 			exchange: []ExchangeDefinition{
 				{
 					Fields: []ExchangeField{
-						{TheirRSTProperty},
+						{RSTProperty},
 						{SerialNumberProperty},
 					},
 				},
 				{
 					Fields: []ExchangeField{
-						{TheirRSTProperty},
+						{RSTProperty},
 						{NoMemberProperty, WAGDOKProperty},
 					},
 				},
 			},
 			expected: []ExchangeField{
-				{TheirRSTProperty},
+				{RSTProperty},
 				{SerialNumberProperty, NoMemberProperty, WAGDOKProperty},
 			},
 		},
@@ -56,20 +56,20 @@ func TestDefinition_ExchangeFields(t *testing.T) {
 			exchange: []ExchangeDefinition{
 				{
 					Fields: []ExchangeField{
-						{TheirRSTProperty},
+						{RSTProperty},
 						{SerialNumberProperty},
 					},
 				},
 				{
 					Fields: []ExchangeField{
-						{TheirRSTProperty},
+						{RSTProperty},
 						{NameProperty},
 						{StateProvinceProperty},
 					},
 				},
 			},
 			expected: []ExchangeField{
-				{TheirRSTProperty},
+				{RSTProperty},
 				{SerialNumberProperty, NameProperty},
 				{StateProvinceProperty},
 			},
@@ -209,7 +209,7 @@ exchange:
 				Exchange: []ExchangeDefinition{
 					{
 						Fields: []ExchangeField{
-							{TheirRSTProperty},
+							{RSTProperty},
 							{SerialNumberProperty},
 							{MemberNumberProperty, NoMemberProperty},
 						},

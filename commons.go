@@ -14,7 +14,7 @@ import (
 
 const (
 	TheirCallProperty        Property = "their_call"
-	TheirRSTProperty         Property = "rst"
+	RSTProperty              Property = "rst"
 	SerialNumberProperty     Property = "serial"
 	MemberNumberProperty     Property = "member_number"
 	NoMemberProperty         Property = "nm"
@@ -26,11 +26,12 @@ const (
 	NameProperty             Property = "name"
 	StateProvinceProperty    Property = "state_province"
 	DXCCPrefixProperty       Property = "dxcc_prefix" // can be used as exchange, e.g. in the CWops contests
-	AlphanumProperty         Property = "alphanum"
+	GenericTextProperty      Property = "generic_text"
+	GenericNumberProperty    Property = "generic_number"
 )
 
 func init() {
-	PropertyValidators[TheirRSTProperty] = RegexpValidator(validRST, "report")
+	PropertyValidators[RSTProperty] = RegexpValidator(validRST, "report")
 	PropertyValidators[SerialNumberProperty] = RegexpValidator(validSerialNumber, "serial number")
 	PropertyValidators[MemberNumberProperty] = RegexpValidator(validMemberNumber, "member number")
 	PropertyValidators[NoMemberProperty] = RegexpValidator(validNoMember, "no member")
@@ -40,10 +41,11 @@ func init() {
 	PropertyValidators[NameProperty] = RegexpValidator(validName, "name")
 	PropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
 	PropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
-	PropertyValidators[AlphanumProperty] = RegexpValidator(validAlphanum, "alpha numeric")
+	PropertyValidators[GenericTextProperty] = RegexpValidator(validGenericText, "generic text")
+	PropertyValidators[GenericNumberProperty] = RegexpValidator(validGenericNumber, "generic number")
 
 	PropertyGetters[TheirCallProperty] = PropertyGetterFunc(getTheirCall)
-	PropertyGetters[TheirRSTProperty] = getTheirExchangeProperty(TheirRSTProperty)
+	PropertyGetters[RSTProperty] = getTheirExchangeProperty(RSTProperty)
 	PropertyGetters[SerialNumberProperty] = getTheirExchangeProperty(SerialNumberProperty)
 	PropertyGetters[MemberNumberProperty] = getTheirExchangeProperty(MemberNumberProperty)
 	PropertyGetters[NoMemberProperty] = getTheirExchangeProperty(NoMemberProperty)
@@ -54,7 +56,8 @@ func init() {
 	PropertyGetters[NameProperty] = getTheirExchangeProperty(NameProperty)
 	PropertyGetters[StateProvinceProperty] = getTheirExchangeProperty(StateProvinceProperty)
 	PropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
-	PropertyGetters[AlphanumProperty] = getTheirExchangeProperty(AlphanumProperty)
+	PropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
+	PropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 }
 
 // Common Exchange Validators
@@ -91,7 +94,8 @@ var (
 	validNoMember      = regexp.MustCompile(`(NM)?`)
 	validName          = regexp.MustCompile(`[A-Z]+`)
 	validStateProvince = regexp.MustCompile(`AB|AL|AK|AZ|AR|BC|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MB|MI|MN|MS|MO|MT|NB|NE|NV|NH|NJ|NL|NM|NS|NY|NC|ND|OH|OK|ON|OR|PA|PE|QC|RI|SC|SD|SK|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
-	validAlphanum      = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
+	validGenericText   = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
+	validGenericNumber = regexp.MustCompile(`[0-9]*`)
 
 	CallsignValidator = PropertyValidatorFunc(func(exchange string, _ PrefixDatabase) error {
 		_, err := callsign.Parse(exchange)

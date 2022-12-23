@@ -101,6 +101,15 @@ func (f ExchangeField) Strings() []string {
 	return result
 }
 
+func (f ExchangeField) Contains(property Property) bool {
+	for _, p := range f {
+		if p == property {
+			return true
+		}
+	}
+	return false
+}
+
 type Scoring struct {
 	QSORules    []ScoringRule `yaml:"qsos"`
 	QSOBandRule BandRule      `yaml:"qso_band_rule"`
