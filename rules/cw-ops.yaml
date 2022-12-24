@@ -44,7 +44,7 @@ examples:
       modes: [cw]
       my_exchange:
         name: karl
-        generic_text: dl
+        dxcc_prefix: dl
     qsos:
     - their_call: dl1abc
       their_exchange: [hans, dl]
