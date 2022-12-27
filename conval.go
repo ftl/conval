@@ -111,6 +111,12 @@ type PrefixDatabase interface {
 	Find(s string) (Continent, DXCCEntity, bool)
 }
 
+type PrefixDatabaseFunc func(s string) (Continent, DXCCEntity, bool)
+
+func (f PrefixDatabaseFunc) Find(s string) (Continent, DXCCEntity, bool) {
+	return f(s)
+}
+
 func NewPrefixDatabase() (*prefixDatabase, error) {
 	prefixes, _, err := dxcc.DefaultPrefixes(true)
 	if err != nil {
