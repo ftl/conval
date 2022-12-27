@@ -127,7 +127,7 @@ examples:
         their_continent: eu
         their_country: dl
         band: 80m
-        points: 0
+        points: 1
         multis: 0
         duplicate: true
       - their_call: dl1abc
@@ -182,7 +182,7 @@ examples:
         their_country: dl
         band: 80m
         mode: cw
-        points: 0
+        points: 1
         multis: 0
         duplicate: true
       - their_call: dl1abc
@@ -229,7 +229,7 @@ examples:
         their_continent: eu
         their_country: dl
         band: 80m
-        points: 0
+        points: 3
         multis: 0
         duplicate: true
       - their_call: dl1abc

@@ -59,7 +59,7 @@ examples:
     - their_call: dl1abc
       their_exchange: [hans, dl]
       band: 80m
-      points: 0
+      points: 1
       multis: 0
       duplicate: true
     - their_call: dl1abc

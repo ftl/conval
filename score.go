@@ -285,11 +285,6 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		}
 	}
 
-	if result.Duplicate {
-		result.Points = 0
-		result.Multis = 0
-	}
-
 	return result
 }
 

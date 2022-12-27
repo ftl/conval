@@ -379,7 +379,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 	expectedScores := []QSOScore{
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{QSOs: 3, Points: 2}
 
@@ -413,10 +413,10 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 	expectedScores := []QSOScore{
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{QSOs: 6, Points: 4}
 
@@ -456,16 +456,16 @@ func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
 	expectedScores := []QSOScore{
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 0, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
 	}
 	expectedTotalScore := BandScore{QSOs: 12, Points: 8}
 
