@@ -79,6 +79,7 @@ type Category struct {
 	Bands    BandMode     `yaml:"bands,omitempty"`
 	Modes    []Mode       `yaml:"modes,omitempty"`
 	Assisted bool         `yaml:"assisted,omitempty"`
+	Overlay  Overlay      `yaml:"overlay,omitempty"`
 }
 
 type ExchangeDefinition struct {

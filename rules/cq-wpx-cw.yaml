@@ -6,10 +6,13 @@ duration-constraints:
 - operator_mode: single
   overlay: classic
   duration: 24h
+  constraint_mode: total_time
 - operator_mode: single
   duration: 36h
+  constraint_mode: total_time
 - operator_mode: multi
   duration: 48h
+  constraint_mode: total_time
 breaks:
 - operator_mode: single
   duration: 1h
