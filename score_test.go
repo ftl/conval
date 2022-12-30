@@ -13,7 +13,7 @@ func TestCounter_SimplestHappyPath(t *testing.T) {
 		Scoring: Scoring{
 			QSORules:    []ScoringRule{{Value: 1}},
 			QSOBandRule: OncePerBand,
-			MultiRules:  []ScoringRule{{Value: 1}, {Value: 2}},
+			MultiRules:  []ScoringRule{{Value: 2}},
 		},
 	}
 	setup := Setup{}
@@ -24,7 +24,7 @@ func TestCounter_SimplestHappyPath(t *testing.T) {
 	qsoScore := counter.Add(qso)
 
 	assert.Equal(t, 1, qsoScore.Points, "points")
-	assert.Equal(t, 3, qsoScore.Multis, "multis")
+	assert.Equal(t, 2, qsoScore.Multis, "multis")
 }
 
 func TestFilterScoringRules(t *testing.T) {
@@ -300,6 +300,139 @@ func TestFilterScoringRules(t *testing.T) {
 			expected: []ScoringRule{
 				{Property: CQZoneProperty, BandRule: OncePerBand, Value: 1},
 				{Property: DXCCEntityProperty, BandRule: OncePerBand, Value: 1},
+			},
+		},
+		{
+			desc: "minimum age",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "23"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "29"},
+					},
+					Value: 2,
+				},
+			},
+			exchange: QSOExchange{
+				AgeProperty: "28",
+			},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "23"},
+					},
+					Value: 1,
+				},
+			},
+		},
+		{
+			desc: "maximum age",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Max: "23"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Max: "29"},
+					},
+					Value: 2,
+				},
+			},
+			exchange: QSOExchange{
+				AgeProperty: "28",
+			},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Max: "29"},
+					},
+					Value: 2,
+				},
+			},
+		},
+		{
+			desc: "age in range",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "23", Max: "29"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "13", Max: "19"},
+					},
+					Value: 2,
+				},
+			},
+			exchange: QSOExchange{
+				AgeProperty: "28",
+			},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "23", Max: "29"},
+					},
+					Value: 1,
+				},
+			},
+		},
+		{
+			desc: "age out of range",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "23", Max: "29"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "13", Max: "19"},
+					},
+					Value: 2,
+				},
+			},
+			exchange: QSOExchange{
+				AgeProperty: "20",
+			},
+			expected: []ScoringRule{},
+		},
+		{
+			desc: "age below gap",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Min: "23"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Max: "19"},
+					},
+					Value: 2,
+				},
+			},
+			exchange: QSOExchange{
+				AgeProperty: "18",
+			},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: AgeProperty, Max: "19"},
+					},
+					Value: 2,
+				},
 			},
 		},
 	}

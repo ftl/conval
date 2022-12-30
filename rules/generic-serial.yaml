@@ -25,7 +25,6 @@ scoring:
   qsos:
   - value: 1
   qso_band_rule: once_per_band
-  multis: 
 examples:
   - setup:
       bands: [80m, 40m, 20m]

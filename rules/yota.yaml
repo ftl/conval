@@ -64,18 +64,33 @@ exchange:
 scoring:
   qsos:
   - their_continent: [same]
-    min.age: 26
+    property_constraints:
+      - name: age
+        min: 26
     value: 1
   - their_continent: [other]
-    min.age: 26
+    property_constraints:
+      - name: age
+        min: 26
     value: 3
-  - max.age: 11
+  - property_constraints:
+      - name: age
+        max: 11
     value: 13
-  - max.age: 16
+  - property_constraints:
+      - name: age
+        min: 12
+        max: 16
     value: 12
-  - max.age: 21
+  - property_constraints:
+      - name: age
+        min: 17
+        max: 21
     value: 11
-  - max.age: 25
+  - property_constraints:
+      - name: age
+        min: 22
+        max: 25
     value: 10
   qso_band_rule: once_per_band_and_mode
   multis: 
@@ -84,6 +99,8 @@ scoring:
     value: 1
 examples:
   - setup:
+      my_continent: eu
+      my_country: dl
       bands: [80m, 40m, 20m]
       modes: [cw, ssb]
     qsos:
@@ -105,6 +122,15 @@ examples:
       points: 1
       multis: 0
       duplicate: false
+    - their_call: n1abc
+      their_exchange: [599, 68]
+      their_continent: na 
+      their_country: k
+      band: 80m
+      mode: ssb
+      points: 3
+      multis: 0
+      duplicate: false
     - their_call: dl1abc
       their_exchange: [599, 68]
       their_continent: eu
@@ -119,6 +145,7 @@ examples:
       their_continent: eu
       their_country: dl
       band: 40m
+      mode: cw
       points: 1
       multis: 0
       duplicate: true
@@ -159,6 +186,6 @@ examples:
       points: 12
       multis: 1
     score:
-      qsos: 9
-      points: 61
+      qsos: 10
+      points: 64
       multis: 7

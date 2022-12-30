@@ -2,6 +2,7 @@ package conval
 
 import (
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/ftl/hamradio/callsign"
@@ -203,6 +204,8 @@ func (c *Counter) Add(qso QSO) QSOScore {
 }
 
 func (c Counter) Probe(qso QSO) QSOScore {
+	// log.Printf("probing %+v", qso)
+
 	result := QSOScore{
 		MultiValues:      make(map[Property]string),
 		MultiBandAndMode: make(map[Property]BandAndMode),
@@ -391,6 +394,55 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			}
 			ruleScore++
 		}
+		if len(rule.PropertyConstraints) > 0 {
+			propertyConstraintsMatched := 0
+
+			for _, constraint := range rule.PropertyConstraints {
+				value := strings.ToLower(strings.TrimSpace(getProperty(constraint.Name)))
+				if value == "" {
+					break
+				}
+				intValue, err := strconv.Atoi(value)
+				if err != nil {
+					break
+				}
+				if constraint.Min != "" && constraint.Max != "" {
+					min, err := strconv.Atoi(constraint.Min)
+					if err != nil {
+						break
+					}
+					max, err := strconv.Atoi(constraint.Max)
+					if err != nil {
+						break
+					}
+					if intValue < min || intValue > max {
+						break
+					}
+				} else if constraint.Min != "" {
+					min, err := strconv.Atoi(constraint.Min)
+					if err != nil {
+						break
+					}
+					if intValue < min {
+						break
+					}
+				} else if constraint.Max != "" {
+					max, err := strconv.Atoi(constraint.Max)
+					if err != nil {
+						break
+					}
+					if intValue > max {
+						break
+					}
+				}
+				propertyConstraintsMatched++
+			}
+			if propertyConstraintsMatched != len(rule.PropertyConstraints) {
+				continue
+			}
+
+			ruleScore++
+		}
 
 		ruleScore += rule.AdditionalWeight
 
@@ -399,6 +451,10 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 		if maxRuleScore < ruleScore {
 			maxRuleScore = ruleScore
 		}
+	}
+
+	if maxRuleScore == 0 && len(matchingRules) > 1 {
+		return []ScoringRule{}
 	}
 
 	result := make([]ScoringRule, 0, len(matchingRules))

@@ -112,22 +112,29 @@ func (f ExchangeField) Contains(property Property) bool {
 }
 
 type Scoring struct {
-	QSORules    []ScoringRule `yaml:"qsos"`
-	QSOBandRule BandRule      `yaml:"qso_band_rule"`
-	MultiRules  []ScoringRule `yaml:"multis"`
+	QSORules    []ScoringRule `yaml:"qsos,omitempty"`
+	QSOBandRule BandRule      `yaml:"qso_band_rule,omitempty"`
+	MultiRules  []ScoringRule `yaml:"multis,omitempty"`
 }
 
 type ScoringRule struct {
-	MyContinent           []Continent   `yaml:"my_continent,omitempty"`
-	MyCountry             []DXCCEntity  `yaml:"my_country,omitempty"`
-	TheirContinent        []Continent   `yaml:"their_continent,omitempty"`
-	TheirCountry          []DXCCEntity  `yaml:"their_country,omitempty"`
-	TheirWorkingCondition string        `yaml:"their_working_condition,omitempty"`
-	Bands                 []ContestBand `yaml:"bands,omitempty"`
-	Property              Property      `yaml:"property,omitempty"`
-	BandRule              BandRule      `yaml:"band_rule,omitempty"`
-	AdditionalWeight      int           `yaml:"additional_weight,omitempty"`
-	Value                 int           `yaml:"value,omitempty"`
+	MyContinent           []Continent          `yaml:"my_continent,omitempty"`
+	MyCountry             []DXCCEntity         `yaml:"my_country,omitempty"`
+	TheirContinent        []Continent          `yaml:"their_continent,omitempty"`
+	TheirCountry          []DXCCEntity         `yaml:"their_country,omitempty"`
+	TheirWorkingCondition string               `yaml:"their_working_condition,omitempty"`
+	Bands                 []ContestBand        `yaml:"bands,omitempty"`
+	Property              Property             `yaml:"property,omitempty"` // only useful for multis
+	PropertyConstraints   []PropertyConstraint `yaml:"property_constraints,omitempty"`
+	BandRule              BandRule             `yaml:"band_rule,omitempty"`
+	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`
+	Value                 int                  `yaml:"value,omitempty"`
+}
+
+type PropertyConstraint struct {
+	Name Property `yaml:"name"`
+	Min  string   `yaml:"min,omitempty"`
+	Max  string   `yaml:"max,omitempty"`
 }
 
 type Example struct {
