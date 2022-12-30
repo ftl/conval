@@ -62,8 +62,18 @@ func (d Definition) ExchangeFields() []ExchangeField {
 
 type ConstrainedDuration struct {
 	Constraint `yaml:",inline"`
-	Duration   time.Duration `yaml:"duration"`
+	Duration   time.Duration          `yaml:"duration"`
+	Mode       DurationConstraintMode `yaml:"constraint_mode,omitempty"`
 }
+
+type DurationConstraintMode string
+
+const (
+	// TotalTime counts from the timestamp of the first QSO until the timestamp of the last QSO without considering breaks.
+	TotalTime DurationConstraintMode = "total_time"
+	// ActiveTime counts from the timestamp of the first QSO until the timestamp of the last QSO, breaks that last at least one hour are subtracted.
+	ActiveTime DurationConstraintMode = "active_time"
+)
 
 type BandChangeRule struct {
 	Constraint          `yaml:",inline"`
