@@ -82,15 +82,25 @@ type BandChangeRule struct {
 }
 
 type Category struct {
-	Name     string       `yaml:"name"`
-	Operator OperatorMode `yaml:"operator,omitempty"`
-	TX       TXMode       `yaml:"tx,omitempty"`
-	Power    PowerMode    `yaml:"power,omitempty"`
-	Bands    BandMode     `yaml:"bands,omitempty"`
-	Modes    []Mode       `yaml:"modes,omitempty"`
-	Assisted bool         `yaml:"assisted,omitempty"`
-	Overlay  Overlay      `yaml:"overlay,omitempty"`
+	Name      string       `yaml:"name"`
+	Operator  OperatorMode `yaml:"operator,omitempty"`
+	TX        TXMode       `yaml:"tx,omitempty"`
+	Power     PowerMode    `yaml:"power,omitempty"`
+	Bands     BandMode     `yaml:"bands,omitempty"`
+	Modes     []Mode       `yaml:"modes,omitempty"`
+	Assisted  bool         `yaml:"assisted,omitempty"`
+	Overlay   Overlay      `yaml:"overlay,omitempty"`
+	ScoreMode ScoreMode    `yaml:"score_mode,omitempty"`
 }
+
+type ScoreMode string
+
+const (
+	// StrictScore allows only the number of bands defined in the category (single, <any number>, all). If more bands were worked, the claimed score is zero.
+	StrictScore ScoreMode = "strict"
+	// BestScore counts only the best n bands, according to the number of bands defined in the category (single, <any number>, all).
+	BestScore ScoreMode = "best"
+)
 
 type ExchangeDefinition struct {
 	MyContinent           []Continent     `yaml:"my_continent,omitempty"`

@@ -13,15 +13,15 @@ breaks:
 categories:
 - name: Single Operator 3 Bands Mixed (open)
   operator_mode: single
-  bands: all
+  bands: 3
   modes: [all]
-  band_score: best.3
+  score_mode: best
 - name: Single Operator 3 Bands Mixed (YOTA)
   operator_mode: single
-  bands: all
+  bands: 3
   modes: [all]
   overlay: youth
-  band_score: best.3
+  score_mode: best
 - name: Single Operator All Bands Mixed (open)
   operator_mode: single
   bands: all
