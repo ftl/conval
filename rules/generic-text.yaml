@@ -1,0 +1,78 @@
+identifier: GENERIC-TEXT
+name: Generic Contest with a Textual Exchange
+official_rules: 
+upload_url: 
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+overlays:
+modes:
+- cw
+- ssb
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- fields:
+  - [rst]
+  - [generic_text]
+scoring:
+  qsos:
+  - value: 1
+  qso_band_rule: once_per_band
+  multis:
+  - property: generic_text
+    band_rule: once
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        generic_text: cheddar
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, cheddar]
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, cheddar]
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, cheddar]
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, brie]
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange: [599, ricotta]
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange: [599, ricotta]
+      band: 20m
+      points: 1
+      multis: 0
+      duplicate: false
+    score:
+      qsos: 6
+      points: 5
+      multis: 3
