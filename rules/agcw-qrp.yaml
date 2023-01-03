@@ -1,0 +1,148 @@
+identifier: AGCW-QRP
+name: AGCW QRP/QRP-Party
+official_rules: https://www.agcw.de/contest/qrp-qrp/
+upload_url: mailto:dj4fv@agcw.de
+upload_format: cabrillo
+duration: 6h
+duration-constraints:
+breaks:
+categories:
+- name: Class A, max. 5W out
+  operator_mode: single
+  power: qrp
+  bands: all
+- name: Class B, max. 20W out
+  operator_mode: single
+  power: low
+  bands: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- fields:
+  - [rst]
+  - [serial]
+  - [class]
+scoring:
+  qsos:
+  - property_constraints:
+    - name: class
+      their_value: a
+    value: 2
+  - property_constraints:
+    - name: class
+      their_value: b
+    value: 1
+  - value: 0
+  qso_band_rule: once_per_band
+  multis: 
+  - property: dxcc_entity
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        class: a
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, a]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124, a]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, a]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, b]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: f3abc
+      their_exchange: [599, 345, b]
+      their_continent: eu
+      their_country: f
+      band: 40m
+      points: 1
+      multis: 1
+    score:
+      qsos: 5
+      points: 6
+      multis: 3
+      total: 18
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        class: b
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, a]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124, a]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, a]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, b]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: f3abc
+      their_exchange: [599, 345, b]
+      their_continent: eu
+      their_country: f
+      band: 40m
+      points: 1
+      multis: 1
+    score:
+      qsos: 5
+      points: 6
+      multis: 3
+      total: 18
