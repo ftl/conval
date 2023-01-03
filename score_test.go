@@ -501,29 +501,31 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 		Scoring: Scoring{
 			QSORules:    []ScoringRule{{Value: 1}},
 			QSOBandRule: Once,
+			MultiRules:  []ScoringRule{{Property: GenericTextProperty, Value: 2}},
 		},
 	}
 	setup := Setup{}
 	qsos := []QSO{
-		{TheirCall: callsign.MustParse("DL1ABC")},
-		{TheirCall: callsign.MustParse("DL2ABC")},
-		{TheirCall: callsign.MustParse("DL1ABC")},
+		{TheirCall: callsign.MustParse("DL1ABC"), TheirExchange: QSOExchange{GenericTextProperty: "1"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), TheirExchange: QSOExchange{GenericTextProperty: "2"}},
+		{TheirCall: callsign.MustParse("DL1ABC"), TheirExchange: QSOExchange{GenericTextProperty: "3"}},
 	}
 	expectedScores := []QSOScore{
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 1, Duplicate: false, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
-		{Points: 1, Duplicate: true, MultiValues: map[Property]string{}, MultiBandAndMode: map[Property]BandAndMode{}},
+		{Points: 1, Multis: 2, Duplicate: false, MultiValues: map[Property]string{GenericTextProperty: "1"}, MultiBandAndMode: map[Property]BandAndMode{GenericTextProperty: {}}},
+		{Points: 1, Multis: 2, Duplicate: false, MultiValues: map[Property]string{GenericTextProperty: "2"}, MultiBandAndMode: map[Property]BandAndMode{GenericTextProperty: {}}},
+		{Points: 1, Multis: 2, Duplicate: true, MultiValues: map[Property]string{GenericTextProperty: "3"}, MultiBandAndMode: map[Property]BandAndMode{GenericTextProperty: {}}},
 	}
-	expectedTotalScore := BandScore{QSOs: 3, Points: 2}
+	expectedTotalScore := BandScore{QSOs: 3, Points: 2, Multis: 4}
 
 	counter := NewCounter(definition, setup)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
-		assert.Equal(t, expectedScores[i], actualScore)
+		assert.Equal(t, expectedScores[i], actualScore, i)
 	}
 	actualTotalScore := counter.TotalScore()
-	assert.Equal(t, expectedTotalScore, actualTotalScore)
+	assert.Equal(t, expectedTotalScore, actualTotalScore, "total score")
+	assert.Equal(t, expectedTotalScore.Points*expectedTotalScore.Multis, actualTotalScore.Total())
 }
 
 func TestCounter_Add_Points_OncePerBand(t *testing.T) {
