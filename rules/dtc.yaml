@@ -1,0 +1,136 @@
+identifier: DTC
+name: German Telegraphy Contest (AGCW + HSC)
+official_rules: https://www.agcw.de/contest/dtc
+upload_url: http://contest.agcw.de/dtc
+upload_format: cabrillo
+duration: 3h
+duration-constraints:
+breaks:
+categories:
+- name: QRP (<= 5W out)
+  operator_mode: single
+  power: qrp
+  bands: all
+- name: LP (> 5W, <= 100W out)
+  operator_mode: single
+  power: low
+  bands: all
+- name: HP (> 100W out)
+  operator_mode: single
+  power: high
+  bands: all
+- name: SWL
+  operator_mode: single
+  bands: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+exchange:
+- their_country: [dl]
+  fields:
+  - [rst]
+  - [generic_text]
+- fields:
+  - [rst]
+scoring:
+  qsos:
+  - property_constraints:
+    - name: their_call
+      their_value: da0hsc
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: df0hsc
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: dk0hsc
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: dl0hsc
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: df0acw
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: df0agc
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: dl0agc
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: dk0ag
+    value: 2
+  - property_constraints:
+    - name: their_call
+      their_value: dl0da
+    value: 2
+  - value: 1
+  qso_band_rule: once_per_band
+  multi_operation: add
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        generic_text: ba
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, b]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, b]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, b]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, k]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      duplicate: false
+    - their_call: da0hsc
+      their_exchange: [599, k]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      duplicate: false
+    - their_call: f3abc
+      their_exchange: [599]
+      their_continent: eu
+      their_country: f
+      band: 40m
+      points: 1
+    - their_call: f3abc
+      their_exchange: [599]
+      their_continent: eu
+      their_country: f
+      band: 20m
+      points: 1
+    score:
+      qsos: 7
+      points: 7
+      total: 7
