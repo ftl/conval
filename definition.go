@@ -37,25 +37,36 @@ type Definition struct {
 }
 
 func (d Definition) ExchangeFields() []ExchangeField {
-	result := make([]ExchangeField, 0, 3)
-	usedProperties := make([]map[Property]bool, 0, 3)
+	fieldCount := 0
 	for _, definition := range d.Exchange {
-		for i, field := range definition.Fields {
-			if i >= len(result) {
-				result = append(result, field)
-				usedProperties = append(usedProperties, make(map[Property]bool))
-				for _, property := range field {
-					usedProperties[i][property] = true
-				}
+		definitionFieldCount := len(definition.Fields)
+		if fieldCount < definitionFieldCount {
+			fieldCount = definitionFieldCount
+		}
+	}
+	result := make([]ExchangeField, fieldCount)
+	usedProperties := make([]map[Property]bool, fieldCount)
+	appendProperty := func(field ExchangeField, usedProperties map[Property]bool, property Property) (ExchangeField, map[Property]bool) {
+		if usedProperties[property] {
+			return field, usedProperties
+		}
+		usedProperties[property] = true
+		field = append(field, property)
+		return field, usedProperties
+	}
+	for _, definition := range d.Exchange {
+		for i := range result {
+			if usedProperties[i] == nil {
+				usedProperties[i] = make(map[Property]bool)
+			}
+			if i >= len(definition.Fields) {
+				result[i], usedProperties[i] = appendProperty(result[i], usedProperties[i], EmptyProperty)
 				continue
 			}
 
+			field := definition.Fields[i]
 			for _, property := range field {
-				if usedProperties[i][property] {
-					continue
-				}
-				result[i] = append(result[i], property)
-				usedProperties[i][property] = true
+				result[i], usedProperties[i] = appendProperty(result[i], usedProperties[i], property)
 			}
 		}
 	}

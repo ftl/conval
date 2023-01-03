@@ -71,7 +71,7 @@ func TestDefinition_ExchangeFields(t *testing.T) {
 			expected: []ExchangeField{
 				{RSTProperty},
 				{SerialNumberProperty, NameProperty},
-				{StateProvinceProperty},
+				{EmptyProperty, StateProvinceProperty},
 			},
 		},
 	}

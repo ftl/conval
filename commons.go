@@ -31,6 +31,7 @@ const (
 
 	GenericTextProperty   Property = "generic_text"
 	GenericNumberProperty Property = "generic_number"
+	EmptyProperty         Property = "empty"
 )
 
 func init() {
@@ -48,6 +49,7 @@ func init() {
 	PropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
 	PropertyValidators[GenericTextProperty] = RegexpValidator(validGenericText, "generic text")
 	PropertyValidators[GenericNumberProperty] = RegexpValidator(validGenericNumber, "generic number")
+	PropertyValidators[EmptyProperty] = EmptyValidator
 
 	PropertyGetters[TheirCallProperty] = PropertyGetterFunc(getTheirCall)
 	PropertyGetters[RSTProperty] = getTheirExchangeProperty(RSTProperty)
@@ -65,6 +67,7 @@ func init() {
 	PropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
 	PropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	PropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
+	PropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
 }
 
 // Common Exchange Validators
@@ -93,6 +96,14 @@ func NumberRangeValidator(from, to int, name string) PropertyValidator {
 		return nil
 	})
 }
+
+var EmptyValidator = PropertyValidatorFunc(func(exchange string, _ PrefixDatabase) error {
+	exchange = strings.TrimSpace(exchange)
+	if exchange != "" {
+		return fmt.Errorf("%s is not empty", exchange)
+	}
+	return nil
+})
 
 var (
 	validRST           = regexp.MustCompile(`[1-5][1-9][1-9]*`)
@@ -163,4 +174,8 @@ func getTheirExchangeProperty(property Property) PropertyGetter {
 	return PropertyGetterFunc(func(qso QSO) string {
 		return qso.TheirExchange[property]
 	})
+}
+
+func getEmpty(_ QSO) string {
+	return ""
 }

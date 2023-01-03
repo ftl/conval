@@ -43,7 +43,6 @@ type BandScore struct {
 	QSOs   int `yaml:"qsos" json:"qsos"`
 	Points int `yaml:"points" json:"points"`
 	Multis int `yaml:"multis" json:"multis"`
-	op     func(int, int) int
 }
 
 func NewCounter(definition Definition, setup Setup) *Counter {
