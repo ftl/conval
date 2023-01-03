@@ -25,6 +25,7 @@ const (
 	WorkingConditionProperty Property = "working_condition"
 	NameProperty             Property = "name"
 	AgeProperty              Property = "age"
+	ClassProperty            Property = "class"
 	StateProvinceProperty    Property = "state_province"
 	DXCCPrefixProperty       Property = "dxcc_prefix" // can be used as exchange, e.g. in the CWops contests
 
@@ -42,6 +43,7 @@ func init() {
 	PropertyValidators[ITUZoneProperty] = NumberRangeValidator(1, 90, "ITU zone")
 	PropertyValidators[NameProperty] = RegexpValidator(validName, "name")
 	PropertyValidators[AgeProperty] = RegexpValidator(validGenericNumber, "age")
+	PropertyValidators[ClassProperty] = RegexpValidator(validName, "class")
 	PropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
 	PropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
 	PropertyValidators[GenericTextProperty] = RegexpValidator(validGenericText, "generic text")
@@ -58,6 +60,7 @@ func init() {
 	PropertyGetters[WorkingConditionProperty] = PropertyGetterFunc(getCallsignWorkingCondition)
 	PropertyGetters[NameProperty] = getTheirExchangeProperty(NameProperty)
 	PropertyGetters[AgeProperty] = getTheirExchangeProperty(AgeProperty)
+	PropertyGetters[ClassProperty] = getTheirExchangeProperty(ClassProperty)
 	PropertyGetters[StateProvinceProperty] = getTheirExchangeProperty(StateProvinceProperty)
 	PropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
 	PropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
