@@ -20,16 +20,23 @@ func validateExample(definition *Definition, example Example, prefixes PrefixDat
 	for i, qso := range example.QSOs {
 		exchangeFields := counter.EffectiveExchangeFields(qso.TheirContinent, qso.TheirCountry)
 		// log.Printf("QSO #%d with exchange fields %v", i+1, exchangeFields)
-		qsoScore := counter.Add(qso.ToQSO(exchangeFields, prefixes))
+		qsoScore := counter.Add(qso.ToQSO(exchangeFields, example.Setup.MyExchange, prefixes))
 		if !(qso.Score.Equal(qsoScore)) {
 			return fmt.Errorf("the score of QSO #%d is wrong, expected %d points * %d multis, duplicate should be %t, but got %d points * %d multis, duplicate is %t", i+1, qso.Score.Points, qso.Score.Multis, qso.Score.Duplicate, qsoScore.Points, qsoScore.Multis, qsoScore.Duplicate)
 		}
 	}
 
 	totalScore := counter.TotalScore()
-	if example.Score != totalScore {
+	if !equalScore(counter, example.Score, totalScore) {
 		return fmt.Errorf("the total score is wrong, expected %d qsos with %d points * %d multis, but got %d qsos with %d points * %d multis", example.Score.QSOs, example.Score.Points, example.Score.Multis, totalScore.QSOs, totalScore.Points, totalScore.Multis)
 	}
 
 	return nil
+}
+
+func equalScore(counter *Counter, expected ScoreExample, actual BandScore) bool {
+	return expected.QSOs == actual.QSOs &&
+		expected.Points == actual.Points &&
+		expected.Multis == actual.Multis &&
+		expected.Total == counter.Total(actual)
 }

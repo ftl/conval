@@ -162,6 +162,7 @@ examples:
       qsos: 8
       points: 17
       multis: 4
+      total: 68
   - setup:
       my_continent: eu
       my_country: dl
@@ -197,6 +198,7 @@ examples:
       qsos: 3
       points: 2
       multis: 1
+      total: 2
   - setup:
       my_continent: eu
       my_country: f
@@ -264,3 +266,4 @@ examples:
       qsos: 8
       points: 12
       multis: 3
+      total: 36

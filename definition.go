@@ -3,6 +3,8 @@ package conval
 import (
 	"io"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
@@ -132,9 +134,10 @@ func (f ExchangeField) Contains(property Property) bool {
 }
 
 type Scoring struct {
-	QSORules    []ScoringRule `yaml:"qsos,omitempty"`
-	QSOBandRule BandRule      `yaml:"qso_band_rule,omitempty"`
-	MultiRules  []ScoringRule `yaml:"multis,omitempty"`
+	QSORules       []ScoringRule  `yaml:"qsos,omitempty"`
+	QSOBandRule    BandRule       `yaml:"qso_band_rule,omitempty"`
+	MultiRules     []ScoringRule  `yaml:"multis,omitempty"`
+	MultiOperation MultiOperation `yaml:"multi_operation,omitempty"`
 }
 
 type ScoringRule struct {
@@ -151,16 +154,83 @@ type ScoringRule struct {
 	Value                 int                  `yaml:"value,omitempty"`
 }
 
+type MultiOperation string
+
+const (
+	DefaultMultiOperation MultiOperation = ""
+	MultiplyMultis        MultiOperation = "multiply"
+	AddMultis             MultiOperation = "add"
+)
+
 type PropertyConstraint struct {
-	Name Property `yaml:"name"`
-	Min  string   `yaml:"min,omitempty"`
-	Max  string   `yaml:"max,omitempty"`
+	Name       Property `yaml:"name"`
+	Min        string   `yaml:"min,omitempty"`
+	Max        string   `yaml:"max,omitempty"`
+	MyValue    string   `yaml:"my_value,omitempty"`
+	TheirValue string   `yaml:"their_value,omitempty"`
+}
+
+func (c PropertyConstraint) Matches(myValue string, theirValue string) bool {
+	myValue = sanitizePropertyValue(myValue)
+	theirValue = sanitizePropertyValue(theirValue)
+	result := true
+	if c.Min != "" || c.Max != "" {
+		result = result && c.matchesMinMax(theirValue)
+	}
+	if c.MyValue != "" {
+		result = result && myValue == c.MyValue
+	}
+	if c.TheirValue != "" {
+		result = result && theirValue == c.TheirValue
+	}
+	return result
+}
+
+func (c PropertyConstraint) matchesMinMax(value string) bool {
+	intValue, err := strconv.Atoi(value)
+	if err != nil {
+		return false
+	}
+	if c.Min != "" && c.Max != "" {
+		min, err := strconv.Atoi(c.Min)
+		if err != nil {
+			return false
+		}
+		max, err := strconv.Atoi(c.Max)
+		if err != nil {
+			return false
+		}
+		if intValue < min || intValue > max {
+			return false
+		}
+	} else if c.Min != "" {
+		min, err := strconv.Atoi(c.Min)
+		if err != nil {
+			return false
+		}
+		if intValue < min {
+			return false
+		}
+	} else if c.Max != "" {
+		max, err := strconv.Atoi(c.Max)
+		if err != nil {
+			return false
+		}
+		if intValue > max {
+			return false
+		}
+	}
+	return true
+}
+
+func sanitizePropertyValue(s string) string {
+	return strings.ToLower(strings.TrimSpace(s))
 }
 
 type Example struct {
 	Setup SetupExample `yaml:"setup"`
 	QSOs  []QSOExample `yaml:"qsos"`
-	Score BandScore    `yaml:"score"`
+	Score ScoreExample `yaml:"score"`
 }
 
 type SetupExample struct {
@@ -221,13 +291,12 @@ type QSOExample struct {
 	Band      ContestBand `yaml:"band,omitempty"`
 	Mode      Mode        `yaml:"mode,omitempty"`
 
-	MyExchange    QSOExchange `yaml:"my_exchange,omitempty"`
-	TheirExchange []string    `yaml:"their_exchange,omitempty"`
+	TheirExchange []string `yaml:"their_exchange,omitempty"`
 
 	Score QSOScore `yaml:",inline"`
 }
 
-func (q QSOExample) ToQSO(fields []ExchangeField, prefixes PrefixDatabase) QSO {
+func (q QSOExample) ToQSO(fields []ExchangeField, myExchange QSOExchange, prefixes PrefixDatabase) QSO {
 	return QSO{
 		TheirCall:      callsign.MustParse(q.TheirCall),
 		TheirContinent: q.TheirContinent,
@@ -235,9 +304,16 @@ func (q QSOExample) ToQSO(fields []ExchangeField, prefixes PrefixDatabase) QSO {
 		Timestamp:      q.Timestamp,
 		Band:           q.Band,
 		Mode:           q.Mode,
-		MyExchange:     q.MyExchange,
+		MyExchange:     myExchange,
 		TheirExchange:  ParseExchange(fields, q.TheirExchange, prefixes),
 	}
+}
+
+type ScoreExample struct {
+	QSOs   int `yaml:"qsos,omitempty"`
+	Points int `yaml:"points,omitempty"`
+	Multis int `yaml:"multis,omitempty"`
+	Total  int `yaml:"total,omitempty"`
 }
 
 func LoadDefinitionFromFile(filename string) (*Definition, error) {

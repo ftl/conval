@@ -177,6 +177,7 @@ examples:
       qsos: 6
       points: 14
       multis: 4
+      total: 56
   - setup:
       my_continent: na
       my_country: ve
@@ -229,3 +230,4 @@ examples:
       qsos: 6
       points: 17
       multis: 4
+      total: 68

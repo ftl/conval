@@ -1,0 +1,145 @@
+identifier: AGCW-YL
+name: AGCW YL-CW-Party
+official_rules: https://www.agcw.de/contest/yl-cw-party/
+duration: 2h
+duration-constraints:
+breaks:
+categories:
+- name: YL
+  operator_mode: single
+  bands: all
+- name: OM
+  operator_mode: single
+  bands: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+exchange:
+- fields:
+  - [rst]
+  - [serial]
+  - [class]
+  - [name]
+scoring:
+  qsos:
+  - property_constraints:
+    - name: class
+      my_value: yl
+      their_value: yl
+    value: 2
+  - property_constraints:
+    - name: class
+      my_value: om
+      their_value: om
+    value: 0
+  - value: 1
+  qso_band_rule: once_per_band
+  multis: 
+  - property: dxcc_entity
+    property_constraints:
+    - name: class
+      my_value: yl
+    band_rule: once_per_band
+    additional_weight: 100
+    value: 1
+  - property: dxcc_entity
+    property_constraints:
+    - name: class
+      their_value: yl
+    band_rule: once_per_band
+    value: 1
+  multi_operation: add
+examples:
+  - setup:
+      bands: [80m]
+      modes: [cw]
+      my_exchange:
+        class: yl
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, om, Hans]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, om, Hans]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, yl, Rosi]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 0
+      duplicate: false
+    - their_call: f3abc
+      their_exchange: [599, 345, yl, Celine]
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 2
+      multis: 1
+    score:
+      qsos: 4
+      points: 5
+      multis: 2
+      total: 7
+  - setup:
+      bands: [80m]
+      modes: [cw]
+      my_exchange:
+        class: om
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, om, Hans]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 0
+      multis: 0
+      duplicate: false
+    - their_call: dl2abc
+      their_exchange: [599, 233, yl, Rosi]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl2abc
+      their_exchange: [599, 234, yl, Rosi]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: f3abc
+      their_exchange: [599, 345, yl, Celine]
+      their_continent: eu
+      their_country: f
+      band: 80m
+      points: 1
+      multis: 1
+    - their_call: ok4abc
+      their_exchange: [599, 543, om, Pavel]
+      their_continent: eu
+      their_country: ok
+      band: 80m
+      points: 0
+      multis: 0
+    score:
+      qsos: 5
+      points: 2
+      multis: 2
+      total: 4

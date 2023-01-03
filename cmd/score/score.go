@@ -47,6 +47,6 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 		QSOs:   totalScore.QSOs,
 		Points: totalScore.Points,
 		Multis: totalScore.Multis,
-		Total:  totalScore.Total(),
+		Total:  counter.Total(totalScore),
 	}, nil
 }

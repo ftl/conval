@@ -2,7 +2,6 @@ package conval
 
 import (
 	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/ftl/hamradio/callsign"
@@ -44,10 +43,7 @@ type BandScore struct {
 	QSOs   int `yaml:"qsos" json:"qsos"`
 	Points int `yaml:"points" json:"points"`
 	Multis int `yaml:"multis" json:"multis"`
-}
-
-func (s BandScore) Total() int {
-	return s.Points * s.Multis
+	op     func(int, int) int
 }
 
 func NewCounter(definition Definition, setup Setup) *Counter {
@@ -146,6 +142,15 @@ func (c Counter) TotalScore() BandScore {
 	return c.scorePerBand[BandAll]
 }
 
+func (c Counter) Total(score BandScore) int {
+	switch c.definition.Scoring.MultiOperation {
+	case AddMultis:
+		return score.Points + score.Multis
+	default:
+		return score.Points * score.Multis
+	}
+}
+
 func (c Counter) EffectiveExchangeFields(theirContinent Continent, theirCountry DXCCEntity) []ExchangeField {
 	return filterExchangeFields(c.definition.Exchange, c.setup.MyContinent, c.setup.MyCountry, theirContinent, theirCountry)
 }
@@ -211,7 +216,11 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		MultiBandAndMode: make(map[Property]BandAndMode),
 	}
 
-	getProperty := func(property Property) string {
+	getMyProperty := func(property Property) string {
+		return qso.MyExchange[property]
+	}
+
+	getTheirProperty := func(property Property) string {
 		getter, getterOK := PropertyGetters[property]
 		if !getterOK {
 			// log.Printf("no property getter for %s", property)
@@ -221,7 +230,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant QSO rules
-	qsoRules := filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	qsoRules := filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getMyProperty, getTheirProperty)
 	// log.Printf("found %d relevant QSO rules", len(qsoRules))
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
@@ -253,7 +262,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant multi rules
-	multiRules := filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getProperty)
+	multiRules := filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getMyProperty, getTheirProperty)
 	// log.Printf("found %d relevant multi rules", len(multiRules))
 	for _, rule := range multiRules {
 		if rule.Property == "" {
@@ -262,7 +271,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		}
 
 		// get the property value
-		value := getProperty(rule.Property)
+		value := getTheirProperty(rule.Property)
 		if value == "" {
 			continue
 		}
@@ -306,9 +315,10 @@ func effectiveBandAndMode(band ContestBand, mode Mode, rule BandRule) BandAndMod
 
 type propertyProvider func(property Property) string
 
-func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, getProperty propertyProvider) []ScoringRule {
+func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
 	matchingRules := make([]ScoringRule, 0, len(rules))
 	ruleScores := make([]int, 0, len(matchingRules))
+	maxRuleScores := make(map[Property]int)
 	maxRuleScore := 0
 	for _, rule := range rules {
 		ruleScore := 0
@@ -379,7 +389,7 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			}
 		}
 		if rule.TheirWorkingCondition != "" {
-			value := strings.ToLower(strings.TrimSpace(getProperty(WorkingConditionProperty)))
+			value := strings.ToLower(strings.TrimSpace(getTheirProperty(WorkingConditionProperty)))
 			if value != rule.TheirWorkingCondition {
 				// log.Printf("not their working condition %q %q", value, rule.TheirWorkingCondition)
 				continue
@@ -387,7 +397,7 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			ruleScore++
 		}
 		if rule.Property != "" {
-			value := getProperty(rule.Property)
+			value := getTheirProperty(rule.Property)
 			if value == "" {
 				// log.Printf("empty property %s", rule.Property)
 				continue
@@ -398,44 +408,11 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			propertyConstraintsMatched := 0
 
 			for _, constraint := range rule.PropertyConstraints {
-				value := strings.ToLower(strings.TrimSpace(getProperty(constraint.Name)))
-				if value == "" {
-					break
+				myValue := getMyProperty(constraint.Name)
+				theirValue := getTheirProperty(constraint.Name)
+				if constraint.Matches(myValue, theirValue) {
+					propertyConstraintsMatched++
 				}
-				intValue, err := strconv.Atoi(value)
-				if err != nil {
-					break
-				}
-				if constraint.Min != "" && constraint.Max != "" {
-					min, err := strconv.Atoi(constraint.Min)
-					if err != nil {
-						break
-					}
-					max, err := strconv.Atoi(constraint.Max)
-					if err != nil {
-						break
-					}
-					if intValue < min || intValue > max {
-						break
-					}
-				} else if constraint.Min != "" {
-					min, err := strconv.Atoi(constraint.Min)
-					if err != nil {
-						break
-					}
-					if intValue < min {
-						break
-					}
-				} else if constraint.Max != "" {
-					max, err := strconv.Atoi(constraint.Max)
-					if err != nil {
-						break
-					}
-					if intValue > max {
-						break
-					}
-				}
-				propertyConstraintsMatched++
 			}
 			if propertyConstraintsMatched != len(rule.PropertyConstraints) {
 				continue
@@ -448,6 +425,9 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 
 		matchingRules = append(matchingRules, rule)
 		ruleScores = append(ruleScores, ruleScore)
+		if maxRuleScores[rule.Property] < ruleScore {
+			maxRuleScores[rule.Property] = ruleScore
+		}
 		if maxRuleScore < ruleScore {
 			maxRuleScore = ruleScore
 		}
@@ -459,8 +439,14 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 
 	result := make([]ScoringRule, 0, len(matchingRules))
 	for i, rule := range matchingRules {
-		if ruleScores[i] == maxRuleScore || !onlyMostRelevant {
-			result = append(result, rule)
+		if onlyMostRelevant {
+			if ruleScores[i] == maxRuleScore {
+				result = append(result, rule)
+			}
+		} else {
+			if ruleScores[i] == maxRuleScores[rule.Property] {
+				result = append(result, rule)
+			}
 		}
 	}
 

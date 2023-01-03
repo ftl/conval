@@ -178,6 +178,7 @@ examples:
       qsos: 5
       points: 10
       multis: 7
+      total: 70
   - setup:
       my_continent: sa
       my_country: py
@@ -235,4 +236,5 @@ examples:
       qsos: 5
       points: 10
       multis: 7
+      total: 70
 

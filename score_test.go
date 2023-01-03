@@ -29,15 +29,17 @@ func TestCounter_SimplestHappyPath(t *testing.T) {
 
 func TestFilterScoringRules(t *testing.T) {
 	tt := []struct {
-		desc           string
-		rules          []ScoringRule
-		myContinent    Continent
-		myCountry      DXCCEntity
-		theirContinent Continent
-		theirCountry   DXCCEntity
-		band           ContestBand
-		exchange       QSOExchange
-		expected       []ScoringRule
+		desc             string
+		rules            []ScoringRule
+		myContinent      Continent
+		myCountry        DXCCEntity
+		theirContinent   Continent
+		theirCountry     DXCCEntity
+		band             ContestBand
+		myExchange       QSOExchange
+		theirExchange    QSOExchange
+		onlyMostRelevant bool
+		expected         []ScoringRule
 	}{
 		{
 			desc:     "one simple unspecific rule",
@@ -246,9 +248,10 @@ func TestFilterScoringRules(t *testing.T) {
 			myCountry:      "dl",
 			theirContinent: Africa,
 			theirCountry:   "zs",
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				MemberNumberProperty: "1234",
 			},
+			onlyMostRelevant: true,
 			expected: []ScoringRule{
 				{Property: MemberNumberProperty, Value: 3},
 			},
@@ -264,7 +267,7 @@ func TestFilterScoringRules(t *testing.T) {
 			myCountry:      "dl",
 			theirContinent: Africa,
 			theirCountry:   "zs",
-			exchange:       QSOExchange{},
+			theirExchange:  QSOExchange{},
 			expected: []ScoringRule{
 				{Value: 1},
 			},
@@ -293,7 +296,7 @@ func TestFilterScoringRules(t *testing.T) {
 			myCountry:      "k",
 			theirContinent: NorthAmerica,
 			theirCountry:   "k",
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				CQZoneProperty:     "5",
 				DXCCEntityProperty: "k",
 			},
@@ -318,7 +321,7 @@ func TestFilterScoringRules(t *testing.T) {
 					Value: 2,
 				},
 			},
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				AgeProperty: "28",
 			},
 			expected: []ScoringRule{
@@ -346,7 +349,7 @@ func TestFilterScoringRules(t *testing.T) {
 					Value: 2,
 				},
 			},
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				AgeProperty: "28",
 			},
 			expected: []ScoringRule{
@@ -374,7 +377,7 @@ func TestFilterScoringRules(t *testing.T) {
 					Value: 2,
 				},
 			},
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				AgeProperty: "28",
 			},
 			expected: []ScoringRule{
@@ -402,7 +405,7 @@ func TestFilterScoringRules(t *testing.T) {
 					Value: 2,
 				},
 			},
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				AgeProperty: "20",
 			},
 			expected: []ScoringRule{},
@@ -423,7 +426,7 @@ func TestFilterScoringRules(t *testing.T) {
 					Value: 2,
 				},
 			},
-			exchange: QSOExchange{
+			theirExchange: QSOExchange{
 				AgeProperty: "18",
 			},
 			expected: []ScoringRule{
@@ -435,15 +438,175 @@ func TestFilterScoringRules(t *testing.T) {
 				},
 			},
 		},
+		{
+			desc: "only my class equals",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "my"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, TheirValue: "their"},
+					},
+					Value: 2,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "my", TheirValue: "their"},
+					},
+					Value: 3,
+				},
+			},
+			myExchange: QSOExchange{
+				ClassProperty: "my",
+			},
+			theirExchange: QSOExchange{},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "my"},
+					},
+					Value: 1,
+				},
+			},
+		},
+		{
+			desc: "no values matches all",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty},
+					},
+					Value: 4,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "my"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, TheirValue: "their"},
+					},
+					Value: 2,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "my", TheirValue: "their"},
+					},
+					Value: 3,
+				},
+			},
+			myExchange: QSOExchange{
+				ClassProperty: "my",
+			},
+			theirExchange: QSOExchange{},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty},
+					},
+					Value: 4,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "my"},
+					},
+					Value: 1,
+				},
+			},
+		},
+		{
+			desc: "only my class equals",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "v1", TheirValue: "v1"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "v2", TheirValue: "v2"},
+					},
+					Value: 2,
+				},
+				{
+					Value: 3,
+				},
+			},
+			myExchange: QSOExchange{
+				ClassProperty: "v1",
+			},
+			theirExchange: QSOExchange{
+				ClassProperty: "v2",
+			},
+			expected: []ScoringRule{
+				{
+					Value: 3,
+				},
+			},
+		},
+		{
+			desc: "only the most relevant per property",
+			rules: []ScoringRule{
+				{
+					Property: DXCCEntityProperty,
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "v1"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, TheirValue: "v2"},
+					},
+					Value: 2,
+				},
+				{
+					Property: DXCCEntityProperty,
+					Value:    3,
+				},
+			},
+			myExchange: QSOExchange{
+				ClassProperty: "v1",
+			},
+			theirExchange: QSOExchange{
+				ClassProperty:      "v2",
+				DXCCEntityProperty: "dl",
+			},
+			expected: []ScoringRule{
+				{
+					Property: DXCCEntityProperty,
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, MyValue: "v1"},
+					},
+					Value: 1,
+				},
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{Name: ClassProperty, TheirValue: "v2"},
+					},
+					Value: 2,
+				},
+			},
+		},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			getProperty := func(property Property) string {
-				return tc.exchange[property]
+			getMyProperty := func(property Property) string {
+				return tc.myExchange[property]
+			}
+			getTheirProperty := func(property Property) string {
+				return tc.theirExchange[property]
 			}
 
-			actual := filterScoringRules(tc.rules, true, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry, tc.band, getProperty)
+			actual := filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry, tc.band, getMyProperty, getTheirProperty)
 
 			assert.Equal(t, tc.expected, actual)
 		})
@@ -525,7 +688,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 	}
 	actualTotalScore := counter.TotalScore()
 	assert.Equal(t, expectedTotalScore, actualTotalScore, "total score")
-	assert.Equal(t, expectedTotalScore.Points*expectedTotalScore.Multis, actualTotalScore.Total())
+	assert.Equal(t, expectedTotalScore.Points*expectedTotalScore.Multis, counter.Total(actualTotalScore))
 }
 
 func TestCounter_Add_Points_OncePerBand(t *testing.T) {
