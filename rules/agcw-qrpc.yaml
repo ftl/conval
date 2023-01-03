@@ -1,0 +1,254 @@
+identifier: AGCW-QRPC
+name: AGCW QRP-Contest
+official_rules: https://www.agcw.de/contest/qrp
+upload_url: mailto:qrptest@agcw.de
+upload_format: cabrillo
+duration: 6h
+duration-constraints:
+breaks:
+categories:
+- name: VLP (very low, 1W out)
+  operator_mode: single
+  power: qrp
+  bands: all
+- name: QRP (normal, 5W out)
+  operator_mode: single
+  power: qrp
+  bands: all
+- name: MP (moderate, 25W out)
+  operator_mode: single
+  power: low
+  bands: all
+- name: QRO (high, > 25W out)
+  operator_mode: single
+  power: high
+  bands: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- fields:
+  - [rst]
+  - [serial]
+  - [class]
+  - [member_number, nm]
+scoring:
+  qsos:
+  - property_constraints:
+    - name: class
+      my_value: qro
+      their_value: qro
+    value: 0
+  - property_constraints:
+    - name: class
+      my_value: qrp
+      their_value: qrp
+    value: 3
+  - property_constraints:
+    - name: class
+      my_value: vlp
+      their_value: vlp
+    value: 3
+  - property_constraints:
+    - name: class
+      my_value: qrp
+      their_value: vlp
+    value: 3
+  - property_constraints:
+    - name: class
+      my_value: vlp
+      their_value: qrp
+    value: 3
+  - value: 2
+  qso_band_rule: once_per_band
+  multis: 
+  - property: member_number
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        class: vlp
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, vlp, 1234]
+      band: 80m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124, vlp, 1234]
+      band: 40m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, vlp, 1234]
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, qrp, 2345]
+      band: 40m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange: [599, 345, mp, 132]
+      band: 40m
+      points: 2
+      multis: 1
+    - their_call: dl4abc
+      their_exchange: [599, 283, qro, nm]
+      band: 20m
+      points: 2
+      multis: 0
+    score:
+      qsos: 6
+      points: 13
+      multis: 4
+      total: 52
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        class: qrp
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, vlp, 1234]
+      band: 80m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124, vlp, 1234]
+      band: 40m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, vlp, 1234]
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, qrp, 2345]
+      band: 40m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange: [599, 345, mp, 132]
+      band: 40m
+      points: 2
+      multis: 1
+    - their_call: dl4abc
+      their_exchange: [599, 283, qro, nm]
+      band: 20m
+      points: 2
+      multis: 0
+    score:
+      qsos: 6
+      points: 13
+      multis: 4
+      total: 52
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        class: mp
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, vlp, 1234]
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124, vlp, 1234]
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, vlp, 1234]
+      band: 40m
+      points: 2
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, qrp, 2345]
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange: [599, 345, mp, 132]
+      band: 40m
+      points: 2
+      multis: 1
+    - their_call: dl4abc
+      their_exchange: [599, 283, qro, nm]
+      band: 20m
+      points: 2
+      multis: 0
+    score:
+      qsos: 6
+      points: 10
+      multis: 4
+      total: 40
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_exchange:
+        class: qro
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123, vlp, 1234]
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124, vlp, 1234]
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125, vlp, 1234]
+      band: 40m
+      points: 2
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234, qrp, 2345]
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_exchange: [599, 345, mp, 132]
+      band: 40m
+      points: 2
+      multis: 1
+    - their_call: dl4abc
+      their_exchange: [599, 283, qro, nm]
+      band: 20m
+      points: 0
+      multis: 0
+    score:
+      qsos: 6
+      points: 8
+      multis: 4
+      total: 32
