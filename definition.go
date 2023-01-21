@@ -95,15 +95,16 @@ type BandChangeRule struct {
 }
 
 type Category struct {
-	Name      string       `yaml:"name"`
-	Operator  OperatorMode `yaml:"operator,omitempty"`
-	TX        TXMode       `yaml:"tx,omitempty"`
-	Power     PowerMode    `yaml:"power,omitempty"`
-	Bands     BandMode     `yaml:"bands,omitempty"`
-	Modes     []Mode       `yaml:"modes,omitempty"`
-	Assisted  bool         `yaml:"assisted,omitempty"`
-	Overlay   Overlay      `yaml:"overlay,omitempty"`
-	ScoreMode ScoreMode    `yaml:"score_mode,omitempty"`
+	Name      string        `yaml:"name"`
+	Operator  OperatorMode  `yaml:"operator,omitempty"`
+	TX        TXMode        `yaml:"tx,omitempty"`
+	Power     PowerMode     `yaml:"power,omitempty"`
+	BandCount BandCount     `yaml:"band_count"`
+	Bands     []ContestBand `yaml:"bands,omitempty"`
+	Modes     []Mode        `yaml:"modes,omitempty"`
+	Assisted  bool          `yaml:"assisted,omitempty"`
+	Overlay   Overlay       `yaml:"overlay,omitempty"`
+	ScoreMode ScoreMode     `yaml:"score_mode,omitempty"`
 }
 
 type ScoreMode string
@@ -159,6 +160,7 @@ type ScoringRule struct {
 	TheirWorkingCondition string               `yaml:"their_working_condition,omitempty"`
 	Bands                 []ContestBand        `yaml:"bands,omitempty"`
 	Property              Property             `yaml:"property,omitempty"` // only useful for multis
+	Except                []string             `yaml:"except,omitempty"`   // only useful for multis
 	PropertyConstraints   []PropertyConstraint `yaml:"property_constraints,omitempty"`
 	BandRule              BandRule             `yaml:"band_rule,omitempty"`
 	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`

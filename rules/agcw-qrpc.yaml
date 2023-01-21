@@ -10,19 +10,19 @@ categories:
 - name: VLP (very low, 1W out)
   operator_mode: single
   power: qrp
-  bands: all
+  bands: [all]
 - name: QRP (normal, 5W out)
   operator_mode: single
   power: qrp
-  bands: all
+  bands: [all]
 - name: MP (moderate, 25W out)
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
 - name: QRO (high, > 25W out)
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
 overlays:
 modes:
 - cw

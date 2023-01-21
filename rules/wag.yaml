@@ -10,41 +10,41 @@ categories:
 - name: Single operator, CW, low power
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
   modes: [cw]
 - name: Single operator, CW, high power
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
   modes: [cw]
 - name: Single operator, SSB, low power
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
   modes: [ssb]
 - name: Single operator, SSB, high power
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
   modes: [ssb]
 - name: Single operator, mixed, low power
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
   modes: [all]
 - name: Single operator, mixed, high power
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
   modes: [all]
 - name: Single operator, mixed, QRP
   operator_mode: single
   power: qrp
-  bands: all
+  bands: [all]
   modes: [all]
 - name: Multi operator
   operator_mode: multi
-  bands: all
+  bands: [all]
   modes: [all]
 - name: SWL, single operator
 overlays:

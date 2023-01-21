@@ -13,37 +13,37 @@ breaks:
 categories:
 - name: Single Operator 3 Bands Mixed (open)
   operator_mode: single
-  bands: 3
+  band_count: 3
   modes: [all]
   score_mode: best
 - name: Single Operator 3 Bands Mixed (YOTA)
   operator_mode: single
-  bands: 3
+  band_count: 3
   modes: [all]
   overlay: youth
   score_mode: best
 - name: Single Operator All Bands Mixed (open)
   operator_mode: single
-  bands: all
+  band_count: all
   modes: [all]
 - name: Single Operator All Bands Mixed (YOTA)
   operator_mode: single
-  bands: all
+  band_count: all
   modes: [all]
   overlay: youth
 - name: Single Operator All Bands Mixed 6 hours (YOTA only)
   operator_mode: single
-  bands: all
+  band_count: all
   modes: [all]
   overlay: youth
 - name: Multi Operator Single Transmitter All Bands Mixed (YOTA only)
   operator_mode: multi
   tx: one
-  bands: all
+  band_count: all
   modes: [all]
   overlay: youth
 - name: SWL
-  bands: all
+  band_count: all
   modes: [all]
 - name: Station Sponsor
 overlays:

@@ -9,15 +9,15 @@ breaks:
 categories:
 - name: Single Op All Band
   operator_mode: single
-  bands: all
+  band_count: all
   modes: [all]
 - name: Single Op Single Band
   operator_mode: single
-  bands: single
+  band_count: single
   modes: [all]
 - name: Multi-Single
   operator_mode: multi
-  bands: all
+  band_count: all
   modes: [all]
 - name: SWL
 overlays:

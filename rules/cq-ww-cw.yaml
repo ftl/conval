@@ -14,56 +14,56 @@ categories:
 - name: Single Operator High Power All Band
   operator_mode: single
   power: high
-  bands: all
+  band_count: all
 - name: Single Operator High Power Single Band
   operator_mode: single
   power: high
-  bands: single
+  band_count: single
 - name: Single Operator Low Power All Band
   operator_mode: single
   power: low
-  bands: all
+  band_count: all
 - name: Single Operator Low Power Single Band
   operator_mode: single
   power: low
-  bands: single
+  band_count: single
 - name: Single Operator QRP All Band
   operator_mode: single
   power: qrp
-  bands: all
+  band_count: all
 - name: Single Operator QRP Single Band
   operator_mode: single
   power: qrp
-  bands: single
+  band_count: single
 - name: Single Operator High Power All Band Assisted
   operator_mode: single
   power: high
-  bands: all
+  band_count: all
   assisted: true
 - name: Single Operator High Power Single Band Assisted
   operator_mode: single
   power: high
-  bands: single
+  band_count: single
   assisted: true
 - name: Single Operator Low Power All Band Assisted
   operator_mode: single
   power: low
-  bands: all
+  band_count: all
   assisted: true
 - name: Single Operator Low Power Single band Assisted
   operator_mode: single
   power: low
-  bands: single
+  band_count: single
   assisted: true
 - name: Single Operator QRP All Band Assisted
   operator_mode: single
   power: qrp
-  bands: all
+  band_count: all
   assisted: true
 - name: Single Operator QRP Single Band Assisted
   operator_mode: single
   power: qrp
-  bands: single
+  band_count: single
   assisted: true
 - name: Multi-Single High Power
   operator_mode: multi

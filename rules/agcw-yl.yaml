@@ -7,10 +7,10 @@ breaks:
 categories:
 - name: YL
   operator_mode: single
-  bands: all
+  bands: [all]
 - name: OM
   operator_mode: single
-  bands: all
+  bands: [all]
 overlays:
 modes:
 - cw

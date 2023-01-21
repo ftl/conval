@@ -5,6 +5,7 @@ package conval
 
 import (
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
@@ -52,12 +53,27 @@ const (
 
 var AllHFBands = []ContestBand{Band160m, Band80m, Band40m, Band20m, Band15m, Band10m}
 
-type BandMode string
+type BandCount string
 
 const (
-	AllBands   BandMode = "all"
-	SingleBand BandMode = "single"
+	AllBands   BandCount = "all"
+	SingleBand BandCount = "single"
 )
+
+func (c BandCount) ToInt() int {
+	switch c {
+	case AllBands:
+		return 0
+	case SingleBand:
+		return 1
+	default:
+		i, err := strconv.Atoi(string(c))
+		if err != nil {
+			return 0
+		}
+		return i
+	}
+}
 
 type Mode string
 

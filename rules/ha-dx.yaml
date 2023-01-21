@@ -1,0 +1,168 @@
+identifier: HA-DX
+name: Hungarian DX Contest
+official_rules: http://ha-dx.com/en/contest-rules
+upload_url: http://ha-dx.com/en/submit-log
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+- operator_mode: single
+  overlay: youth
+  duration: 6h
+  constraint_mode: active_time
+breaks:
+categories:
+- name: SOSB 10
+  operator_mode: single
+  bands: [10m]
+- name: SOSB 15
+  operator_mode: single
+  bands: [15m]
+- name: SOSB 20
+  operator_mode: single
+  bands: [20m]
+- name: SOSB 40
+  operator_mode: single
+  bands: [40m]
+- name: SOSB 80
+  operator_mode: single
+  bands: [80m]
+- name: SOSB 160
+  operator_mode: single
+  bands: [160m]
+- name: SO3BAND
+  operator_mode: single
+  band_count: 3
+- name: SOAB CW HP
+  operator_mode: single
+  bands: [all]
+  modes: [cw]
+  power: high
+- name: SOAB SSB HP
+  operator_mode: single
+  bands: [all]
+  modes: [ssb]
+  power: high
+- name: SOAB MIX HP
+  operator_mode: single
+  bands: [all]
+  modes: [cw, ssb]
+  power: high
+- name: SOAB CW LP
+  operator_mode: single
+  bands: [all]
+  modes: [cw]
+  power: low
+- name: SOAB SSB LP
+  operator_mode: single
+  bands: [all]
+  modes: [ssb]
+  power: low
+- name: SOAB MIX LP
+  operator_mode: single
+  bands: [all]
+  modes: [cw, ssb]
+  power: low
+- name: SOAB MIX QRP
+  operator_mode: single
+  bands: [all]
+  modes: [cw, ssb]
+  power: qrp
+- name: MS
+  operator_mode: multi
+  bands: [all]
+  modes: [cw, ssb]
+  power: qrp
+- name: YOUTH6H
+  operator_mode: single
+  overlay: youth
+overlays:
+- youth
+modes:
+- cw
+- ssb
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- their_country: [ha]
+  fields:
+  - [rst]
+  - [ha_county]
+- fields:
+  - [rst]
+  - [serial]
+scoring:
+  qsos:
+  - their_country: [ha]
+    value: 10
+  - their_country: [not, ha]
+    their_continent: [same]
+    value: 2
+  - their_continent: [other]
+    value: 5
+  qso_band_rule: once_per_band_and_mode
+  multis: 
+  - property: dxcc_entity
+    except: [ha]
+    band_rule: once_per_band
+    value: 1
+  - property: ha_county
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_continent: eu
+      my_country: dl
+      my_exchange:
+    qsos:
+    - their_call: ha1abc
+      their_exchange: [599, bn]
+      their_continent: eu
+      their_country: ha
+      band: 80m
+      points: 10
+      multis: 1
+      duplicate: false
+    - their_call: ha1abc
+      their_exchange: [599, bn]
+      their_continent: eu
+      their_country: ha
+      band: 80m
+      points: 10
+      multis: 0
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [599, 123]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: k1abc
+      their_exchange: [599, 123]
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 5
+      multis: 1
+      duplicate: false
+    score:
+      qsos: 5
+      points: 19
+      multis: 4
+      total: 76

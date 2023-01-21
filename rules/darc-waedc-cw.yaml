@@ -13,14 +13,14 @@ categories:
 - name: Single-Op High
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
 - name: Single-Op Low
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
 - name: Multi-Op
   operator_mode: multi
-  bands: all
+  bands: [all]
 overlays:
 modes:
 - cw

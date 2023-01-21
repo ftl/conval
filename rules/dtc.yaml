@@ -10,18 +10,18 @@ categories:
 - name: QRP (<= 5W out)
   operator_mode: single
   power: qrp
-  bands: all
+  bands: [all]
 - name: LP (> 5W, <= 100W out)
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
 - name: HP (> 100W out)
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
 - name: SWL
   operator_mode: single
-  bands: all
+  bands: [all]
 overlays:
 modes:
 - cw

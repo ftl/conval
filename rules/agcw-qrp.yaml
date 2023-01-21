@@ -10,11 +10,11 @@ categories:
 - name: Class A, max. 5W out
   operator_mode: single
   power: qrp
-  bands: all
+  bands: [all]
 - name: Class B, max. 20W out
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
 overlays:
 modes:
 - cw

@@ -272,6 +272,11 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		// get the property value
 		value := getTheirProperty(rule.Property)
 		if value == "" {
+			// log.Printf("rule #%d: value is empty", i+1)
+			continue
+		}
+		if contains(rule.Except, value) {
+			// log.Printf("rule #%d: value %s is excluded", i+1, value)
 			continue
 		}
 
@@ -431,6 +436,8 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 			maxRuleScore = ruleScore
 		}
 	}
+
+	// log.Printf("%d matching rules with a max score of %d", len(matchingRules), maxRuleScore)
 
 	if maxRuleScore == 0 && len(matchingRules) > 1 {
 		return []ScoringRule{}

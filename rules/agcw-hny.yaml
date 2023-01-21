@@ -8,18 +8,18 @@ categories:
 - name: Class 1, High Power
   operator_mode: single
   power: high
-  bands: all
+  bands: [all]
 - name: Class 2, Low Power
   operator_mode: single
   power: low
-  bands: all
+  bands: [all]
 - name: Class 3, QRP
   operator_mode: single
   power: qrp
-  bands: all
+  bands: [all]
 - name: Class 4, SWL
   operator_mode: single
-  bands: all
+  bands: [all]
 overlays:
 modes:
 - cw
