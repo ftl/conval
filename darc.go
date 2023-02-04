@@ -54,10 +54,10 @@ func WAEEntity(call callsign.Callsign, dxccEntity DXCCEntity) string {
 	switch dxccEntity {
 	case "K", "VE", "VK", "ZL", "ZS", "JA", "BY", "PY":
 		// special entities outside EU with numerical call areas
-		return string(dxccEntity) + waeCallAreaNumber(call, dxccEntity)
+		return string(dxccEntity) + waeCallAreaNumber(call)
 	case "UA9":
 		// asian russia is even more special
-		return "UA" + waeCallAreaNumber(call, dxccEntity)
+		return "UA" + waeCallAreaNumber(call)
 	default:
 		return string(dxccEntity)
 	}
@@ -65,7 +65,7 @@ func WAEEntity(call callsign.Callsign, dxccEntity DXCCEntity) string {
 
 var waeNumberCallAreaExpression = regexp.MustCompile("[0-9]+")
 
-func waeCallAreaNumber(call callsign.Callsign, dxccEntity DXCCEntity) string {
+func waeCallAreaNumber(call callsign.Callsign) string {
 	var number string
 	if number == "" && call.Prefix != "" {
 		number = waeNumberCallAreaExpression.FindString(call.Prefix)
