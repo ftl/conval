@@ -318,3 +318,37 @@ func TestSaveYAMLWithoutExamples(t *testing.T) {
 		})
 	}
 }
+
+func TestPropertyConstraint_Matches(t *testing.T) {
+	tt := []struct {
+		desc       string
+		myValue    string
+		theirValue string
+		constraint PropertyConstraint
+		expected   bool
+	}{
+		{
+			desc:       "not empty, true",
+			theirValue: "123",
+			constraint: PropertyConstraint{
+				TheirValueNotEmpty: true,
+			},
+			expected: true,
+		},
+		{
+			desc:       "not empty, false",
+			theirValue: "",
+			constraint: PropertyConstraint{
+				TheirValueNotEmpty: true,
+			},
+			expected: false,
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			actual := tc.constraint.Matches(tc.myValue, tc.theirValue)
+
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}

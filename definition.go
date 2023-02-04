@@ -176,11 +176,12 @@ const (
 )
 
 type PropertyConstraint struct {
-	Name       Property `yaml:"name"`
-	Min        string   `yaml:"min,omitempty"`
-	Max        string   `yaml:"max,omitempty"`
-	MyValue    string   `yaml:"my_value,omitempty"`
-	TheirValue string   `yaml:"their_value,omitempty"`
+	Name               Property `yaml:"name"`
+	Min                string   `yaml:"min,omitempty"`
+	Max                string   `yaml:"max,omitempty"`
+	MyValue            string   `yaml:"my_value,omitempty"`
+	TheirValue         string   `yaml:"their_value,omitempty"`
+	TheirValueNotEmpty bool     `yaml:"their_value_not_empty,omitempty"`
 }
 
 func (c PropertyConstraint) Matches(myValue string, theirValue string) bool {
@@ -194,7 +195,10 @@ func (c PropertyConstraint) Matches(myValue string, theirValue string) bool {
 		result = result && myValue == c.MyValue
 	}
 	if c.TheirValue != "" {
-		result = result && theirValue == c.TheirValue
+		result = result && (theirValue == c.TheirValue)
+	}
+	if c.TheirValueNotEmpty {
+		result = result && (theirValue != "")
 	}
 	return result
 }

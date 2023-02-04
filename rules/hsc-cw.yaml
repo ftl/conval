@@ -1,45 +1,56 @@
-identifier: TEMPLATE
-name: Contest Rules Template for Conval
-official_rules: https://github.com/ftl/conval
-upload_url: https://github.com/ftl/conval
+identifier: HSC-CW
+name: HSC CW Contest
+official_rules: https://hsc.lima-city.de/de/konteste.html
+upload_url: https://sites.google.com/view/hsc-contest
 upload_format: cabrillo
 duration: 3h
 duration-constraints:
 breaks:
 categories:
-- name: Class 1, High Power
-  operator_mode: single
-  power: high
-  bands: [all]
-- name: Class 2, Low Power
+- name: HSC Member
   operator_mode: single
   power: low
   bands: [all]
-- name: Class 3, QRP
+- name: Non-member
+  operator_mode: single
+  power: low
+  bands: [all]
+- name: QRP
   operator_mode: single
   power: qrp
   bands: [all]
-- name: Class 4, SWL
+- name: SWL
+  operator_mode: single
+  bands: [all]
+- name: Checklog
   operator_mode: single
   bands: [all]
 overlays:
 modes:
 - cw
-- ssb
 bands:
 - 80m
 - 40m
 - 20m
+- 15m
+- 10m
 exchange:
 - fields:
   - [rst]
-  - [serial]
+  - [member_number,nm]
 scoring:
   qsos:
+  - property_constraints:
+    - name: member_number
+      their_value_not_empty: true
+    value: 5
   - value: 1
   qso_band_rule: once_per_band
   multis: 
   - property: dxcc_entity
+    property_constraints:
+    - name: member_number
+      their_value_not_empty: true
     band_rule: once_per_band
     value: 1
 examples:
@@ -53,49 +64,46 @@ examples:
       their_continent: eu
       their_country: dl
       band: 80m
-      points: 1
+      points: 5
       multis: 1
-      duplicate: false
     - their_call: dl1abc
-      their_exchange: [599, 124]
+      their_exchange: [599, 123]
       their_continent: eu
       their_country: dl
       band: 40m
-      points: 1
+      points: 5
       multis: 1
-      duplicate: false
     - their_call: dl1abc
-      their_exchange: [599, 125]
+      their_exchange: [599, 123]
       their_continent: eu
       their_country: dl
       band: 40m
-      points: 1
+      points: 5
       multis: 0
       duplicate: true
     - their_call: dl2abc
-      their_exchange: [599, 234]
+      their_exchange: [599, nm]
       their_continent: eu
       their_country: dl
       band: 40m
       points: 1
       multis: 0
-      duplicate: false
     - their_call: dl3abc
       their_exchange: [599, 345]
       their_continent: eu
       their_country: dl
       band: 40m
-      points: 1
+      points: 5
       multis: 0
     - their_call: dl3abc
-      their_exchange: [599, 346]
+      their_exchange: [599, 345]
       their_continent: eu
       their_country: dl
       band: 20m
-      points: 1
+      points: 5
       multis: 1
     score:
       qsos: 6
-      points: 5
+      points: 21
       multis: 3
-      total: 15
+      total: 63
