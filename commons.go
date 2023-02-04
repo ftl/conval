@@ -106,12 +106,13 @@ var EmptyValidator = PropertyValidatorFunc(func(exchange string, _ PrefixDatabas
 })
 
 var (
-	validRST           = regexp.MustCompile(`[1-5][1-9][1-9]*`)
-	validSerialNumber  = regexp.MustCompile(`\d+`)
-	validMemberNumber  = regexp.MustCompile(`\d+`)
-	validNoMember      = regexp.MustCompile(`(NM)?`)
-	validName          = regexp.MustCompile(`[A-Z]+`)
-	validStateProvince = regexp.MustCompile(`AB|AL|AK|AZ|AR|BC|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MB|MI|MN|MS|MO|MT|NB|NE|NV|NH|NJ|NL|NM|NS|NY|NC|ND|OH|OK|ON|OR|PA|PE|QC|RI|SC|SD|SK|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
+	validRST          = regexp.MustCompile(`[1-5][1-9][1-9]*`)
+	validSerialNumber = regexp.MustCompile(`\d+`)
+	validMemberNumber = regexp.MustCompile(`\d+`)
+	validNoMember     = regexp.MustCompile(`(NM)?`)
+	validName         = regexp.MustCompile(`[A-Z]+`)
+	// according to https://contests.arrl.org/contestmultipliers.php
+	validStateProvince = regexp.MustCompile(`AB|BC|LB|MB|NB|NF|NS|NT|NU|ON|PE|QC|SK|YT|AL|AK|AZ|AR|CA|CO|CT|DC|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
 	validGenericText   = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
 	validGenericNumber = regexp.MustCompile(`[0-9]*`)
 
