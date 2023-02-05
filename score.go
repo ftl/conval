@@ -229,7 +229,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant QSO rules
-	qsoRules := filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getMyProperty, getTheirProperty)
+	qsoRules := filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
 	// log.Printf("found %d relevant QSO rules", len(qsoRules))
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
@@ -261,7 +261,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant multi rules
-	multiRules := filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, qso.TheirContinent, qso.TheirCountry, qso.Band, getMyProperty, getTheirProperty)
+	multiRules := filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
 	// log.Printf("found %d relevant multi rules", len(multiRules))
 	for _, rule := range multiRules {
 		if rule.Property == "" {
@@ -319,7 +319,7 @@ func effectiveBandAndMode(band ContestBand, mode Mode, rule BandRule) BandAndMod
 
 type propertyProvider func(property Property) string
 
-func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, band ContestBand, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
+func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, myPrefix string, theirContinent Continent, theirCountry DXCCEntity, theirPrefix string, band ContestBand, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
 	matchingRules := make([]ScoringRule, 0, len(rules))
 	ruleScores := make([]int, 0, len(matchingRules))
 	maxRuleScores := make(map[Property]int)
@@ -344,6 +344,17 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 					continue
 				}
 			} else if !contains(rule.MyCountry, myCountry) {
+				// log.Printf("not my prefix %s %v", myPrefix, rule.MyPrefix)
+				continue
+			}
+			ruleScore++
+		}
+		if myPrefix != "" && len(rule.MyPrefix) > 0 {
+			if len(rule.MyPrefix) > 1 && rule.MyPrefix[0] == NotPrefix {
+				if contains(rule.MyPrefix, myPrefix) {
+					continue
+				}
+			} else if !contains(rule.MyPrefix, myPrefix) {
 				// log.Printf("not my country %s %v", myCountry, rule.MyCountry)
 				continue
 			}
@@ -379,6 +390,23 @@ func filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent 
 					continue
 				}
 			} else if contains(rule.TheirCountry, theirCountry) {
+				ruleScore++
+			} else {
+				continue
+			}
+		}
+		if theirPrefix != "" && len(rule.TheirPrefix) > 0 {
+			if len(rule.TheirPrefix) == 1 &&
+				((rule.TheirPrefix[0] == SamePrefix && myPrefix == theirPrefix) ||
+					(rule.TheirPrefix[0] == OtherPrefix && myPrefix != theirPrefix)) {
+				ruleScore++
+			} else if len(rule.TheirPrefix) > 1 && rule.TheirPrefix[0] == NotPrefix {
+				if !contains(rule.TheirPrefix, theirPrefix) {
+					ruleScore++
+				} else {
+					continue
+				}
+			} else if contains(rule.TheirPrefix, theirPrefix) {
 				ruleScore++
 			} else {
 				continue

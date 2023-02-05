@@ -33,8 +33,10 @@ func TestFilterScoringRules(t *testing.T) {
 		rules            []ScoringRule
 		myContinent      Continent
 		myCountry        DXCCEntity
+		myPrefix         string
 		theirContinent   Continent
 		theirCountry     DXCCEntity
+		theirPrefix      string
 		band             ContestBand
 		myExchange       QSOExchange
 		theirExchange    QSOExchange
@@ -595,6 +597,166 @@ func TestFilterScoringRules(t *testing.T) {
 				},
 			},
 		},
+		{
+			desc: "only my special prefix included (1)",
+			rules: []ScoringRule{
+				{
+					MyCountry: []DXCCEntity{"k", "ve"},
+					MyPrefix:  []string{"kh6", "kl7", "cy9", "cy0"},
+					Value:     3,
+				},
+				{
+					MyCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:     3,
+				},
+			},
+			myCountry: "k",
+			myPrefix:  "kh6",
+			expected: []ScoringRule{
+				{
+					MyCountry: []DXCCEntity{"k", "ve"},
+					MyPrefix:  []string{"kh6", "kl7", "cy9", "cy0"},
+					Value:     3,
+				},
+			},
+		},
+		{
+			desc: "only my special prefix included (2)",
+			rules: []ScoringRule{
+				{
+					MyCountry: []DXCCEntity{"k", "ve"},
+					MyPrefix:  []string{"kh6", "kl7", "cy9", "cy0"},
+					Value:     3,
+				},
+				{
+					MyCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:     3,
+				},
+			},
+			myCountry: "k",
+			myPrefix:  "w6",
+			expected:  []ScoringRule{},
+		},
+		{
+			desc: "only my special prefix excluded (1)",
+			rules: []ScoringRule{
+				{
+					MyCountry: []DXCCEntity{"k", "ve"},
+					MyPrefix:  []string{"not", "kh6", "kl7", "cy9", "cy0"},
+					Value:     3,
+				},
+				{
+					MyCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:     3,
+				},
+			},
+			myCountry: "k",
+			myPrefix:  "kh6",
+			expected:  []ScoringRule{},
+		},
+		{
+			desc: "only my special prefix excluded (2)",
+			rules: []ScoringRule{
+				{
+					MyCountry: []DXCCEntity{"k", "ve"},
+					MyPrefix:  []string{"not", "kh6", "kl7", "cy9", "cy0"},
+					Value:     3,
+				},
+				{
+					MyCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:     3,
+				},
+			},
+			myCountry: "k",
+			myPrefix:  "w",
+			expected: []ScoringRule{
+				{
+					MyCountry: []DXCCEntity{"k", "ve"},
+					MyPrefix:  []string{"not", "kh6", "kl7", "cy9", "cy0"},
+					Value:     3,
+				},
+			},
+		},
+		{
+			desc: "only their special prefix included (1)",
+			rules: []ScoringRule{
+				{
+					TheirCountry: []DXCCEntity{"k", "ve"},
+					TheirPrefix:  []string{"kh6", "kl7", "cy9", "cy0"},
+					Value:        3,
+				},
+				{
+					TheirCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:        3,
+				},
+			},
+			theirCountry: "k",
+			theirPrefix:  "kh6",
+			expected: []ScoringRule{
+				{
+					TheirCountry: []DXCCEntity{"k", "ve"},
+					TheirPrefix:  []string{"kh6", "kl7", "cy9", "cy0"},
+					Value:        3,
+				},
+			},
+		},
+		{
+			desc: "only their special prefix included (2)",
+			rules: []ScoringRule{
+				{
+					TheirCountry: []DXCCEntity{"k", "ve"},
+					TheirPrefix:  []string{"kh6", "kl7", "cy9", "cy0"},
+					Value:        3,
+				},
+				{
+					TheirCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:        3,
+				},
+			},
+			theirCountry: "k",
+			theirPrefix:  "w6",
+			expected:     []ScoringRule{},
+		},
+		{
+			desc: "only their special prefix excluded (1)",
+			rules: []ScoringRule{
+				{
+					TheirCountry: []DXCCEntity{"k", "ve"},
+					TheirPrefix:  []string{"not", "kh6", "kl7", "cy9", "cy0"},
+					Value:        3,
+				},
+				{
+					TheirCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:        3,
+				},
+			},
+			theirCountry: "k",
+			theirPrefix:  "kh6",
+			expected:     []ScoringRule{},
+		},
+		{
+			desc: "only their special prefix excluded (2)",
+			rules: []ScoringRule{
+				{
+					TheirCountry: []DXCCEntity{"k", "ve"},
+					TheirPrefix:  []string{"not", "kh6", "kl7", "cy9", "cy0"},
+					Value:        3,
+				},
+				{
+					TheirCountry: []DXCCEntity{"not", "k", "ve"},
+					Value:        3,
+				},
+			},
+			theirCountry: "k",
+			theirPrefix:  "w6",
+			expected: []ScoringRule{
+				{
+					TheirCountry: []DXCCEntity{"k", "ve"},
+					TheirPrefix:  []string{"not", "kh6", "kl7", "cy9", "cy0"},
+					Value:        3,
+				},
+			},
+		},
 	}
 
 	for _, tc := range tt {
@@ -606,7 +768,7 @@ func TestFilterScoringRules(t *testing.T) {
 				return tc.theirExchange[property]
 			}
 
-			actual := filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry, tc.band, getMyProperty, getTheirProperty)
+			actual := filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, getMyProperty, getTheirProperty)
 
 			assert.Equal(t, tc.expected, actual)
 		})

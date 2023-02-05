@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/ftl/hamradio/callsign"
 )
@@ -45,7 +46,7 @@ func init() {
 	PropertyValidators[ITUZoneProperty] = NumberRangeValidator(1, 90, "ITU zone")
 	PropertyValidators[NameProperty] = RegexpValidator(validName, "name")
 	PropertyValidators[AgeProperty] = RegexpValidator(validGenericNumber, "age")
-	PropertyValidators[PowerProperty] = RegexpValidator(validGenericNumber, "power")
+	PropertyValidators[PowerProperty] = RegexpValidator(validPower, "power")
 	PropertyValidators[ClassProperty] = RegexpValidator(validName, "class")
 	PropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
 	PropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
@@ -114,6 +115,7 @@ var (
 	validMemberNumber = regexp.MustCompile(`\d+`)
 	validNoMember     = regexp.MustCompile(`(NM)?`)
 	validName         = regexp.MustCompile(`[A-Z]+`)
+	validPower        = regexp.MustCompile(`[A-Z0-9]+`)
 	// according to https://contests.arrl.org/contestmultipliers.php
 	validStateProvince = regexp.MustCompile(`AB|BC|LB|MB|NB|NF|NS|NT|NU|ON|PE|QC|SK|YT|AL|AK|AZ|AR|CA|CO|CT|DC|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
 	validGenericText   = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
@@ -182,4 +184,27 @@ func getTheirExchangeProperty(property Property) PropertyGetter {
 
 func getEmpty(_ QSO) string {
 	return ""
+}
+
+var parseWPXPrefixExpression = regexp.MustCompile(`^[A-Z0-9]?[A-Z][0-9]*`)
+
+func WPXPrefix(call callsign.Callsign) string {
+	var p string
+	if p == "" && call.Prefix != "" {
+		p = parseWPXPrefixExpression.FindString(call.Prefix)
+	}
+	if p == "" && call.Suffix != "" {
+		p = parseWPXPrefixExpression.FindString(call.Suffix)
+	}
+	if p == "" {
+		p = parseWPXPrefixExpression.FindString(call.BaseCall)
+	}
+	if p == "" {
+		return ""
+	}
+	runes := []rune(p)
+	if !unicode.IsDigit(runes[len(runes)-1]) {
+		p += "0"
+	}
+	return p
 }

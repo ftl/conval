@@ -123,6 +123,12 @@ const (
 	NotCountry   DXCCEntity = "not"
 )
 
+const (
+	SamePrefix  string = "same"
+	OtherPrefix string = "other"
+	NotPrefix   string = "not"
+)
+
 type PrefixDatabase interface {
 	Find(s string) (Continent, DXCCEntity, bool)
 }
@@ -199,6 +205,10 @@ type QSO struct {
 	TheirExchange QSOExchange
 }
 
+func (q QSO) TheirPrefix() string {
+	return WPXPrefix(q.TheirCall)
+}
+
 type QSOExchange map[Property]string
 
 func ParseExchange(fields []ExchangeField, values []string, prefixes PrefixDatabase) QSOExchange {
@@ -243,6 +253,10 @@ type Setup struct {
 	Modes        []Mode
 
 	MyExchange QSOExchange
+}
+
+func (s Setup) MyPrefix() string {
+	return WPXPrefix(s.MyCall)
 }
 
 type Constraint struct {
