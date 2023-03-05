@@ -1,0 +1,290 @@
+identifier: SP-DX
+name: SP DX Contest
+official_rules: https://spdxcontest.pzk.org.pl
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+- name: MOAB MIXED
+  operator_mode: multi
+  modes: [cw, ssb]
+  bands: [all]
+- name: SOAB MIXED HP
+  operator_mode: single
+  power: high
+  modes: [cw, ssb]
+  bands: [all]
+- name: SOAB MIXED LP
+  operator_mode: single
+  power: low
+  modes: [cw, ssb]
+  bands: [all]
+- name: SOAB MIXED QRP
+  operator_mode: single
+  power: qrp
+  modes: [cw, ssb]
+  bands: [all]
+- name: SOAB PHONE HP
+  operator_mode: single
+  power: high
+  modes: [ssb]
+  bands: [all]
+- name: SOAB PHONE LP
+  operator_mode: single
+  power: low
+  modes: [ssb]
+  bands: [all]
+- name: SOAB CW HP
+  operator_mode: single
+  power: high
+  modes: [cw]
+  bands: [all]
+- name: SOAB CW LP
+  operator_mode: single
+  power: low
+  modes: [cw]
+  bands: [all]
+- name: SOTB MIXED
+  operator_mode: single
+  modes: [cw, ssb]
+  band_count: 3
+- name: SOSB PHONE
+  operator_mode: single
+  modes: [ssb]
+  band_count: 1
+- name: SOSB CW
+  operator_mode: single
+  modes: [cw]
+  band_count: 1
+- name: SWL MIXED
+- name: CHECKLOG
+overlays:
+modes:
+- cw
+- ssb
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- their_country: [sp]
+  fields:
+  - [rst]
+  - [pzk_province]
+- fields:
+  - [rst]
+  - [serial]
+scoring:
+  qsos:
+  - my_country: [sp]
+    their_continent: [other]
+    value: 3
+  - my_country: [sp]
+    their_country: [not, sp]
+    their_continent: [eu]
+    value: 1
+  - my_country: [not, sp]
+    their_country: [sp]
+    value: 3
+  qso_band_rule: once_per_band_and_mode
+  multis: 
+  - property: dxcc_entity
+    my_country: [sp]
+    their_country: [not, sp]
+    band_rule: once_per_band
+    value: 1
+  - property: pzk_province
+    my_country: [not, sp]
+    their_country: [sp]
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: sp
+      bands: [80m, 40m, 20m]
+      modes: [cw, ssb]
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      mode: cw
+      points: 1
+      multis: 1
+    - their_call: dl1abc
+      their_exchange: [599, 124]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 1
+    - their_call: dl1abc
+      their_exchange: [599, 125]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [599, 126]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      mode: ssb
+      points: 1
+      multis: 0
+    - their_call: dl2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 0
+    - their_call: k1abc
+      their_exchange: [599, 345]
+      their_continent: na
+      their_country: k
+      mode: cw
+      band: 40m
+      points: 3
+      multis: 1
+    - their_call: sp3abc
+      their_exchange: [599, C]
+      their_continent: eu
+      their_country: sp
+      band: 20m
+      points: 0
+      multis: 0
+    score:
+      qsos: 7
+      points: 7
+      multis: 3
+      total: 21
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m]
+      modes: [cw, ssb]
+    qsos:
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 80m
+      mode: cw
+      points: 3
+      multis: 1
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 40m
+      mode: cw
+      points: 3
+      multis: 1
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 40m
+      mode: cw
+      points: 3
+      multis: 0
+      duplicate: true
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 40m
+      mode: ssb
+      points: 3
+      multis: 0
+    - their_call: dl2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      mode: cw
+      points: 0
+      multis: 0
+    - their_call: sp3abc
+      their_exchange: [599, C]
+      their_continent: eu
+      their_country: sp
+      band: 20m
+      points: 3
+      multis: 1
+    score:
+      qsos: 6
+      points: 12
+      multis: 3
+      total: 36
+  - setup:
+      my_continent: na
+      my_country: k
+      bands: [80m, 40m, 20m]
+      modes: [cw, ssb]
+    qsos:
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 80m
+      mode: cw
+      points: 3
+      multis: 1
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 40m
+      mode: cw
+      points: 3
+      multis: 1
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 40m
+      mode: cw
+      points: 3
+      multis: 0
+      duplicate: true
+    - their_call: sp1abc
+      their_exchange: [599, B]
+      their_continent: eu
+      their_country: sp
+      band: 40m
+      mode: ssb
+      points: 3
+      multis: 0
+    - their_call: dl2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      mode: cw
+      points: 0
+      multis: 0
+    - their_call: sp3abc
+      their_exchange: [599, C]
+      their_continent: eu
+      their_country: sp
+      band: 20m
+      points: 3
+      multis: 1
+    score:
+      qsos: 6
+      points: 12
+      multis: 3
+      total: 36
