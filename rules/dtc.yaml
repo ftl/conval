@@ -28,11 +28,14 @@ modes:
 bands:
 - 80m
 - 40m
+properties:
+- name: ldk
+  expression: "[A-Z]+"
 exchange:
 - their_country: [dl]
   fields:
   - [rst]
-  - [generic_text]
+  - [ldk]
 - fields:
   - [rst]
 scoring:

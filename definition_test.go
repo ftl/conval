@@ -42,13 +42,13 @@ func TestDefinition_ExchangeFields(t *testing.T) {
 				{
 					Fields: []ExchangeField{
 						{RSTProperty},
-						{NoMemberProperty, WAGDOKProperty},
+						{NoMemberProperty, "wag_dok"},
 					},
 				},
 			},
 			expected: []ExchangeField{
 				{RSTProperty},
-				{SerialNumberProperty, NoMemberProperty, WAGDOKProperty},
+				{SerialNumberProperty, NoMemberProperty, "wag_dok"},
 			},
 		},
 		{
@@ -349,6 +349,147 @@ func TestPropertyConstraint_Matches(t *testing.T) {
 			actual := tc.constraint.Matches(tc.myValue, tc.theirValue)
 
 			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
+func TestPropertyDefinition_Validate(t *testing.T) {
+	tt := []struct {
+		desc   string
+		yaml   string
+		values []string
+		valid  []bool
+	}{
+		{
+			desc: "simple value list",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  values: [A, B, C]`,
+			values: []string{"A", "a", "D"},
+			valid:  []bool{true, true, false},
+		},
+		{
+			desc: "regular expression",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  expression: "\\d*[A-Z][A-Z0-9]+"`,
+			values: []string{"B36", "b36", "70DARC", "1A"},
+			valid:  []bool{true, true, true, false},
+		},
+		{
+			desc: "regular expression over value list",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  values: [1A, B, C]
+  expression: "\\d*[A-Z][A-Z0-9]+"`,
+			values: []string{"B36", "b36", "70DARC", "1A", "B", "C"},
+			valid:  []bool{true, true, true, false, false, false},
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			buffer := bytes.NewBufferString(tc.yaml)
+			definition, err := LoadDefinitionYAML(buffer)
+			assert.NoError(t, err)
+
+			validator, ok := definition.PropertyValidator("pty")
+			assert.True(t, ok)
+			assert.NotNil(t, validator)
+
+			for i, value := range tc.values {
+				err := validator.ValidateProperty(value, nil)
+				if tc.valid[i] {
+					assert.NoError(t, err, i)
+				} else {
+					assert.Error(t, err, i)
+				}
+			}
+		})
+	}
+}
+
+func TestPropertyDefinition_Get(t *testing.T) {
+	tt := []struct {
+		desc     string
+		yaml     string
+		exchange []string
+		expected []string
+	}{
+		{
+			desc: "simple value list",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  values: [A, B, C]
+exchange:
+- fields:
+  - [pty]`,
+			exchange: []string{"A", "a", "D"},
+			expected: []string{"A", "A", ""},
+		},
+		{
+			desc: "regular expression",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  expression: "\\d*[A-Z][A-Z0-9]+"
+exchange:
+- fields:
+  - [pty]`,
+			exchange: []string{"B36", "b36", "70DARC", "1A"},
+			expected: []string{"B36", "B36", "70DARC", ""},
+		},
+		{
+			desc: "regular expression over value list",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  values: [1A, B, C]
+  expression: "\\d*[A-Z][A-Z0-9]+"
+exchange:
+- fields:
+  - [pty]`,
+			exchange: []string{"B36", "b36", "70DARC", "1A", "B", "C"},
+			expected: []string{"B36", "B36", "70DARC", "", "", ""},
+		},
+		{
+			desc: "derived property",
+			yaml: `name: Test Contest
+properties:
+- name: src
+  expression: "\\d*[A-Z][A-Z0-9]+"
+- name: pty
+  source: src
+  expression: "\\d*([A-Z]).*"
+exchange:
+- fields: 
+  - [src]`,
+			exchange: []string{"B36", "b36", "70DARC", "1A", "B", "C"},
+			expected: []string{"B", "B", "D", "", "", ""},
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			buffer := bytes.NewBufferString(tc.yaml)
+			definition, err := LoadDefinitionYAML(buffer)
+			assert.NoError(t, err)
+
+			getter, ok := definition.PropertyGetter("pty")
+			assert.True(t, ok)
+			assert.NotNil(t, getter)
+
+			for i, exchange := range tc.exchange {
+				parsedExchange := ParseExchange(definition.ExchangeFields(), []string{exchange}, nil, definition)
+				qso := QSO{
+					TheirExchange: parsedExchange,
+				}
+
+				actual := getter.GetProperty(qso)
+				assert.Equal(t, tc.expected[i], actual, i)
+			}
 		})
 	}
 }

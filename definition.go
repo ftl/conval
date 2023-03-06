@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -146,9 +147,13 @@ const (
 )
 
 type PropertyDefinition struct {
-	Name   Property `yaml:"name"`
-	Label  string   `yaml:"label"`
-	Values []string `yaml:"values"`
+	Name       Property `yaml:"name"`
+	Label      string   `yaml:"label,omitempty"`
+	Values     []string `yaml:"values,omitempty"`
+	Expression string   `yaml:"expression,omitempty"`
+	Source     Property `yaml:"source,omitempty"`
+
+	re *regexp.Regexp
 }
 
 func (d *PropertyDefinition) GetLabel() string {
@@ -159,7 +164,35 @@ func (d *PropertyDefinition) GetLabel() string {
 }
 
 func (d *PropertyDefinition) ValidateProperty(value string, _ PrefixDatabase) error {
-	return d.validatePropertyValue(value)
+	switch {
+	case d.Expression != "":
+		return d.validatePropertyExpression(value)
+	case len(d.Values) > 0:
+		return d.validatePropertyValue(value)
+	default:
+		return fmt.Errorf("%s is not defined properly", d.GetLabel())
+	}
+}
+
+func (d *PropertyDefinition) validatePropertyExpression(value string) error {
+	if d.re == nil {
+		re, err := regexp.Compile(d.Expression)
+		if err != nil {
+			return err
+		}
+		d.re = re
+	}
+
+	sanitize := func(s string) string {
+		return strings.ToUpper(strings.TrimSpace(s))
+	}
+	sanitizedValue := sanitize(value)
+
+	match := d.re.FindString(sanitizedValue)
+	if len(match) == 0 || len(match) != len(sanitizedValue) {
+		return fmt.Errorf("%s is not a valid %s", value, d.GetLabel())
+	}
+	return nil
 }
 
 func (d *PropertyDefinition) validatePropertyValue(value string) error {
@@ -178,7 +211,37 @@ func (d *PropertyDefinition) validatePropertyValue(value string) error {
 }
 
 func (d *PropertyDefinition) GetProperty(qso QSO) string {
-	return qso.TheirExchange[d.Name]
+	if d.Source == "" {
+		return qso.TheirExchange[d.Name]
+	}
+
+	sourceValue, ok := qso.TheirExchange[d.Source]
+	if !ok {
+		return ""
+	}
+
+	sanitize := func(s string) string {
+		return strings.ToUpper(strings.TrimSpace(s))
+	}
+	sourceValue = sanitize(sourceValue)
+	if len(sourceValue) == 0 {
+		return ""
+	}
+
+	if d.re == nil {
+		re, err := regexp.Compile(d.Expression)
+		if err != nil {
+			return ""
+		}
+		d.re = re
+	}
+
+	matches := d.re.FindStringSubmatch(sourceValue)
+	if len(matches) != 2 {
+		return ""
+	}
+
+	return sanitize(matches[1])
 }
 
 type ExchangeDefinition struct {

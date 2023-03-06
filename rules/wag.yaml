@@ -61,6 +61,12 @@ bandchange_rules:
 - operator_mode: multi
   grace_period: 10m
   multiplier_exception: true
+properties:
+- name: wag_dok
+  expression: "\\d*[A-Z][A-Z0-9ÄÖÜ-]*"
+- name: wag_district
+  source: wag_dok
+  expression: "\\d*([A-Z]).+"
 exchange:
 - their_country: [dl]
   fields:
@@ -241,6 +247,13 @@ examples:
         band: 40m
         points: 3
         multis: 1
+      - their_call: dl8abc
+        their_exchange: [599, b02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 3
+        multis: 0
       - their_call: f1abc
         their_exchange: [599, 001]
         their_continent: eu
@@ -263,7 +276,7 @@ examples:
         points: 0
         multis: 0
     score:
-      qsos: 8
-      points: 12
+      qsos: 9
+      points: 15
       multis: 3
-      total: 36
+      total: 45

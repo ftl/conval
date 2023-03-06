@@ -30,6 +30,7 @@ const (
 	ClassProperty            Property = "class"
 	StateProvinceProperty    Property = "state_province"
 	DXCCPrefixProperty       Property = "dxcc_prefix" // can be used as exchange, e.g. in the CWops contests
+	WAEEntityProperty        Property = "wae_entity"
 
 	GenericTextProperty   Property = "generic_text"
 	GenericNumberProperty Property = "generic_number"
@@ -69,6 +70,7 @@ func init() {
 	commonPropertyGetters[ClassProperty] = getTheirExchangeProperty(ClassProperty)
 	commonPropertyGetters[StateProvinceProperty] = getTheirExchangeProperty(StateProvinceProperty)
 	commonPropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
+	commonPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
 	commonPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	commonPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	commonPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
@@ -170,6 +172,63 @@ func getDXCCEntity(qso QSO) string {
 	}
 	// TODO get DXCC entity from a database
 	return ""
+}
+
+func getWAEEntity(qso QSO) string {
+	return WAEEntity(qso.TheirCall, qso.TheirCountry)
+}
+
+func WAEEntity(call callsign.Callsign, dxccEntity DXCCEntity) string {
+	dxccEntity = DXCCEntity(strings.ToUpper(string(dxccEntity)))
+	switch dxccEntity {
+	case "K", "VE", "VK", "ZL", "ZS", "JA", "BY", "PY":
+		// special entities outside EU with numerical call areas
+		return string(dxccEntity) + waeCallAreaNumber(call)
+	case "UA9":
+		// asian russia is even more special
+		return "UA" + waeCallAreaNumber(call)
+	default:
+		return string(dxccEntity)
+	}
+}
+
+var waeNumberCallAreaExpression = regexp.MustCompile("[0-9]+")
+
+func waeCallAreaNumber(call callsign.Callsign) string {
+	var number string
+	if number == "" && call.Prefix != "" {
+		number = waeNumberCallAreaExpression.FindString(call.Prefix)
+	}
+	if number == "" && call.Suffix != "" {
+		number = waeNumberCallAreaExpression.FindString(call.Suffix)
+	}
+	if number == "" {
+		number = waeNumberCallAreaExpression.FindString(call.BaseCall[1:])
+	}
+	if len(number) > 1 {
+		number = number[1:]
+	}
+	return number
+}
+
+func IsWAECountry(call callsign.Callsign, dxccEntity DXCCEntity) bool {
+	dxccEntity = DXCCEntity(strings.ToUpper(string(dxccEntity)))
+	switch dxccEntity {
+	case "IG9":
+		return false
+
+	// this is the WAE country list according to https://www.darc.de/der-club/referate/conteste/wae-dx-contest/en/wae-rules/
+	case "1A", "3A", "4O", "4U1I", "4U1V", "9A", "9H", "C3", "CT", "CU", "DL",
+		"E7", "EA", "EA6", "EI", "ER", "ES", "EU", "F", "G", "GD", "GI", "GJ",
+		"GM", "GU", "GW", "HA", "HB", "HB0", "HV", "I", "IS", "IT9", "JW", "JW/b",
+		"JX", "LA", "LX", "LY", "LZ", "OE", "OH", "OH0", "OJ0", "OK", "OM", "ON",
+		"OY", "OZ", "PA", "UA", "UA2", "S5", "SM", "SP", "SV", "SV/a", "SV5", "SV9",
+		"T7", "TA1", "TF", "TK", "UR", "YL", "YO", "YU", "Z6", "Z3", "ZA", "ZB":
+		return true
+
+	default:
+		return false
+	}
 }
 
 func getCallsignWorkingCondition(qso QSO) string {
