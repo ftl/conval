@@ -54,7 +54,7 @@ func (l CabrilloLogfile) Setup() *conval.Setup {
 	return result
 }
 
-func (l CabrilloLogfile) QSOs(exchangeFields func(conval.Continent, conval.DXCCEntity) []conval.ExchangeField) []conval.QSO {
+func (l CabrilloLogfile) QSOs(definition *conval.Definition, exchangeFields func(conval.Continent, conval.DXCCEntity) []conval.ExchangeField) []conval.QSO {
 	result := make([]conval.QSO, len(l.log.QSOData))
 	for i, qso := range l.log.QSOData {
 		resultQSO := conval.QSO{
@@ -69,7 +69,7 @@ func (l CabrilloLogfile) QSOs(exchangeFields func(conval.Continent, conval.DXCCE
 			resultQSO.TheirCountry = theirCountry
 		}
 		fields := exchangeFields(resultQSO.TheirContinent, resultQSO.TheirCountry)
-		resultQSO.TheirExchange = cabrilloToQSOExchange(fields, qso.Received, l.prefixes)
+		resultQSO.TheirExchange = cabrilloToQSOExchange(fields, qso.Received, l.prefixes, definition)
 
 		result[i] = resultQSO
 	}
@@ -127,8 +127,8 @@ func cabrilloToQSOMode(mode cabrillo.QSOMode) conval.Mode {
 	}
 }
 
-func cabrilloToQSOExchange(fields []conval.ExchangeField, info cabrillo.QSOInfo, prefixes conval.PrefixDatabase) conval.QSOExchange {
+func cabrilloToQSOExchange(fields []conval.ExchangeField, info cabrillo.QSOInfo, prefixes conval.PrefixDatabase, propertyValidators conval.PropertyValidators) conval.QSOExchange {
 	values := make([]string, 0, len(info.Exchange))
 	values = append(values, info.Exchange...)
-	return conval.ParseExchange(fields, values, prefixes)
+	return conval.ParseExchange(fields, values, prefixes, propertyValidators)
 }

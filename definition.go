@@ -1,6 +1,7 @@
 package conval
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -31,6 +32,7 @@ type Definition struct {
 	Modes               []Mode                `yaml:"modes,omitempty"`
 	Bands               []ContestBand         `yaml:"bands,omitempty"`
 	BandChangeRules     []BandChangeRule      `yaml:"band_change_rules,omitempty"`
+	Properties          []PropertyDefinition  `yaml:"properties,omitempty"`
 	Exchange            []ExchangeDefinition  `yaml:"exchange"`
 	Scoring             Scoring               `yaml:"scoring"`
 	Examples            []Example             `yaml:"examples,omitempty"`
@@ -71,6 +73,33 @@ func (d Definition) ExchangeFields() []ExchangeField {
 		}
 	}
 	return result
+}
+
+func (d Definition) PropertyGetter(property Property) (PropertyGetter, bool) {
+	definition, ok := d.propertyDefinition(property)
+	if ok {
+		return definition, true
+	}
+	getter, ok := commonPropertyGetters[property]
+	return getter, ok
+}
+
+func (d Definition) PropertyValidator(property Property) (PropertyValidator, bool) {
+	definition, ok := d.propertyDefinition(property)
+	if ok {
+		return definition, true
+	}
+	validator, ok := commonPropertyValidators[property]
+	return validator, ok
+}
+
+func (d Definition) propertyDefinition(property Property) (*PropertyDefinition, bool) {
+	for _, definition := range d.Properties {
+		if definition.Name == property {
+			return &definition, true
+		}
+	}
+	return nil, false
 }
 
 type ConstrainedDuration struct {
@@ -115,6 +144,42 @@ const (
 	// BestScore counts only the best n bands, according to the number of bands defined in the category (single, <any number>, all).
 	BestScore ScoreMode = "best"
 )
+
+type PropertyDefinition struct {
+	Name   Property `yaml:"name"`
+	Label  string   `yaml:"label"`
+	Values []string `yaml:"values"`
+}
+
+func (d *PropertyDefinition) GetLabel() string {
+	if d.Label != "" {
+		return d.Label
+	}
+	return string(d.Name)
+}
+
+func (d *PropertyDefinition) ValidateProperty(value string, _ PrefixDatabase) error {
+	return d.validatePropertyValue(value)
+}
+
+func (d *PropertyDefinition) validatePropertyValue(value string) error {
+	sanitize := func(s string) string {
+		return strings.ToLower(strings.TrimSpace(s))
+	}
+	sanitizedValue := sanitize(value)
+
+	for _, v := range d.Values {
+		if sanitizedValue == sanitize(v) {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("%s is not a valid %s", value, d.GetLabel())
+}
+
+func (d *PropertyDefinition) GetProperty(qso QSO) string {
+	return qso.TheirExchange[d.Name]
+}
 
 type ExchangeDefinition struct {
 	MyContinent           []Continent     `yaml:"my_continent,omitempty"`
@@ -315,7 +380,7 @@ type QSOExample struct {
 	Score QSOScore `yaml:",inline"`
 }
 
-func (q QSOExample) ToQSO(fields []ExchangeField, myExchange QSOExchange, prefixes PrefixDatabase) QSO {
+func (q QSOExample) ToQSO(fields []ExchangeField, myExchange QSOExchange, prefixes PrefixDatabase, propertyValidators PropertyValidators) QSO {
 	return QSO{
 		TheirCall:      callsign.MustParse(q.TheirCall),
 		TheirContinent: q.TheirContinent,
@@ -324,7 +389,7 @@ func (q QSOExample) ToQSO(fields []ExchangeField, myExchange QSOExchange, prefix
 		Band:           q.Band,
 		Mode:           q.Mode,
 		MyExchange:     myExchange,
-		TheirExchange:  ParseExchange(fields, q.TheirExchange, prefixes),
+		TheirExchange:  ParseExchange(fields, q.TheirExchange, prefixes, propertyValidators),
 	}
 }
 

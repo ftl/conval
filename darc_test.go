@@ -40,7 +40,7 @@ func TestWAECallAreaNumber(t *testing.T) {
 }
 
 func TestValidateSDOKs(t *testing.T) {
-	validateWAGDOK := PropertyValidators[WAGDOKProperty]
+	validateWAGDOK := commonPropertyValidators[WAGDOKProperty]
 
 	sdokFile, err := os.Open("testdata/sdok.txt")
 	require.NoError(t, err)
@@ -85,7 +85,7 @@ func TestParseWAGExchange(t *testing.T) {
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			actual := ParseExchange(fields, tc.values, nil)
+			actual := ParseExchange(fields, tc.values, nil, PropertyValidatorsFunc(CommonPropertyValidator))
 			assert.Equal(t, tc.expected, actual)
 		})
 	}

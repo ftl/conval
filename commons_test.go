@@ -7,7 +7,7 @@ import (
 )
 
 func TestValidateNoMember(t *testing.T) {
-	validator := PropertyValidators[NoMemberProperty]
+	validator := commonPropertyValidators[NoMemberProperty]
 	assert.NoError(t, validator.ValidateProperty("nm", nil), "nm")
 	assert.NoError(t, validator.ValidateProperty("NM", nil), "NM")
 	assert.Error(t, validator.ValidateProperty("", nil), "empty")

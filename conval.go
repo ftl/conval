@@ -97,7 +97,22 @@ func (f PropertyValidatorFunc) ValidateProperty(exchange string, prefixes Prefix
 	return f(exchange, prefixes)
 }
 
-var PropertyValidators = map[Property]PropertyValidator{}
+type PropertyValidators interface {
+	PropertyValidator(Property) (PropertyValidator, bool)
+}
+
+type PropertyValidatorsFunc func(Property) (PropertyValidator, bool)
+
+func (f PropertyValidatorsFunc) PropertyValidator(property Property) (PropertyValidator, bool) {
+	return f(property)
+}
+
+var commonPropertyValidators = map[Property]PropertyValidator{}
+
+func CommonPropertyValidator(property Property) (PropertyValidator, bool) {
+	validator, ok := commonPropertyValidators[property]
+	return validator, ok
+}
 
 type Continent string
 
@@ -190,7 +205,7 @@ func (f PropertyGetterFunc) GetProperty(qso QSO) string {
 	return f(qso)
 }
 
-var PropertyGetters = map[Property]PropertyGetter{}
+var commonPropertyGetters = map[Property]PropertyGetter{}
 
 type QSO struct {
 	TheirCall      callsign.Callsign
@@ -211,20 +226,20 @@ func (q QSO) TheirPrefix() string {
 
 type QSOExchange map[Property]string
 
-func ParseExchange(fields []ExchangeField, values []string, prefixes PrefixDatabase) QSOExchange {
+func ParseExchange(fields []ExchangeField, values []string, prefixes PrefixDatabase, propertyValidators PropertyValidators) QSOExchange {
 	result := make(QSOExchange)
-	result.Add(fields, values, prefixes)
+	result.Add(fields, values, prefixes, propertyValidators)
 	return result
 }
 
-func (e QSOExchange) Add(fields []ExchangeField, values []string, prefixes PrefixDatabase) {
+func (e QSOExchange) Add(fields []ExchangeField, values []string, prefixes PrefixDatabase, propertyValidators PropertyValidators) {
 	for i, field := range fields {
 		if i >= len(values) {
 			break
 		}
 		value := strings.ToUpper(strings.TrimSpace(values[i]))
 		for _, property := range field {
-			validator, ok := PropertyValidators[property]
+			validator, ok := propertyValidators.PropertyValidator(property)
 			if !ok {
 				log.Printf("no validator for property %s", property)
 				continue

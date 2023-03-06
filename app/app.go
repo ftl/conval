@@ -12,7 +12,7 @@ import (
 type Logfile interface {
 	Identifier() conval.ContestIdentifier
 	Setup() *conval.Setup
-	QSOs(exchangeFields func(conval.Continent, conval.DXCCEntity) []conval.ExchangeField) []conval.QSO
+	QSOs(definition *conval.Definition, exchangeFields func(conval.Continent, conval.DXCCEntity) []conval.ExchangeField) []conval.QSO
 }
 
 type OutputFormat string

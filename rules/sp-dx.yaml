@@ -70,6 +70,9 @@ bands:
 - 20m
 - 15m
 - 10m
+properties:
+- name: pzk_province
+  values: [B, C, D, F, G, J, K, L, M, O, P, R, S, U, W, Z]
 exchange:
 - their_country: [sp]
   fields:
@@ -283,8 +286,15 @@ examples:
       band: 20m
       points: 3
       multis: 1
+    - their_call: sp4abc
+      their_exchange: [599, X]
+      their_continent: eu
+      their_country: sp
+      band: 20m
+      points: 3
+      multis: 0
     score:
-      qsos: 6
-      points: 12
+      qsos: 7
+      points: 15
       multis: 3
-      total: 36
+      total: 45

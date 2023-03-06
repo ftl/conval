@@ -11,10 +11,10 @@ import (
 )
 
 func init() {
-	PropertyValidators[PAProvinceProperty] = RegexpValidator(validPAProvince, "PA province")
+	commonPropertyValidators[PAProvinceProperty] = RegexpValidator(validPAProvince, "PA province")
 
-	PropertyGetters[PAProvinceProperty] = getTheirExchangeProperty(PAProvinceProperty)
-	PropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getVeronEntity)
+	commonPropertyGetters[PAProvinceProperty] = getTheirExchangeProperty(PAProvinceProperty)
+	commonPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getVeronEntity)
 }
 
 const (

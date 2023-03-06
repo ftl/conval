@@ -37,7 +37,7 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 	}
 
 	counter := conval.NewCounter(*definitionForFile, *setupForFile)
-	qsos := logfile.QSOs(counter.EffectiveExchangeFields)
+	qsos := logfile.QSOs(definition, counter.EffectiveExchangeFields)
 	for _, qso := range qsos {
 		counter.Add(qso)
 	}

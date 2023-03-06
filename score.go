@@ -220,7 +220,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	getTheirProperty := func(property Property) string {
-		getter, getterOK := PropertyGetters[property]
+		getter, getterOK := c.definition.PropertyGetter(property)
 		if !getterOK {
 			// log.Printf("no property getter for %s", property)
 			return ""

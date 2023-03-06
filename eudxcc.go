@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	PropertyValidators[EURegionProperty] = RegexpValidator(validEURegion, "EU region")
+	commonPropertyValidators[EURegionProperty] = RegexpValidator(validEURegion, "EU region")
 
-	PropertyGetters[EURegionProperty] = getTheirExchangeProperty(EURegionProperty)
+	commonPropertyGetters[EURegionProperty] = getTheirExchangeProperty(EURegionProperty)
 }
 
 const (

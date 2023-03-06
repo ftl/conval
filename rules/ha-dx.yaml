@@ -87,6 +87,9 @@ bands:
 - 20m
 - 15m
 - 10m
+properties:
+- name: ha_county
+  values: [BN, BA, BE, BO, CS, FE, GY, HB, HE, SZ, KO, NG, PE, SO, SA, TO, VA, VE, ZA, BP]
 exchange:
 - their_country: [ha]
   fields:

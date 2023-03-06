@@ -4,7 +4,7 @@ This file contains the implementation of the specific things for contests announ
 package conval
 
 func init() {
-	PropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getWPXPrefix)
+	commonPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getWPXPrefix)
 }
 
 const (

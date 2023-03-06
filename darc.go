@@ -11,10 +11,10 @@ import (
 )
 
 func init() {
-	PropertyValidators[WAGDOKProperty] = RegexpValidator(validDOK, "DOK")
+	commonPropertyValidators[WAGDOKProperty] = RegexpValidator(validDOK, "DOK")
 
-	PropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
-	PropertyGetters[WAGDistrictProperty] = PropertyGetterFunc(getWAGDistrict)
+	commonPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
+	commonPropertyGetters[WAGDistrictProperty] = PropertyGetterFunc(getWAGDistrict)
 }
 
 const (
