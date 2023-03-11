@@ -1,0 +1,249 @@
+identifier: UBA-DX-CW
+name: UBA DX contest
+official_rules: https://www.uba.be/en/hf/contest-rules/uba-dx-contest
+upload_url: mailto:ubacw@uba.be
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+- name: AH
+  operator_mode: single
+  duration: 6h
+  power: high
+  band_count: all
+- name: AL
+  operator_mode: single
+  duration: 6h
+  power: low
+  band_count: all
+- name: BH
+  operator_mode: single
+  duration: 12h
+  power: high
+  band_count: all
+- name: BL
+  operator_mode: single
+  duration: 12h
+  power: low
+  band_count: all
+- name: CH
+  operator_mode: single
+  power: high
+  band_count: all
+- name: CL
+  operator_mode: single
+  power: low
+  band_count: all
+- name: D
+  operator_mode: multi
+  band_count: all
+- name: E
+  operator_mode: single
+  duration: 18h
+  power: qrp
+  band_count: all
+- name: BASE
+  operator_mode: single
+  band_count: all
+- name: F
+- name: A10HP
+  operator_mode: single
+  power: high
+  bands: [10m]
+- name: A10LP
+  operator_mode: single
+  power: low
+  bands: [10m]
+- name: A15HP
+  operator_mode: single
+  power: high
+  bands: [15m]
+- name: A15LP
+  operator_mode: single
+  power: low
+  bands: [15m]
+- name: A20HP
+  operator_mode: single
+  power: high
+  bands: [20m]
+- name: A20LP
+  operator_mode: single
+  power: low
+  bands: [20m]
+- name: A40HP
+  operator_mode: single
+  power: high
+  bands: [40m]
+- name: A40LP
+  operator_mode: single
+  power: low
+  bands: [40m]
+- name: A80HP
+  operator_mode: single
+  power: high
+  bands: [80m]
+- name: A80LP
+  operator_mode: single
+  power: low
+  bands: [80m]
+- name: CHP
+  operator_mode: single
+  power: high
+  band_count: all
+- name: CLP
+  operator_mode: single
+  power: low
+  band_count: all
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+properties:
+- name: uba_section
+  values: [AAA, ACC, ALT, ARA, ARC, AST, ATH, ATO, BDX, BLW, BRC, BSE, BTS, BXE, CDZ, CLR, CPN, CRD, DNZ, DRC, DST, EKO, ERA, GBN, GBX, GDV, GNT, GTM, HAC, HCC, HOB, HRT, IPR, KSD, KTK, LGE, LIR, LLV, LUS, LVN, MCL, MLB, MNS, MTT, MWV, NBT, NLB, NMR, NNV, NOK, NOL, ODE, ONZ, ORA, OSA, OSB, OST, PHI, RAF, RAM, RAT, RBO, RCA, RCN, REM, RST, RSX, SNW, THN, TLS, TRA, TRC, TWS, UBA, VHF, WLD, WRA, WRC, WTN, WTO, XXX, ZLB, ZLZ, ZTM]
+exchange:
+- their_country: [on]
+  fields:
+  - [rst]
+  - [uba_section]
+- fields:
+  - [rst]
+  - [serial]
+scoring:
+  qsos:
+  - my_country: [on]
+    their_country: [on]
+    value: 1
+  - my_country: [on]
+    their_country: [5b, 9a, 9h, ct, ct3, cu, dl, ea, ea6, ea8, ei, es, f, fg, fm, fr, fy, ha, i, is, lx, ly, lz, oe, oh, oh0, oj0, ok, om, oz, pa, s5, sm, sp, sv, sv5, sv9, sv/a, tk, yl, yo]
+    value: 2
+  - my_country: [on]
+    value: 3
+  - my_country: [not, on]
+    their_country: [on]
+    value: 10
+  - my_country: [not, on]
+    their_country: [5b, 9a, 9h, ct, ct3, cu, dl, ea, ea6, ea8, ei, es, f, fg, fm, fr, fy, ha, i, is, lx, ly, lz, oe, oh, oh0, oj0, ok, om, oz, pa, s5, sm, sp, sv, sv5, sv9, sv/a, tk, yl, yo]
+    value: 3
+  - my_country: [not, on]
+    value: 1
+  qso_band_rule: once
+  multis: 
+  - my_country: [on]
+    property: dxcc_entity
+    band_rule: once_per_band
+    value: 1
+  - my_country: [not, on]
+    property: uba_section
+    band_rule: once_per_band
+    value: 1
+  - my_country: [not, on]
+    their_country: [on]
+    property: wpx_prefix
+    band_rule: once_per_band
+    value: 1
+  - my_country: [not, on]
+    their_country: [5b, 9a, 9h, ct, ct3, cu, dl, ea, ea6, ea8, ei, es, f, fg, fm, fr, fy, ha, i, is, lx, ly, lz, oe, oh, oh0, oj0, ok, om, oz, pa, s5, sm, sp, sv, sv5, sv9, sv/a, tk, yl, yo]
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_country: on
+    qsos:
+    - their_call: on1abc
+      their_exchange: [599, AAA]
+      their_continent: eu
+      their_country: on
+      band: 80m
+      points: 1
+      multis: 1
+    - their_call: on1abc
+      their_exchange: [599, AAA]
+      their_continent: eu
+      their_country: on
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [599, 125]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 1
+    - their_call: g2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: g
+      band: 40m
+      points: 3
+      multis: 1
+    - their_call: g2abc
+      their_exchange: [599, 235]
+      their_continent: eu
+      their_country: g
+      band: 20m
+      points: 3
+      multis: 1
+      duplicate: true
+    score:
+      qsos: 5
+      points: 6
+      multis: 3
+      total: 18
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_country: dl
+    qsos:
+    - their_call: on1abc
+      their_exchange: [599, AAA]
+      their_continent: eu
+      their_country: on
+      band: 80m
+      points: 10
+      multis: 2
+    - their_call: on1abc
+      their_exchange: [599, AAA]
+      their_continent: eu
+      their_country: on
+      band: 40m
+      points: 10
+      multis: 2
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [599, 125]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 3
+      multis: 1
+    - their_call: g2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: g
+      band: 40m
+      points: 1
+      multis: 1
+    - their_call: g2abc
+      their_exchange: [599, 235]
+      their_continent: eu
+      their_country: g
+      band: 20m
+      points: 1
+      multis: 1
+      duplicate: true
+    score:
+      qsos: 5
+      points: 14
+      multis: 4
+      total: 56
