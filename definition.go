@@ -135,6 +135,7 @@ type Category struct {
 	Assisted  bool          `yaml:"assisted,omitempty"`
 	Overlay   Overlay       `yaml:"overlay,omitempty"`
 	ScoreMode ScoreMode     `yaml:"score_mode,omitempty"`
+	Duration  time.Duration `yaml:"duration,omitempty"`
 }
 
 type ScoreMode string

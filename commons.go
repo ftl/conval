@@ -31,6 +31,7 @@ const (
 	StateProvinceProperty    Property = "state_province"
 	DXCCPrefixProperty       Property = "dxcc_prefix" // can be used as exchange, e.g. in the CWops contests
 	WAEEntityProperty        Property = "wae_entity"
+	WPXPrefixProperty        Property = "wpx_prefix"
 
 	GenericTextProperty   Property = "generic_text"
 	GenericNumberProperty Property = "generic_number"
@@ -71,6 +72,7 @@ func init() {
 	commonPropertyGetters[StateProvinceProperty] = getTheirExchangeProperty(StateProvinceProperty)
 	commonPropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
 	commonPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
+	commonPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getWPXPrefix)
 	commonPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	commonPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	commonPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
@@ -243,6 +245,10 @@ func getTheirExchangeProperty(property Property) PropertyGetter {
 
 func getEmpty(_ QSO) string {
 	return ""
+}
+
+func getWPXPrefix(qso QSO) string {
+	return WPXPrefix(qso.TheirCall)
 }
 
 var parseWPXPrefixExpression = regexp.MustCompile(`^[A-Z0-9]?[A-Z][0-9]*`)
