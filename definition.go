@@ -288,7 +288,7 @@ type ScoringRule struct {
 	TheirContinent        []Continent          `yaml:"their_continent,omitempty"`
 	TheirCountry          []DXCCEntity         `yaml:"their_country,omitempty"`
 	TheirPrefix           []string             `yaml:"their_prefix,omitempty"`
-	TheirWorkingCondition string               `yaml:"their_working_condition,omitempty"`
+	TheirWorkingCondition []string             `yaml:"their_working_condition,omitempty"`
 	Bands                 []ContestBand        `yaml:"bands,omitempty"`
 	Property              Property             `yaml:"property,omitempty"` // only useful for multis
 	Except                []string             `yaml:"except,omitempty"`   // only useful for multis

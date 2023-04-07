@@ -767,8 +767,9 @@ func TestFilterScoringRules(t *testing.T) {
 			getTheirProperty := func(property Property) string {
 				return tc.theirExchange[property]
 			}
+			counter := Counter{}
 
-			actual := filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, getMyProperty, getTheirProperty)
+			actual := counter.filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, getMyProperty, getTheirProperty)
 
 			assert.Equal(t, tc.expected, actual)
 		})
@@ -813,7 +814,9 @@ func TestFilterExchangeFields(t *testing.T) {
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			actual := filterExchangeFields(tc.definitions, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry)
+			counter := Counter{}
+
+			actual := counter.filterExchangeFields(tc.definitions, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry)
 
 			assert.Equal(t, tc.expected, actual)
 		})

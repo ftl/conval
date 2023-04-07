@@ -52,7 +52,11 @@ func runValidate(cmd *cobra.Command, args []string) {
 		log.Fatalf("%s does not contain any examples to validate\n", filename)
 	}
 
-	err = conval.ValidateExamples(definition, prefixes)
+	if rootFlags.trace {
+		err = conval.ValidateExamplesTrace(definition, prefixes)
+	} else {
+		err = conval.ValidateExamples(definition, prefixes)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}

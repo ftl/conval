@@ -67,7 +67,7 @@ scoring:
     their_contient: [other]
     additional_weight: 10
     value: 15
-  - their_working_condition: mm
+  - their_working_condition: [mm]
     additional_weight: 100
     value: 3
   qso_band_rule: once_per_band
