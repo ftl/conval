@@ -165,8 +165,14 @@ func (c Counter) Total(score BandScore) int {
 	}
 }
 
-func (c Counter) EffectiveExchangeFields(theirContinent Continent, theirCountry DXCCEntity) []ExchangeField {
-	return c.filterExchangeFields(c.definition.Exchange, c.setup.MyContinent, c.setup.MyCountry, theirContinent, theirCountry)
+func (c *Counter) EffectiveExchangeFields(theirCall callsign.Callsign) []ExchangeField {
+	theirContinent, theirCountry, _, _, ok := c.prefixes.Find(theirCall.String())
+	c.tracef("filtering exchange fields for %s on continent %s in country %s (found: %t)", theirCall, theirContinent, theirCountry, ok)
+	if !ok {
+		theirContinent = ""
+		theirCountry = ""
+	}
+	return c.filterExchangeFields(c.definition.Exchange, c.setup.MyContinent, c.setup.MyCountry, theirContinent, theirCountry, theirCall.WorkingCondition)
 }
 
 func (c *Counter) Add(qso QSO) QSOScore {
@@ -304,6 +310,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		var duplicateValue bool
 		properties, propertiesOK := c.multisPerBandAndMode[bandAndMode]
 		if propertiesOK {
+			c.tracef("rule #%d: multis for band and mode %v already exist: %v", i+1, bandAndMode, properties)
 			values, propertyOK := properties[rule.Property]
 			if propertyOK {
 				_, duplicateValue = values[value]
@@ -519,7 +526,8 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 	return result
 }
 
-func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity) []ExchangeField {
+func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myContinent Continent, myCountry DXCCEntity, theirContinent Continent, theirCountry DXCCEntity, theirWorkingCondition string) []ExchangeField {
+	theirWorkingCondition = strings.ToLower(theirWorkingCondition)
 	matchingDefinitions := make([]ExchangeDefinition, 0, len(definitions))
 	definitionScores := make([]int, 0, len(matchingDefinitions))
 	maxDefinitionScore := 0
@@ -582,6 +590,27 @@ func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myConti
 				definitionScore++
 			} else {
 				c.tracef("not their country %s %v", theirCountry, definition.TheirCountry)
+				continue
+			}
+		}
+		if len(definition.TheirWorkingCondition) > 0 {
+			c.tracef("evaluating working condition %s %v", theirWorkingCondition, definition.TheirWorkingCondition)
+			if len(definition.TheirWorkingCondition) == 1 && theirWorkingCondition == definition.TheirWorkingCondition[0] {
+				c.tracef("working condition exact match")
+				definitionScore++
+			} else if len(definition.TheirWorkingCondition) > 1 && definition.TheirWorkingCondition[0] == NotPrefix {
+				if !contains(definition.TheirWorkingCondition, theirWorkingCondition) {
+					c.tracef("working condition match with not")
+					definitionScore++
+				} else {
+					c.tracef("working condition NO match with not")
+					continue
+				}
+			} else if contains(definition.TheirWorkingCondition, theirWorkingCondition) {
+				c.tracef("working condition match")
+				definitionScore++
+			} else {
+				c.tracef("working condition NO match")
 				continue
 			}
 		}

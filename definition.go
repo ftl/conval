@@ -250,7 +250,7 @@ type ExchangeDefinition struct {
 	MyCountry             []DXCCEntity    `yaml:"my_country,omitempty"`
 	TheirContinent        []Continent     `yaml:"their_continent,omitempty"`
 	TheirCountry          []DXCCEntity    `yaml:"their_country,omitempty"`
-	TheirWorkingCondition string          `yaml:"their_working_condition,omitempty"`
+	TheirWorkingCondition []string        `yaml:"their_working_condition,omitempty"`
 	AdditionalWeight      int             `yaml:"additional_weight,omitempty"`
 	Fields                []ExchangeField `yaml:"fields,omitempty"`
 }

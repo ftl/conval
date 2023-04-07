@@ -816,7 +816,7 @@ func TestFilterExchangeFields(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			counter := Counter{}
 
-			actual := counter.filterExchangeFields(tc.definitions, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry)
+			actual := counter.filterExchangeFields(tc.definitions, tc.myContinent, tc.myCountry, tc.theirContinent, tc.theirCountry, "")
 
 			assert.Equal(t, tc.expected, actual)
 		})

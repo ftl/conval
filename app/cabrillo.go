@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/ftl/cabrillo"
+	"github.com/ftl/hamradio/callsign"
 
 	"github.com/ftl/conval"
 )
@@ -54,7 +55,7 @@ func (l CabrilloLogfile) Setup() *conval.Setup {
 	return result
 }
 
-func (l CabrilloLogfile) QSOs(definition *conval.Definition, exchangeFields func(conval.Continent, conval.DXCCEntity) []conval.ExchangeField) []conval.QSO {
+func (l CabrilloLogfile) QSOs(definition *conval.Definition, exchangeFields func(callsign.Callsign) []conval.ExchangeField) []conval.QSO {
 	result := make([]conval.QSO, len(l.log.QSOData))
 	for i, qso := range l.log.QSOData {
 		resultQSO := conval.QSO{
@@ -68,7 +69,7 @@ func (l CabrilloLogfile) QSOs(definition *conval.Definition, exchangeFields func
 			resultQSO.TheirContinent = theirContinent
 			resultQSO.TheirCountry = theirCountry
 		}
-		fields := exchangeFields(resultQSO.TheirContinent, resultQSO.TheirCountry)
+		fields := exchangeFields(resultQSO.TheirCall)
 		resultQSO.TheirExchange = cabrilloToQSOExchange(fields, qso.Received, l.prefixes, definition)
 
 		result[i] = resultQSO

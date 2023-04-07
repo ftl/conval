@@ -6,13 +6,15 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ftl/hamradio/callsign"
+
 	"github.com/ftl/conval"
 )
 
 type Logfile interface {
 	Identifier() conval.ContestIdentifier
 	Setup() *conval.Setup
-	QSOs(definition *conval.Definition, exchangeFields func(conval.Continent, conval.DXCCEntity) []conval.ExchangeField) []conval.QSO
+	QSOs(definition *conval.Definition, exchangeFields func(callsign.Callsign) []conval.ExchangeField) []conval.QSO
 }
 
 type OutputFormat string

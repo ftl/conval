@@ -3,6 +3,8 @@ package conval
 import (
 	"fmt"
 	"log"
+
+	"github.com/ftl/hamradio/callsign"
 )
 
 func ValidateExamples(definition *Definition, prefixes PrefixDatabase) error {
@@ -30,7 +32,7 @@ func validateExample(definition *Definition, example Example, prefixes PrefixDat
 	counter := NewCounter(*definition, example.Setup.ToSetup(), prefixes)
 	counter.SetTrace(trace)
 	for i, qso := range example.QSOs {
-		exchangeFields := counter.EffectiveExchangeFields(qso.TheirContinent, qso.TheirCountry)
+		exchangeFields := counter.EffectiveExchangeFields(callsign.MustParse(qso.TheirCall))
 		qsoScore := counter.Add(qso.ToQSO(exchangeFields, example.Setup.MyExchange, prefixes, definition))
 		if trace {
 			log.Printf("QSO #%d with exchange fields %v: %+v", i+1, exchangeFields, qsoScore)
