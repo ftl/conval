@@ -133,7 +133,7 @@ scoring:
     value: 3
   - my_country: [not, on]
     value: 1
-  qso_band_rule: once
+  qso_band_rule: once_per_band
   multis: 
   - my_country: [on]
     property: dxcc_entity
@@ -172,6 +172,13 @@ examples:
       band: 40m
       points: 1
       multis: 1
+    - their_call: on1abc
+      their_exchange: [599, AAA]
+      their_continent: eu
+      their_country: on
+      band: 40m
+      points: 1
+      multis: 0
       duplicate: true
     - their_call: dl1abc
       their_exchange: [599, 125]
@@ -194,12 +201,11 @@ examples:
       band: 20m
       points: 3
       multis: 1
-      duplicate: true
     score:
-      qsos: 5
-      points: 6
-      multis: 3
-      total: 18
+      qsos: 6
+      points: 10
+      multis: 5
+      total: 50
   - setup:
       bands: [80m, 40m, 20m]
       modes: [cw]
@@ -219,6 +225,13 @@ examples:
       band: 40m
       points: 10
       multis: 2
+    - their_call: on1abc
+      their_exchange: [599, AAA]
+      their_continent: eu
+      their_country: on
+      band: 40m
+      points: 10
+      multis: 0
       duplicate: true
     - their_call: dl1abc
       their_exchange: [599, 125]
@@ -233,17 +246,16 @@ examples:
       their_country: g
       band: 40m
       points: 1
-      multis: 1
+      multis: 0
     - their_call: g2abc
       their_exchange: [599, 235]
       their_continent: eu
       their_country: g
       band: 20m
       points: 1
-      multis: 1
-      duplicate: true
+      multis: 0
     score:
-      qsos: 5
-      points: 14
-      multis: 4
-      total: 56
+      qsos: 6
+      points: 25
+      multis: 5
+      total: 125
