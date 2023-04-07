@@ -60,7 +60,7 @@ func PrepareSetup(filename string, prefixes conval.PrefixDatabase) (*conval.Setu
 		return nil, nil
 	}
 
-	myContinent, myCountry, found := prefixes.Find(result.MyCall.String())
+	myContinent, myCountry, _, _, found := prefixes.Find(result.MyCall.String())
 	if found && result.MyContinent == "" {
 		result.MyContinent = myContinent
 	}

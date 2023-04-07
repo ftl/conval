@@ -36,7 +36,7 @@ func (l CabrilloLogfile) Identifier() conval.ContestIdentifier {
 func (l CabrilloLogfile) Setup() *conval.Setup {
 	result := new(conval.Setup)
 	result.MyCall = l.log.Callsign
-	myContinent, myCountry, found := l.prefixes.Find(result.MyCall.String())
+	myContinent, myCountry, _, _, found := l.prefixes.Find(result.MyCall.String())
 	if found {
 		result.MyContinent = myContinent
 		result.MyCountry = myCountry
@@ -63,7 +63,7 @@ func (l CabrilloLogfile) QSOs(definition *conval.Definition, exchangeFields func
 			Band:      cabrilloToBand(qso.Frequency),
 			Mode:      cabrilloToQSOMode(qso.Mode),
 		}
-		theirContinent, theirCountry, found := l.prefixes.Find(resultQSO.TheirCall.String())
+		theirContinent, theirCountry, _, _, found := l.prefixes.Find(resultQSO.TheirCall.String())
 		if found {
 			resultQSO.TheirContinent = theirContinent
 			resultQSO.TheirCountry = theirCountry

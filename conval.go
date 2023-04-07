@@ -144,8 +144,12 @@ const (
 	NotPrefix   string = "not"
 )
 
+type CQZone int
+
+type ITUZone int
+
 type PrefixDatabase interface {
-	Find(s string) (Continent, DXCCEntity, bool)
+	Find(s string) (Continent, DXCCEntity, CQZone, ITUZone, bool)
 }
 
 type PrefixDatabaseFunc func(s string) (Continent, DXCCEntity, bool)
@@ -166,13 +170,17 @@ type prefixDatabase struct {
 	prefixes *dxcc.Prefixes
 }
 
-func (d prefixDatabase) Find(s string) (Continent, DXCCEntity, bool) {
+func (d prefixDatabase) Find(s string) (Continent, DXCCEntity, CQZone, ITUZone, bool) {
 	entities, found := d.prefixes.Find(s)
 	if !found || len(entities) == 0 {
-		return "", "", false
+		return "", "", 0, 0, false
 	}
 
-	return Continent(strings.ToLower(entities[0].Continent)), DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix)), true
+	return Continent(strings.ToLower(entities[0].Continent)),
+		DXCCEntity(strings.ToLower(entities[0].PrimaryPrefix)),
+		CQZone(entities[0].CQZone),
+		ITUZone(entities[0].ITUZone),
+		true
 }
 
 type BandRule string

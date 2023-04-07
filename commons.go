@@ -133,7 +133,7 @@ var (
 		return nil
 	})
 	DXCCPrefixValidator = PropertyValidatorFunc(func(exchange string, prefixes PrefixDatabase) error {
-		_, entity, found := prefixes.Find(exchange)
+		_, entity, _, _, found := prefixes.Find(exchange)
 		if !found {
 			return fmt.Errorf("%s is not a valid DXCC prefix", exchange)
 		}
