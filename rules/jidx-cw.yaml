@@ -1,0 +1,278 @@
+identifier: JIDX-CW
+name: Japan International DX Contest
+official_rules: http://www.jidx.org/jidxrule-e.html
+upload_url: http://www.jidx.org/upload/uplog.html
+upload_format: cabrillo
+duration: 30h
+duration-constraints:
+breaks:
+categories:
+- name: AB
+  operator_mode: single
+  power: high
+  bands: [all]
+- name: 28
+  operator_mode: single
+  power: high
+  bands: [10m]
+- name: 21
+  operator_mode: single
+  power: high
+  bands: [15m]
+- name: 14
+  operator_mode: single
+  power: high
+  bands: [20m]
+- name: 7
+  operator_mode: single
+  power: high
+  bands: [40m]
+- name: 3.5
+  operator_mode: single
+  power: high
+  bands: [80m]
+- name: 1.8
+  operator_mode: single
+  power: high
+  bands: [160m]
+- name: ABL
+  operator_mode: single
+  power: low
+  bands: [all]
+- name: 28L
+  operator_mode: single
+  power: low
+  bands: [10m]
+- name: 21L
+  operator_mode: single
+  power: low
+  bands: [15m]
+- name: 14L
+  operator_mode: single
+  power: low
+  bands: [20m]
+- name: 7L
+  operator_mode: single
+  power: low
+  bands: [40m]
+- name: 3.5L
+  operator_mode: single
+  power: low
+  bands: [80m]
+- name: 1.8L
+  operator_mode: single
+  power: low
+  bands: [160m]
+- name: MOP1
+  operator_mode: multi
+  tx: one
+  bands: [all]
+- name: MOP2
+  operator_mode: multi
+  tx: two
+  bands: [all]
+- name: MM
+  bands: [all]
+overlays:
+modes:
+- cw
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+properties:
+- name: jidx_prefecture
+  expression: "[0-5]*\\d"
+exchange:
+- their_country: [ja]
+  their_working_condition: [not, mm]
+  fields:
+  - [rst]
+  - [jidx_prefecture]
+- fields:
+  - [rst]
+  - [cq_zone]
+scoring:
+  qsos:
+  - my_country: [ja]
+    their_country: [other]
+    bands: [160m]
+    value: 4
+  - my_country: [ja]
+    their_country: [other]
+    bands: [80m, 10m]
+    value: 2
+  - my_country: [ja]
+    their_country: [other]
+    bands: [40m, 20m, 15m]
+    value: 1
+  - my_country: [ja]
+    their_working_condition: [mm]
+    bands: [160m]
+    value: 4
+    additional_weight: 100
+  - my_country: [ja]
+    their_working_condition: [mm]
+    bands: [80m, 10m]
+    value: 2
+    additional_weight: 100
+  - my_country: [ja]
+    their_working_condition: [mm]
+    bands: [40m, 20m, 15m]
+    value: 1
+    additional_weight: 100
+  - my_country: [not, ja]
+    their_country: [ja]
+    bands: [160m]
+    value: 4
+  - my_country: [not, ja]
+    their_country: [ja]
+    bands: [80m, 10m]
+    value: 2
+  - my_country: [not, ja]
+    their_country: [ja]
+    bands: [40m, 20m, 15m]
+    value: 1
+  - my_country: [not, ja]
+    their_working_condition: [mm]
+    bands: [160m]
+    value: 0
+  - my_country: [not, ja]
+    their_working_condition: [mm]
+    bands: [80m, 10m]
+    value: 0
+  - my_country: [not, ja]
+    their_working_condition: [mm]
+    bands: [40m, 20m, 15m]
+    value: 0
+  qso_band_rule: once_per_band
+  multis: 
+  - my_country: [ja]
+    their_working_condition: [not, mm]
+    property: dxcc_entity
+    band_rule: once_per_band
+    value: 1
+  - my_country: [ja]
+    property: cq_zone
+    band_rule: once_per_band
+    value: 1
+  - my_country: [not, ja]
+    property: jidx_prefecture
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+      my_country: ja
+    qsos:
+    - their_call: ja1abc
+      their_exchange: [599, 1]
+      their_country: ja
+      band: 80m
+      points: 0
+      multis: 2
+    - their_call: dl1abc
+      their_exchange: [599, 14]
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 2
+    - their_call: dl1abc
+      their_exchange: [599, 14]
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: ja2abc/mm
+      their_exchange: [599, 14]
+      their_country: ja
+      band: 40m
+      points: 1
+      multis: 0
+    - their_call: dl3abc
+      their_exchange: [599, 14]
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 2
+    - their_call: k3abc
+      their_exchange: [599, 5]
+      their_country: k
+      band: 160m
+      points: 4
+      multis: 2
+    - their_call: dl3abc
+      their_exchange: [599, 14]
+      their_country: dl
+      band: 10m
+      points: 2
+      multis: 2
+    score:
+      qsos: 7
+      points: 10
+      multis: 10
+      total: 100
+  - setup:
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+      my_country: dl
+    qsos:
+    - their_call: ja1abc
+      their_exchange: [599, 1]
+      their_country: ja
+      band: 80m
+      points: 2
+      multis: 1
+    - their_call: ja1abc
+      their_exchange: [599, 1]
+      their_country: ja
+      band: 40m
+      points: 1
+      multis: 1
+    - their_call: ja1abc
+      their_exchange: [599, 1]
+      their_country: ja
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: ja2abc/mm
+      their_exchange: [599, 14]
+      their_country: ja
+      band: 40m
+      points: 0
+      multis: 0
+    - their_call: k3abc
+      their_exchange: [599, 5]
+      their_country: k
+      band: 160m
+      points: 0
+      multis: 0
+    - their_call: ja3abc
+      their_exchange: [599, 4]
+      their_country: ja
+      band: 80m
+      points: 2
+      multis: 1
+    - their_call: ja3abc
+      their_exchange: [599, 4]
+      their_country: ja
+      band: 160m
+      points: 4
+      multis: 1
+    - their_call: ja3abc
+      their_exchange: [599, 4]
+      their_country: ja
+      band: 10m
+      points: 2
+      multis: 1
+    score:
+      qsos: 8
+      points: 11
+      multis: 5
+      total: 55
