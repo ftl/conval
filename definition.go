@@ -211,7 +211,7 @@ func (d *PropertyDefinition) validatePropertyValue(value string) error {
 	return fmt.Errorf("%s is not a valid %s", value, d.GetLabel())
 }
 
-func (d *PropertyDefinition) GetProperty(qso QSO) string {
+func (d *PropertyDefinition) GetProperty(qso QSO, _ PrefixDatabase) string {
 	if d.Source == "" {
 		return qso.TheirExchange[d.Name]
 	}

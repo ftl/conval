@@ -27,7 +27,7 @@ func ValidateExamplesTrace(definition *Definition, prefixes PrefixDatabase) erro
 }
 
 func validateExample(definition *Definition, example Example, prefixes PrefixDatabase, trace bool) error {
-	counter := NewCounter(*definition, example.Setup.ToSetup())
+	counter := NewCounter(*definition, example.Setup.ToSetup(), prefixes)
 	counter.SetTrace(trace)
 	for i, qso := range example.QSOs {
 		exchangeFields := counter.EffectiveExchangeFields(qso.TheirContinent, qso.TheirCountry)

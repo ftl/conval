@@ -471,6 +471,10 @@ exchange:
 			expected: []string{"B", "B", "D", "", "", ""},
 		},
 	}
+
+	prefixes, err := NewPrefixDatabase()
+	require.NoError(t, err)
+
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
 			buffer := bytes.NewBufferString(tc.yaml)
@@ -487,7 +491,7 @@ exchange:
 					TheirExchange: parsedExchange,
 				}
 
-				actual := getter.GetProperty(qso)
+				actual := getter.GetProperty(qso, prefixes)
 				assert.Equal(t, tc.expected[i], actual, i)
 			}
 		})

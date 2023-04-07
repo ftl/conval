@@ -26,7 +26,7 @@ var (
 	validPAProvince = regexp.MustCompile(`DR|FL|FR|GD|GR|LB|NB|NH|OV|UT|ZH|ZL`)
 )
 
-func getVeronEntity(qso QSO) string {
+func getVeronEntity(qso QSO, _ PrefixDatabase) string {
 	return VeronEntity(qso.TheirCall, qso.TheirCountry)
 }
 

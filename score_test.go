@@ -19,7 +19,7 @@ func TestCounter_SimplestHappyPath(t *testing.T) {
 	setup := Setup{}
 	qso := QSO{}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 
 	qsoScore := counter.Add(qso)
 
@@ -845,7 +845,7 @@ func TestCounter_Add_Points_Once(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{QSOs: 3, Points: 2, Multis: 4}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -883,7 +883,7 @@ func TestCounter_Add_Points_OncePerBand(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{QSOs: 6, Points: 4}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -932,7 +932,7 @@ func TestCounter_Add_Points_OncePerBandAndMode(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{QSOs: 12, Points: 8}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -962,7 +962,7 @@ func TestCounter_Add_Multis_Once(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{QSOs: 3, Multis: 2}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -999,7 +999,7 @@ func TestCounter_Add_Multis_OncePerBand(t *testing.T) {
 	}
 	expectedTotalScore := BandScore{QSOs: 6, Multis: 4}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 
 	for i, qso := range qsos {
 		actualScore := counter.Add(qso)
@@ -1026,7 +1026,7 @@ func TestCounter_BandsPerMulti(t *testing.T) {
 		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, TheirExchange: QSOExchange{"cq_zone": "14"}},
 	}
 
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 	for _, qso := range qsos {
 		counter.Add(qso)
 	}

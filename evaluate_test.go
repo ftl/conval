@@ -12,7 +12,7 @@ func TestCounter_EvaluateAll_ResultSize(t *testing.T) {
 		Duration: 12 * time.Hour,
 	}
 	setup := Setup{}
-	counter := NewCounter(definition, setup)
+	counter := NewCounter(definition, setup, nil)
 	startTime := time.Now().Truncate(time.Hour)
 
 	perHour := counter.EvaluateAll(startTime, time.Hour)

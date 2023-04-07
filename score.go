@@ -16,6 +16,7 @@ type BandAndMode struct {
 type Counter struct {
 	definition Definition
 	setup      Setup
+	prefixes   PrefixDatabase
 	trace      bool
 
 	qsos                    []ScoredQSO
@@ -47,10 +48,11 @@ type BandScore struct {
 	Multis int `yaml:"multis" json:"multis"`
 }
 
-func NewCounter(definition Definition, setup Setup) *Counter {
+func NewCounter(definition Definition, setup Setup, prefixes PrefixDatabase) *Counter {
 	return &Counter{
 		definition: definition,
 		setup:      setup,
+		prefixes:   prefixes,
 
 		qsos:                    make([]ScoredQSO, 0, 10000),
 		callsignsPerBandAndMode: make(map[BandAndMode]map[callsign.Callsign]bool),
@@ -238,7 +240,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 			c.tracef("no property getter for %s", property)
 			return ""
 		}
-		return getter.GetProperty(qso)
+		return getter.GetProperty(qso, c.prefixes)
 	}
 
 	// find the relevant QSO rules

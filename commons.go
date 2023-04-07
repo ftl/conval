@@ -146,37 +146,46 @@ var (
 
 // Common Property Getters
 
-func getTheirCall(qso QSO) string {
+func getTheirCall(qso QSO, _ PrefixDatabase) string {
 	return qso.TheirCall.String()
 }
 
-func getCQZone(qso QSO) string {
+func getCQZone(qso QSO, prefixes PrefixDatabase) string {
 	exchange, ok := qso.TheirExchange[CQZoneProperty]
 	if ok {
 		return exchange
 	}
-	// TODO get CQ zone from a database
+	_, _, cqZone, _, ok := prefixes.Find(qso.TheirCall.String())
+	if ok {
+		return cqZone.String()
+	}
 	return ""
 }
 
-func getITUZone(qso QSO) string {
+func getITUZone(qso QSO, prefixes PrefixDatabase) string {
 	exchange, ok := qso.TheirExchange[ITUZoneProperty]
 	if ok {
 		return exchange
 	}
-	// TODO get ITU zone from a database
+	_, _, _, ituZone, ok := prefixes.Find(qso.TheirCall.String())
+	if ok {
+		return ituZone.String()
+	}
 	return ""
 }
 
-func getDXCCEntity(qso QSO) string {
+func getDXCCEntity(qso QSO, prefixes PrefixDatabase) string {
 	if qso.TheirCountry != "" {
 		return string(qso.TheirCountry)
 	}
-	// TODO get DXCC entity from a database
+	_, entity, _, _, ok := prefixes.Find(qso.TheirCall.String())
+	if ok {
+		return entity.String()
+	}
 	return ""
 }
 
-func getWAEEntity(qso QSO) string {
+func getWAEEntity(qso QSO, _ PrefixDatabase) string {
 	return WAEEntity(qso.TheirCall, qso.TheirCountry)
 }
 
@@ -233,21 +242,21 @@ func IsWAECountry(call callsign.Callsign, dxccEntity DXCCEntity) bool {
 	}
 }
 
-func getCallsignWorkingCondition(qso QSO) string {
+func getCallsignWorkingCondition(qso QSO, _ PrefixDatabase) string {
 	return qso.TheirCall.WorkingCondition
 }
 
 func getTheirExchangeProperty(property Property) PropertyGetter {
-	return PropertyGetterFunc(func(qso QSO) string {
+	return PropertyGetterFunc(func(qso QSO, _ PrefixDatabase) string {
 		return qso.TheirExchange[property]
 	})
 }
 
-func getEmpty(_ QSO) string {
+func getEmpty(_ QSO, _ PrefixDatabase) string {
 	return ""
 }
 
-func getWPXPrefix(qso QSO) string {
+func getWPXPrefix(qso QSO, _ PrefixDatabase) string {
 	return WPXPrefix(qso.TheirCall)
 }
 

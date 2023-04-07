@@ -132,6 +132,10 @@ const (
 
 type DXCCEntity string
 
+func (e DXCCEntity) String() string {
+	return string(e)
+}
+
 const (
 	SameCountry  DXCCEntity = "same"
 	OtherCountry DXCCEntity = "other"
@@ -146,7 +150,15 @@ const (
 
 type CQZone int
 
+func (z CQZone) String() string {
+	return strconv.Itoa(int(z))
+}
+
 type ITUZone int
+
+func (z ITUZone) String() string {
+	return strconv.Itoa(int(z))
+}
 
 type PrefixDatabase interface {
 	Find(s string) (Continent, DXCCEntity, CQZone, ITUZone, bool)
@@ -204,13 +216,13 @@ const (
 type Property string
 
 type PropertyGetter interface {
-	GetProperty(QSO) string
+	GetProperty(QSO, PrefixDatabase) string
 }
 
-type PropertyGetterFunc func(QSO) string
+type PropertyGetterFunc func(QSO, PrefixDatabase) string
 
-func (f PropertyGetterFunc) GetProperty(qso QSO) string {
-	return f(qso)
+func (f PropertyGetterFunc) GetProperty(qso QSO, prefixes PrefixDatabase) string {
+	return f(qso, prefixes)
 }
 
 var commonPropertyGetters = map[Property]PropertyGetter{}
