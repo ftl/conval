@@ -216,7 +216,7 @@ examples:
     - their_call: f1abc
       their_exchange: [599, 1]
       their_continent: eu
-      their_countra: f
+      their_country: f
       band: 40m
       points: 6
       multis: 1
@@ -224,7 +224,7 @@ examples:
     - their_call: f4abc/mm
       their_exchange: [599, 1]
       their_continent: eu
-      their_countra: f
+      their_country: f
       band: 40m
       points: 3
       multis: 0
@@ -267,7 +267,7 @@ examples:
     - their_call: f1abc
       their_exchange: [599, 1]
       their_continent: eu
-      their_countra: f
+      their_country: f
       band: 40m
       points: 15
       multis: 1
@@ -275,7 +275,7 @@ examples:
     - their_call: f4abc/mm
       their_exchange: [599, 1]
       their_continent: eu
-      their_countra: f
+      their_country: f
       band: 40m
       points: 3
       multis: 0

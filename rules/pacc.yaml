@@ -272,7 +272,7 @@ examples:
       mode: cw
       points: 1
       multis: 1
-    - their_call: dl3abc
+    - their_call: pa3abc
       their_exchange: [599, zl]
       their_continent: eu
       their_country: pa
