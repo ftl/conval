@@ -1,0 +1,238 @@
+identifier: AADX-CW
+name: All Asian DX Contest, CW
+official_rules: https://www.jarl.org/English/4_Library/A-4-3_Contests/2023AA_rule.htm
+upload_url: http://www.b4h.net/cabforms/aadxcw_cab3.php
+upload_format: cabrillo
+duration: 48h
+duration-constraints:
+breaks:
+categories:
+- name: SO160HP
+  operator_mode: single
+  power: high
+  bands: [160m]
+- name: SO80HP
+  operator_mode: single
+  power: high
+  bands: [80m]
+- name: SO40HP
+  operator_mode: single
+  power: high
+  bands: [40m]
+- name: SO20HP
+  operator_mode: single
+  power: high
+  bands: [20m]
+- name: SO15HP
+  operator_mode: single
+  power: high
+  bands: [15m]
+- name: SO10HP
+  operator_mode: single
+  power: high
+  bands: [10m]
+- name: SOABHP
+  operator_mode: single
+  power: high
+  bands: [all]
+- name: SO160LP
+  operator_mode: single
+  power: low
+  bands: [160m]
+- name: SO80LP
+  operator_mode: single
+  power: low
+  bands: [80m]
+- name: SO40LP
+  operator_mode: single
+  power: low
+  bands: [40m]
+- name: SO20LP
+  operator_mode: single
+  power: low
+  bands: [20m]
+- name: SO15LP
+  operator_mode: single
+  power: low
+  bands: [15m]
+- name: SO10LP
+  operator_mode: single
+  power: low
+  bands: [10m]
+- name: SOABLP
+  operator_mode: single
+  power: low
+  bands: [all]
+- name: SO160
+  operator_mode: single
+  bands: [160m]
+- name: SO80
+  operator_mode: single
+  bands: [80m]
+- name: SO40
+  operator_mode: single
+  bands: [40m]
+- name: SO20
+  operator_mode: single
+  bands: [20m]
+- name: SO15
+  operator_mode: single
+  bands: [15m]
+- name: SO10
+  operator_mode: single
+  bands: [10m]
+- name: SOAB
+  operator_mode: single
+  bands: [all]
+- name: M/S
+  operator_mode: multi
+  tx: one
+- name: M/M
+  operator_mode: multi
+  tx: multi
+overlays:
+modes:
+- cw
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- fields:
+  - [rst]
+  - [age]
+scoring:
+  qsos:
+  - their_continent: [as]
+    their_country: [same]
+    value: 0
+  - their_continent: [as]
+    their_country: [other]
+    bands: [160m]
+    value: 3
+  - their_continent: [as]
+    their_country: [other]
+    bands: [80m, 10m]
+    value: 2
+  - their_continent: [as]
+    their_country: [other]
+    value: 1
+  - their_continent: [not, as]
+    my_continent: [as]
+    bands: [160m]
+    value: 9
+  - their_continent: [not, as]
+    my_continent: [as]
+    bands: [80m, 10m]
+    value: 6
+  - their_continent: [not, as]
+    my_continent: [as]
+    value: 3
+  qso_band_rule: once_per_band
+  multis:
+  - my_continent: [as] 
+    their_country: [same]
+    value: 0
+  - my_continent: [as] 
+    property: dxcc_entity
+    band_rule: once_per_band
+    value: 1
+  - my_continent: [not, as]
+    their_continent: [as]
+    property: wpx_prefix
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_continent: as
+      my_country: ja
+    qsos:
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 3
+      multis: 0
+      duplicate: true
+    - their_call: bd2abc
+      their_continent: as
+      their_country: by
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 3
+      multis: 0
+    score:
+      qsos: 5
+      points: 13
+      multis: 3
+      total: 39
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_continent: eu
+      my_country: dl
+    qsos:
+    - their_call: ja1abc
+      their_continent: as
+      their_country: ja
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: ja1abc
+      their_continent: as
+      their_country: ja
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: ja1abc
+      their_continent: as
+      their_country: ja
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: bd2abc
+      their_continent: as
+      their_country: by
+      band: 40m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl3abc
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 0
+      multis: 0
+    score:
+      qsos: 5
+      points: 4
+      multis: 3
+      total: 12
