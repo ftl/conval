@@ -61,14 +61,17 @@ bands:
 - 20m
 - 15m
 - 10m
+properties:
+- name: iaru_section
+  expression: "[A-Z][A-Z0-9]+"
 exchange:
 - fields:
   - [rst]
-  - [itu_zone, generic_text]
+  - [itu_zone, iaru_section]
 scoring:
   qsos:
   - property_constraints: 
-    - name: generic_text
+    - name: iaru_section
       their_value_not_empty: true
     additional_weight: 100
     value: 1
@@ -88,9 +91,12 @@ scoring:
   qso_band_rule: once_per_band_and_mode
   multis: 
   - property: itu_zone
+    property_constraints:
+    - name: iaru_section
+      their_value_empty: true
     band_rule: once_per_band
     value: 1
-  - property: generic_text
+  - property: iaru_section
     band_rule: once_per_band
     value: 1
 examples:
@@ -145,19 +151,19 @@ examples:
       mode: cw
       points: 1
       multis: 1
-    - their_call: w9jj
-      their_exchange: [599, 8]
-      their_continent: na
-      band: 20m
-      mode: cw
-      points: 5
-      multis: 1
     - their_call: w1aw
       their_exchange: [599, arrl]
       their_continent: na
       band: 20m
       mode: cw
       points: 1
+      multis: 1
+    - their_call: w9jj
+      their_exchange: [599, 8]
+      their_continent: na
+      band: 20m
+      mode: cw
+      points: 5
       multis: 1
     - their_call: g3bj
       their_exchange: [599, 27]

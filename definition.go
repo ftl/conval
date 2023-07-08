@@ -312,6 +312,7 @@ type PropertyConstraint struct {
 	Max                string   `yaml:"max,omitempty"`
 	MyValue            string   `yaml:"my_value,omitempty"`
 	TheirValue         string   `yaml:"their_value,omitempty"`
+	TheirValueEmpty    bool     `yaml:"their_value_empty,omitempty"`
 	TheirValueNotEmpty bool     `yaml:"their_value_not_empty,omitempty"`
 	SameValue          bool     `yaml:"same,omitempty"`
 	OtherValue         bool     `yaml:"other,omitempty"`
@@ -330,13 +331,14 @@ func (c PropertyConstraint) Matches(myValue string, theirValue string) bool {
 	if c.TheirValue != "" {
 		result = result && (theirValue == c.TheirValue)
 	}
-	if c.TheirValueNotEmpty {
+	if c.TheirValueEmpty {
+		result = result && (theirValue == "")
+	} else if c.TheirValueNotEmpty {
 		result = result && (theirValue != "")
 	}
 	if c.SameValue {
 		result = result && myValue == theirValue
-	}
-	if c.OtherValue {
+	} else if c.OtherValue {
 		result = result && myValue != theirValue
 	}
 	return result
