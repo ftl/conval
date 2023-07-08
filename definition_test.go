@@ -343,6 +343,42 @@ func TestPropertyConstraint_Matches(t *testing.T) {
 			},
 			expected: false,
 		},
+		{
+			desc:       "same value, same true",
+			myValue:    "123",
+			theirValue: "123",
+			constraint: PropertyConstraint{
+				SameValue: true,
+			},
+			expected: true,
+		},
+		{
+			desc:       "other value, same true",
+			myValue:    "123",
+			theirValue: "321",
+			constraint: PropertyConstraint{
+				SameValue: true,
+			},
+			expected: false,
+		},
+		{
+			desc:       "same value, other true",
+			myValue:    "123",
+			theirValue: "123",
+			constraint: PropertyConstraint{
+				OtherValue: true,
+			},
+			expected: false,
+		},
+		{
+			desc:       "other value, other true",
+			myValue:    "123",
+			theirValue: "321",
+			constraint: PropertyConstraint{
+				OtherValue: true,
+			},
+			expected: true,
+		},
 	}
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {

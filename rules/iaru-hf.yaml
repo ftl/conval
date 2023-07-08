@@ -1,0 +1,173 @@
+identifier: IARU-HF
+name: IARU HF Championship
+official_rules: http://www.arrl.org/iaru-hf-world-championship
+upload_url: http://contest-log-submission.arrl.org/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+- name: SO-QRP
+  operator_mode: single
+  power: qrp
+  bands: [all]
+  assisted: false
+- name: SO-LP
+  operator_mode: single
+  power: low
+  bands: [all]
+  assisted: false
+- name: SO-HP
+  operator_mode: single
+  power: high
+  bands: [all]
+  assisted: false
+- name: SOU-QRP
+  operator_mode: single
+  power: qrp
+  bands: [all]
+  assisted: true
+- name: SOU-LP
+  operator_mode: single
+  power: low
+  bands: [all]
+  assisted: true
+- name: SOU-HP
+  operator_mode: single
+  power: high
+  bands: [all]
+  assisted: true
+- name: MS
+  operator_mode: multi
+  power: high
+  bands: [all]
+  tx: one
+  assisted: true
+- name: M2
+  operator_mode: multi
+  power: low
+  bands: [all]
+  tx: two
+  assisted: false
+- name: CHECKLOG
+overlays:
+modes:
+- cw
+- ssb
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+exchange:
+- fields:
+  - [rst]
+  - [itu_zone, generic_text]
+scoring:
+  qsos:
+  - property_constraints: 
+    - name: generic_text
+      their_value_not_empty: true
+    additional_weight: 100
+    value: 1
+  - property_constraints: 
+    - name: itu_zone
+      their_value_not_empty: true
+      other: true 
+    their_continent: [same]
+    value: 3
+  - property_constraints: 
+    - name: itu_zone
+      their_value_not_empty: true
+      other: true 
+    their_continent: [other]
+    value: 5
+  - value: 1
+  qso_band_rule: once_per_band_and_mode
+  multis: 
+  - property: itu_zone
+    band_rule: once_per_band
+    value: 1
+  - property: generic_text
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw, ssb]
+      my_exchange:
+        rst: 599
+        itu_zone: 28
+      my_continent: eu
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 28]
+      their_continent: eu
+      band: 80m
+      mode: cw
+      points: 1
+      multis: 1
+    - their_call: dl1abc
+      their_exchange: [599, 28]
+      their_continent: eu
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 1
+    - their_call: dl1abc
+      their_exchange: [599, 28]
+      their_continent: eu
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [599, 28]
+      their_continent: eu
+      band: 40m
+      mode: ssb
+      points: 1
+      multis: 0
+    - their_call: dl2abc
+      their_exchange: [599, 28]
+      their_continent: eu
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 0
+    - their_call: da0hq
+      their_exchange: [599, darc]
+      their_continent: eu
+      band: 40m
+      mode: cw
+      points: 1
+      multis: 1
+    - their_call: w9jj
+      their_exchange: [599, 8]
+      their_continent: na
+      band: 20m
+      mode: cw
+      points: 5
+      multis: 1
+    - their_call: w1aw
+      their_exchange: [599, arrl]
+      their_continent: na
+      band: 20m
+      mode: cw
+      points: 1
+      multis: 1
+    - their_call: g3bj
+      their_exchange: [599, 27]
+      their_continent: eu
+      band: 20m
+      mode: cw
+      points: 3
+      multis: 1
+    score:
+      qsos: 9
+      points: 14
+      multis: 6
+      total: 84
