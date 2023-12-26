@@ -1,0 +1,120 @@
+identifier: DARC-XMAS
+name: DARC XMAS Contest
+official_rules: https://www.darc.de/der-club/referate/conteste/weihnachtswettbewerb/rules/
+upload_url: https://dxhf2.darc.de/~xmaslog/upload.cgi?form=referat&lang=en
+upload_format: cabrillo
+duration: 150m
+duration-constraints:
+breaks:
+categories:
+- name: Single-Op Mixed High
+  operator_mode: single
+  power: high
+  bands: [all]
+  modes: [all]
+- name: Single-Op Mixed Low
+  operator_mode: single
+  power: low
+  bands: [all]
+  modes: [all]
+- name: Single-Op CW High
+  operator_mode: single
+  power: high
+  bands: [all]
+  modes: [cw]
+- name: Single-Op CW Low
+  operator_mode: single
+  power: low
+  bands: [all]
+  modes: [cw]
+- name: Single-Op SSB High
+  operator_mode: single
+  power: high
+  bands: [all]
+  modes: [ssb]
+- name: Single-Op SSB Low
+  operator_mode: single
+  power: low
+  bands: [all]
+  modes: [ssb]
+overlays:
+modes:
+- cw
+- ssb
+bands:
+- 80m
+- 40m
+properties:
+- name: wag_dok
+  expression: "\\d*[A-Z][A-Z0-9ÄÖÜ-]*"
+exchange:
+- their_country: [dl]
+  fields:
+  - [rst]
+  - [nm, wag_dok]
+- fields:
+  - [rst]
+  - [serial]
+scoring:
+  qsos:
+  - value: 1
+  qso_band_rule: once_per_band
+  multis: 
+  - property: wag_dok
+    band_rule: once_per_band
+    value: 1
+  - property: wpx_prefix
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, b36]
+      band: 80m
+      mode: cw
+      points: 1
+      multis: 2
+      duplicate: false
+    - their_call: dl1bcd
+      their_exchange: [599, b26]
+      band: 80m
+      mode: cw
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1cde
+      their_exchange: [599, nm]
+      band: 80m
+      mode: cw
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: df3abc
+      their_exchange: [599, nm]
+      band: 80m
+      mode: cw
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, b36]
+      band: 80m
+      mode: ssb
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: dl1abc
+      their_exchange: [599, b36]
+      band: 40m
+      mode: ssb
+      points: 1
+      multis: 2
+      duplicate: false
+    score:
+      qsos: 6
+      points: 5
+      multis: 6
+      total: 30
