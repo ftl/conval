@@ -252,7 +252,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	// find the relevant QSO rules
 	c.tracef("filtering %d scoring rules", len(c.definition.Scoring.QSORules))
 	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
-	c.tracef("found %d relevant QSO rules", len(qsoRules))
+	c.tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
 	} else if len(qsoRules) > 1 {
@@ -476,16 +476,21 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 			ruleScore++
 		}
 		if len(rule.PropertyConstraints) > 0 {
+			c.tracef("rule #%d has %d property constraints", i, len(rule.PropertyConstraints))
 			propertyConstraintsMatched := 0
 
 			for _, constraint := range rule.PropertyConstraints {
 				myValue := getMyProperty(constraint.Name)
 				theirValue := getTheirProperty(constraint.Name)
 				if constraint.Matches(myValue, theirValue) {
+					c.tracef("property constraint on %s matched: my %q their %q", constraint.Name, myValue, theirValue)
 					propertyConstraintsMatched++
+				} else {
+					c.tracef("property constraint on %s NO match: my %q their %q", constraint.Name, myValue, theirValue)
 				}
 			}
 			if propertyConstraintsMatched != len(rule.PropertyConstraints) {
+				c.tracef("only %d of %d property constraints matched", propertyConstraintsMatched, len(rule.PropertyConstraints))
 				continue
 			}
 
