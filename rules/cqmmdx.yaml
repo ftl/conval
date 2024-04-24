@@ -1,0 +1,221 @@
+identifier: CQMMDX
+name: CQMM DX Contest
+official_rules: http://www.cqmmdx.com/rules/
+upload_url: mailto:cwjf@cqmmdx.com
+upload_format: cabrillo
+duration: 39h
+duration-constraints:
+breaks:
+categories:
+- name: MOST AB HP
+  operator_mode: multi
+  power: high
+  bands: [all]
+- name: MOST AB LP
+  operator_mode: multi
+  power: low
+  bands: [all]
+- name: SO AB HP
+  operator_mode: single
+  power: high
+  bands: [all]
+- name: SO AB LP
+  operator_mode: single
+  power: low
+  bands: [all]
+- name: SO AB HP
+  operator_mode: single
+  power: high
+  band_count: single
+- name: SO AB LP
+  operator_mode: single
+  power: low
+  band_count: single
+- name: SO AB QRP
+  operator_mode: single
+  power: qrp
+  bands: [all]
+- name: SO AB YL
+  operator_mode: single
+  bands: [all]
+overlays:
+modes:
+- cw
+bands:
+- 80m
+- 40m
+- 20m
+- 15m
+- 10m
+properties:
+- name: cqmm_exchange
+  expression: "((AF)|(AS)|(EU)|(NA)|(OC)|(SA))[CMQY]?"
+- name: cqmm_group
+  source: cqmm_exchange
+  expression: "[AENOS][ACFSU]([CMQY]?)"
+exchange:
+- fields:
+  - [rst]
+  - [cqmm_exchange]
+scoring:
+  qsos:
+  - their_country: [same]
+    value: 1
+  - their_continent: [same]
+    their_country: [other]
+    bands: [10m,15m,20m]
+    value: 2
+  - their_continent: [same]
+    their_country: [other]
+    bands: [40m,80m]
+    value: 4
+  - their_continent: [other]
+    bands: [10m,15m,20m]
+    value: 3
+  - their_continent: [other]
+    bands: [40m,80m]
+    value: 6
+  - property_constraints:
+    - name: cqmm_group
+      their_value_not_empty: true
+    additional_weight: 100
+    value: 10
+  - their_working_condition: [mm]
+    additional_weight: 100
+    value: 3
+  qso_band_rule: once_per_band
+  multis: 
+  - property: wpx_prefix
+    their_continent: [sa]
+    band_rule: once_per_band
+    their_working_condition: [not, mm]
+    value: 1
+  - property: dxcc_entity
+    band_rule: once
+    their_working_condition: [not, mm]
+    value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+      my_exchange: 
+        rst: 599
+        cqmm_exchange: eu
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, eu]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 1
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, eu]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, eu]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 1
+      multis: 0
+      duplicate: true
+    - their_call: f1abc
+      their_exchange: [599, eu]
+      their_continent: eu
+      their_country: f
+      band: 40m
+      points: 4
+      multis: 1
+      duplicate: false
+    - their_call: f1abc
+      their_exchange: [599, eu]
+      their_continent: eu
+      their_country: f
+      band: 20m
+      points: 2
+      multis: 0
+      duplicate: false
+    - their_call: k1abc
+      their_exchange: [599, na]
+      their_continent: na
+      their_country: k
+      band: 15m
+      points: 3
+      multis: 1
+      duplicate: false
+    - their_call: k1abc
+      their_exchange: [599, na]
+      their_continent: na
+      their_country: k
+      band: 40m
+      points: 6
+      multis: 0
+      duplicate: false
+    - their_call: pp1abc
+      their_exchange: [599, sa]
+      their_continent: sa
+      their_country: py
+      band: 40m
+      points: 6
+      multis: 2
+      duplicate: false
+    - their_call: py1abc
+      their_exchange: [599, sa]
+      their_continent: sa
+      their_country: py
+      band: 40m
+      points: 6
+      multis: 1
+      duplicate: false
+    - their_call: 3b8db
+      their_exchange: [599, afm]
+      their_continent: af
+      their_country: 3b8
+      band: 40m
+      points: 10
+      multis: 1
+      duplicate: false
+    score:
+      qsos: 10
+      points: 39
+      multis: 7
+      total: 273
+  - setup:
+      my_continent: af
+      my_country: 3b8
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+      my_exchange: 
+        rst: 599
+        cqmm_exchange: afm
+    qsos:
+    - their_call: 3b8db
+      their_exchange: [599, afm]
+      their_continent: af
+      their_country: 3b8
+      band: 80m
+      points: 10
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc/mm
+      their_exchange: [599, eu]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 3
+      multis: 0
+      duplicate: false
+    score:
+      qsos: 2
+      points: 13
+      multis: 1
+      total: 13
