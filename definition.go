@@ -126,7 +126,7 @@ type BandChangeRule struct {
 
 type Category struct {
 	Name      string        `yaml:"name"`
-	Operator  OperatorMode  `yaml:"operator,omitempty"`
+	Operator  OperatorMode  `yaml:"operator_mode,omitempty"`
 	TX        TXMode        `yaml:"tx,omitempty"`
 	Power     PowerMode     `yaml:"power,omitempty"`
 	BandCount BandCount     `yaml:"band_count"`
@@ -285,6 +285,7 @@ type ScoringRule struct {
 	MyContinent           []Continent          `yaml:"my_continent,omitempty"`
 	MyCountry             []DXCCEntity         `yaml:"my_country,omitempty"`
 	MyPrefix              []string             `yaml:"my_prefix,omitempty"`
+	MyWorkingCondition    []string             `yaml:"my_working_condition,omitempty"`
 	TheirContinent        []Continent          `yaml:"their_continent,omitempty"`
 	TheirCountry          []DXCCEntity         `yaml:"their_country,omitempty"`
 	TheirPrefix           []string             `yaml:"their_prefix,omitempty"`

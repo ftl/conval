@@ -445,25 +445,47 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 				continue
 			}
 		}
+		if len(rule.MyWorkingCondition) > 0 {
+			value := strings.ToLower(strings.TrimSpace(getMyProperty(WorkingConditionProperty)))
+			c.tracef("evaluating my working condition %s %v", value, rule.MyWorkingCondition)
+			if len(rule.MyWorkingCondition) == 1 && value == rule.MyWorkingCondition[0] {
+				c.tracef("my working condition exact match")
+				ruleScore++
+			} else if len(rule.MyWorkingCondition) > 1 && rule.MyWorkingCondition[0] == NotPrefix {
+				if !contains(rule.MyWorkingCondition, value) {
+					c.tracef("my working condition match with not")
+					ruleScore++
+				} else {
+					c.tracef("my working condition NO match with not")
+					continue
+				}
+			} else if contains(rule.MyWorkingCondition, value) {
+				c.tracef("my working condition match")
+				ruleScore++
+			} else {
+				c.tracef("my working condition NO match")
+				continue
+			}
+		}
 		if len(rule.TheirWorkingCondition) > 0 {
 			value := strings.ToLower(strings.TrimSpace(getTheirProperty(WorkingConditionProperty)))
-			c.tracef("evaluating working condition %s %v", value, rule.TheirWorkingCondition)
+			c.tracef("evaluating their working condition %s %v", value, rule.TheirWorkingCondition)
 			if len(rule.TheirWorkingCondition) == 1 && value == rule.TheirWorkingCondition[0] {
-				c.tracef("working condition exact match")
+				c.tracef("their working condition exact match")
 				ruleScore++
 			} else if len(rule.TheirWorkingCondition) > 1 && rule.TheirWorkingCondition[0] == NotPrefix {
 				if !contains(rule.TheirWorkingCondition, value) {
-					c.tracef("working condition match with not")
+					c.tracef("their working condition match with not")
 					ruleScore++
 				} else {
-					c.tracef("working condition NO match with not")
+					c.tracef("their working condition NO match with not")
 					continue
 				}
 			} else if contains(rule.TheirWorkingCondition, value) {
-				c.tracef("working condition match")
+				c.tracef("their working condition match")
 				ruleScore++
 			} else {
-				c.tracef("working condition NO match")
+				c.tracef("their working condition NO match")
 				continue
 			}
 		}
