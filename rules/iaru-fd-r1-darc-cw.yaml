@@ -1,0 +1,207 @@
+identifier: IARU-FD-R1-DARC-CW
+name: IARU Region 1 Fieldday CW
+official_rules: https://www.darc.de/der-club/referate/conteste/iaru-region-1-fieldday/rules/
+upload_url: https://dxhf2.darc.de/~fdcwlog/upload.cgi
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+- operator_mode: single
+  duration: 18h
+  constraint_mode: active_time
+breaks:
+categories:
+- name: Portable, single operator, QRP, assisted
+  operator_mode: single
+  power: qrp
+  bands: [all]
+  assisted: true
+- name: Portable, single operator, low power, non-assisted
+  operator_mode: single
+  power: low
+  bands: [all]
+  assisted: false
+- name: Portable, multi operator, low power, non-assisted
+  operator_mode: multi
+  power: low
+  bands: [all]
+  assisted: false
+- name: Portable, multi operator, low power, assisted
+  operator_mode: multi
+  power: low
+  bands: [all]
+  assisted: true
+- name: Portable, multi operator, QRP, assisted
+  operator_mode: multi
+  power: qrp
+  bands: [all]
+  assisted: true
+- name: Portable, multi operator, high power, assisted
+  operator_mode: multi
+  power: high
+  bands: [all]
+  assisted: true
+- name: Fixed
+  bands: [all]
+overlays:
+modes:
+- cw
+bands:
+- 160m
+- 80m
+- 40m
+- 20m
+- 15m
+- 10,
+exchange:
+- fields:
+  - [rst]
+  - [serial]
+scoring:
+  qsos:
+  - my_working_condition: [not, p, m, mm, am]
+    their_working_condition: [not, p, m, mm, am]
+    value: 0
+  - my_working_condition: [p, m, mm, am]
+    their_working_condition: [not, p, m, mm, am]
+    their_continent: [eu]
+    value: 2
+  - my_working_condition: [p, m, mm, am]
+    their_working_condition: [not, p, m, mm, am]
+    their_continent: [not, eu]
+    value: 3
+  - their_working_condition: [p, m, mm, am]
+    their_continent: [eu]
+    value: 4
+  - their_working_condition: [p, m, mm, am]
+    their_continent: [not, eu]
+    value: 6
+  qso_band_rule: once_per_band
+  multis: 
+  - property: dxcc_entity
+    band_rule: once_per_band
+    value: 1
+examples:
+  - setup:
+      my_call: dk1abc/p
+      my_exchange:
+        working_condition: p
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 2
+      multis: 0
+      duplicate: false
+    - their_call: dl3abc/p
+      their_exchange: [599, 345]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 4
+      multis: 0
+    - their_call: k3abc
+      their_exchange: [599, 346]
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 3
+      multis: 1
+    - their_call: k4abc/p
+      their_exchange: [599, 346]
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 6
+      multis: 0
+    score:
+      qsos: 7
+      points: 19
+      multis: 3
+      total: 57
+  - setup:
+      my_call: dk1abc
+    qsos:
+    - their_call: dl1abc
+      their_exchange: [599, 123]
+      their_continent: eu
+      their_country: dl
+      band: 80m
+      points: 0
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 124]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 0
+      multis: 1
+      duplicate: false
+    - their_call: dl1abc
+      their_exchange: [599, 125]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 0
+      multis: 0
+      duplicate: true
+    - their_call: dl2abc
+      their_exchange: [599, 234]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 0
+      multis: 0
+      duplicate: false
+    - their_call: dl3abc/p
+      their_exchange: [599, 345]
+      their_continent: eu
+      their_country: dl
+      band: 40m
+      points: 4
+      multis: 0
+    - their_call: k3abc
+      their_exchange: [599, 346]
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 0
+      multis: 1
+    - their_call: k4abc/p
+      their_exchange: [599, 346]
+      their_continent: na
+      their_country: k
+      band: 20m
+      points: 6
+      multis: 0
+    score:
+      qsos: 7
+      points: 10
+      multis: 3
+      total: 30
