@@ -527,7 +527,7 @@ exchange:
 					TheirExchange: parsedExchange,
 				}
 
-				actual := getter.GetProperty(qso, prefixes)
+				actual := getter.GetProperty(qso, Setup{}, prefixes)
 				assert.Equal(t, tc.expected[i], actual, i)
 			}
 		})

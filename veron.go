@@ -15,6 +15,9 @@ func init() {
 
 	commonPropertyGetters[PAProvinceProperty] = getTheirExchangeProperty(PAProvinceProperty)
 	commonPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getVeronEntity)
+
+	myPropertyGetters[PAProvinceProperty] = getMyExchangeProperty(PAProvinceProperty)
+	myPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getMyVeronEntity)
 }
 
 const (
@@ -26,7 +29,11 @@ var (
 	validPAProvince = regexp.MustCompile(`DR|FL|FR|GD|GR|LB|NB|NH|OV|UT|ZH|ZL`)
 )
 
-func getVeronEntity(qso QSO, _ PrefixDatabase) string {
+func getMyVeronEntity(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return VeronEntity(setup.MyCall, setup.MyCountry)
+}
+
+func getVeronEntity(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return VeronEntity(qso.TheirCall, qso.TheirCountry)
 }
 

@@ -237,7 +237,11 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	getMyProperty := func(property Property) string {
-		return qso.MyExchange[property]
+		getter, getterOK := c.definition.MyPropertyGetter(property)
+		if !getterOK {
+			return qso.MyExchange[property]
+		}
+		return getter.GetProperty(qso, c.setup, c.prefixes)
 	}
 
 	getTheirProperty := func(property Property) string {
@@ -246,7 +250,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 			c.tracef("no property getter for %s", property)
 			return ""
 		}
-		return getter.GetProperty(qso, c.prefixes)
+		return getter.GetProperty(qso, c.setup, c.prefixes)
 	}
 
 	// find the relevant QSO rules

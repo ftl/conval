@@ -76,6 +76,11 @@ func (d Definition) ExchangeFields() []ExchangeField {
 	return result
 }
 
+func (d Definition) MyPropertyGetter(property Property) (PropertyGetter, bool) {
+	getter, ok := myPropertyGetters[property]
+	return getter, ok
+}
+
 func (d Definition) PropertyGetter(property Property) (PropertyGetter, bool) {
 	definition, ok := d.propertyDefinition(property)
 	if ok {
@@ -211,7 +216,7 @@ func (d *PropertyDefinition) validatePropertyValue(value string) error {
 	return fmt.Errorf("%s is not a valid %s", value, d.GetLabel())
 }
 
-func (d *PropertyDefinition) GetProperty(qso QSO, _ PrefixDatabase) string {
+func (d *PropertyDefinition) GetProperty(qso QSO, _ Setup, _ PrefixDatabase) string {
 	if d.Source == "" {
 		return qso.TheirExchange[d.Name]
 	}

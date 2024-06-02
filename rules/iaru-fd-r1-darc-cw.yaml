@@ -83,8 +83,6 @@ scoring:
 examples:
   - setup:
       my_call: dk1abc/p
-      my_exchange:
-        working_condition: p
     qsos:
     - their_call: dl1abc
       their_exchange: [599, 123]

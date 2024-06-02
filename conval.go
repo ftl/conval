@@ -216,14 +216,16 @@ const (
 type Property string
 
 type PropertyGetter interface {
-	GetProperty(QSO, PrefixDatabase) string
+	GetProperty(QSO, Setup, PrefixDatabase) string
 }
 
-type PropertyGetterFunc func(QSO, PrefixDatabase) string
+type PropertyGetterFunc func(QSO, Setup, PrefixDatabase) string
 
-func (f PropertyGetterFunc) GetProperty(qso QSO, prefixes PrefixDatabase) string {
-	return f(qso, prefixes)
+func (f PropertyGetterFunc) GetProperty(qso QSO, setup Setup, prefixes PrefixDatabase) string {
+	return f(qso, setup, prefixes)
 }
+
+var myPropertyGetters = map[Property]PropertyGetter{}
 
 var commonPropertyGetters = map[Property]PropertyGetter{}
 

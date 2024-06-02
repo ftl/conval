@@ -76,6 +76,26 @@ func init() {
 	commonPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	commonPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	commonPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
+
+	myPropertyGetters[RSTProperty] = getMyExchangeProperty(RSTProperty)
+	myPropertyGetters[SerialNumberProperty] = getMyExchangeProperty(SerialNumberProperty)
+	myPropertyGetters[MemberNumberProperty] = getMyExchangeProperty(MemberNumberProperty)
+	myPropertyGetters[NoMemberProperty] = getMyExchangeProperty(NoMemberProperty)
+	myPropertyGetters[CQZoneProperty] = PropertyGetterFunc(getMyCQZone)
+	myPropertyGetters[ITUZoneProperty] = PropertyGetterFunc(getMyITUZone)
+	myPropertyGetters[DXCCEntityProperty] = PropertyGetterFunc(getMyDXCCEntity)
+	myPropertyGetters[WorkingConditionProperty] = PropertyGetterFunc(getMyWorkingCondition)
+	myPropertyGetters[NameProperty] = getMyExchangeProperty(NameProperty)
+	myPropertyGetters[AgeProperty] = getMyExchangeProperty(AgeProperty)
+	myPropertyGetters[PowerProperty] = getMyExchangeProperty(PowerProperty)
+	myPropertyGetters[ClassProperty] = getMyExchangeProperty(ClassProperty)
+	myPropertyGetters[StateProvinceProperty] = getMyExchangeProperty(StateProvinceProperty)
+	myPropertyGetters[DXCCPrefixProperty] = getMyExchangeProperty(DXCCPrefixProperty)
+	myPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getMyWAEEntity)
+	myPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getMyWPXPrefix)
+	myPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
+	myPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
+	myPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
 }
 
 // Common Exchange Validators
@@ -146,11 +166,23 @@ var (
 
 // Common Property Getters
 
-func getTheirCall(qso QSO, _ PrefixDatabase) string {
+func getTheirCall(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return qso.TheirCall.String()
 }
 
-func getCQZone(qso QSO, prefixes PrefixDatabase) string {
+func getMyCQZone(qso QSO, setup Setup, prefixes PrefixDatabase) string {
+	exchange, ok := qso.MyExchange[CQZoneProperty]
+	if ok {
+		return exchange
+	}
+	_, _, cqZone, _, ok := prefixes.Find(setup.MyCall.String())
+	if ok {
+		return cqZone.String()
+	}
+	return ""
+}
+
+func getCQZone(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	exchange, ok := qso.TheirExchange[CQZoneProperty]
 	if ok {
 		return exchange
@@ -162,7 +194,19 @@ func getCQZone(qso QSO, prefixes PrefixDatabase) string {
 	return ""
 }
 
-func getITUZone(qso QSO, prefixes PrefixDatabase) string {
+func getMyITUZone(qso QSO, setup Setup, prefixes PrefixDatabase) string {
+	exchange, ok := qso.MyExchange[ITUZoneProperty]
+	if ok {
+		return exchange
+	}
+	_, _, _, ituZone, ok := prefixes.Find(setup.MyCall.String())
+	if ok {
+		return ituZone.String()
+	}
+	return ""
+}
+
+func getITUZone(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	exchange, ok := qso.TheirExchange[ITUZoneProperty]
 	if ok {
 		return exchange
@@ -174,7 +218,18 @@ func getITUZone(qso QSO, prefixes PrefixDatabase) string {
 	return ""
 }
 
-func getDXCCEntity(qso QSO, prefixes PrefixDatabase) string {
+func getMyDXCCEntity(qso QSO, setup Setup, prefixes PrefixDatabase) string {
+	if setup.MyCountry != "" {
+		return string(setup.MyCountry)
+	}
+	_, entity, _, _, ok := prefixes.Find(setup.MyCall.String())
+	if ok {
+		return entity.String()
+	}
+	return ""
+}
+
+func getDXCCEntity(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	if qso.TheirCountry != "" {
 		return string(qso.TheirCountry)
 	}
@@ -185,7 +240,11 @@ func getDXCCEntity(qso QSO, prefixes PrefixDatabase) string {
 	return ""
 }
 
-func getWAEEntity(qso QSO, _ PrefixDatabase) string {
+func getMyWAEEntity(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return WAEEntity(setup.MyCall, setup.MyCountry)
+}
+
+func getWAEEntity(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return WAEEntity(qso.TheirCall, qso.TheirCountry)
 }
 
@@ -242,21 +301,35 @@ func IsWAECountry(call callsign.Callsign, dxccEntity DXCCEntity) bool {
 	}
 }
 
-func getCallsignWorkingCondition(qso QSO, _ PrefixDatabase) string {
+func getMyWorkingCondition(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return setup.MyCall.WorkingCondition
+}
+
+func getCallsignWorkingCondition(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return qso.TheirCall.WorkingCondition
 }
 
+func getMyExchangeProperty(property Property) PropertyGetter {
+	return PropertyGetterFunc(func(qso QSO, _ Setup, _ PrefixDatabase) string {
+		return qso.MyExchange[property]
+	})
+}
+
 func getTheirExchangeProperty(property Property) PropertyGetter {
-	return PropertyGetterFunc(func(qso QSO, _ PrefixDatabase) string {
+	return PropertyGetterFunc(func(qso QSO, _ Setup, _ PrefixDatabase) string {
 		return qso.TheirExchange[property]
 	})
 }
 
-func getEmpty(_ QSO, _ PrefixDatabase) string {
+func getEmpty(_ QSO, _ Setup, _ PrefixDatabase) string {
 	return ""
 }
 
-func getWPXPrefix(qso QSO, _ PrefixDatabase) string {
+func getMyWPXPrefix(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return WPXPrefix(setup.MyCall)
+}
+
+func getWPXPrefix(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return WPXPrefix(qso.TheirCall)
 }
 
