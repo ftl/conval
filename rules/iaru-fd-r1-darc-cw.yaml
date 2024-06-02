@@ -51,7 +51,7 @@ bands:
 - 40m
 - 20m
 - 15m
-- 10,
+- 10m,
 exchange:
 - fields:
   - [rst]
