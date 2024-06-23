@@ -159,7 +159,8 @@ type PropertyDefinition struct {
 	Expression string   `yaml:"expression,omitempty"`
 	Source     Property `yaml:"source,omitempty"`
 
-	re *regexp.Regexp
+	definition *Definition
+	re         *regexp.Regexp
 }
 
 func (d *PropertyDefinition) GetLabel() string {
@@ -216,15 +217,17 @@ func (d *PropertyDefinition) validatePropertyValue(value string) error {
 	return fmt.Errorf("%s is not a valid %s", value, d.GetLabel())
 }
 
-func (d *PropertyDefinition) GetProperty(qso QSO, _ Setup, _ PrefixDatabase) string {
+func (d *PropertyDefinition) GetProperty(qso QSO, setup Setup, prefixes PrefixDatabase) string {
 	if d.Source == "" {
 		return qso.TheirExchange[d.Name]
 	}
 
-	sourceValue, ok := qso.TheirExchange[d.Source]
-	if !ok {
+	getter, getterOK := d.definition.PropertyGetter(d.Source)
+	if !getterOK {
 		return ""
 	}
+
+	sourceValue := getter.GetProperty(qso, setup, prefixes)
 
 	sanitize := func(s string) string {
 		return strings.ToUpper(strings.TrimSpace(s))
@@ -499,7 +502,15 @@ func LoadDefinitionYAML(r io.Reader) (*Definition, error) {
 		return nil, err
 	}
 
-	return &result, nil
+	return initDefinition(&result), nil
+}
+
+func initDefinition(d *Definition) *Definition {
+	for i, pd := range d.Properties {
+		pd.definition = d
+		d.Properties[i] = pd
+	}
+	return d
 }
 
 func SaveDefinitionYAML(w io.Writer, definition *Definition, withExamples bool) error {

@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ftl/hamradio/callsign"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -449,10 +450,11 @@ properties:
 
 func TestPropertyDefinition_Get(t *testing.T) {
 	tt := []struct {
-		desc     string
-		yaml     string
-		exchange []string
-		expected []string
+		desc      string
+		yaml      string
+		theirCall string
+		exchange  []string
+		expected  []string
 	}{
 		{
 			desc: "simple value list",
@@ -506,6 +508,17 @@ exchange:
 			exchange: []string{"B36", "b36", "70DARC", "1A", "B", "C"},
 			expected: []string{"B", "B", "D", "", "", ""},
 		},
+		{
+			desc: "property derived from their call",
+			yaml: `name: Test Contest
+properties:
+- name: pty
+  source: their_call
+  expression: ".*([A-Z0-9])"`,
+			theirCall: "DL1ABC",
+			exchange:  []string{""},
+			expected:  []string{"C"},
+		},
 	}
 
 	prefixes, err := NewPrefixDatabase()
@@ -525,6 +538,9 @@ exchange:
 				parsedExchange := ParseExchange(definition.ExchangeFields(), []string{exchange}, nil, definition)
 				qso := QSO{
 					TheirExchange: parsedExchange,
+				}
+				if tc.theirCall != "" {
+					qso.TheirCall = callsign.MustParse(tc.theirCall)
 				}
 
 				actual := getter.GetProperty(qso, Setup{}, prefixes)
