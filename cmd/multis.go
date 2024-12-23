@@ -28,11 +28,11 @@ func init() {
 
 func runMultis(cmd *cobra.Command, args []string) {
 	var err error
-	prefixes, err := conval.NewPrefixDatabase()
+	definition, err := app.PrepareDefinition(rootFlags.definitionName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	definition, err := app.PrepareDefinition(rootFlags.definitionName)
+	prefixes, err := conval.NewPrefixDatabase(definition.ARRLCountryList)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -27,10 +27,6 @@ func init() {
 
 func runValidate(cmd *cobra.Command, args []string) {
 	var err error
-	prefixes, err := conval.NewPrefixDatabase()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	if len(args) < 1 {
 		log.Fatal("missing filename")
@@ -50,6 +46,11 @@ func runValidate(cmd *cobra.Command, args []string) {
 
 	if len(definition.Examples) == 0 {
 		log.Fatalf("%s does not contain any examples to validate\n", filename)
+	}
+
+	prefixes, err := conval.NewPrefixDatabase(definition.ARRLCountryList)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	if rootFlags.trace {

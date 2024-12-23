@@ -45,7 +45,7 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 		return Result{}, fmt.Errorf("no setup defined")
 	}
 
-	prefixes, err := conval.NewPrefixDatabase()
+	prefixes, err := conval.NewPrefixDatabase(definition.ARRLCountryList)
 	if err != nil {
 		return Result{}, err
 	}

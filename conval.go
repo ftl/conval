@@ -170,20 +170,27 @@ func (f PrefixDatabaseFunc) Find(s string) (Continent, DXCCEntity, bool) {
 	return f(s)
 }
 
-func NewPrefixDatabase() (*prefixDatabase, error) {
+func NewPrefixDatabase(arrlCompliant bool) (*prefixDatabase, error) {
 	prefixes, _, err := dxcc.DefaultPrefixes(true)
 	if err != nil {
 		return nil, err
 	}
-	return &prefixDatabase{prefixes}, nil
+	return &prefixDatabase{prefixes: prefixes, arrlCompliant: arrlCompliant}, nil
 }
 
 type prefixDatabase struct {
-	prefixes *dxcc.Prefixes
+	prefixes      *dxcc.Prefixes
+	arrlCompliant bool
 }
 
 func (d prefixDatabase) Find(s string) (Continent, DXCCEntity, CQZone, ITUZone, bool) {
-	entities, found := d.prefixes.Find(s)
+	var entities []dxcc.Prefix
+	var found bool
+	if d.arrlCompliant {
+		entities, found = d.prefixes.FindARRLCompliant(s)
+	} else {
+		entities, found = d.prefixes.Find(s)
+	}
 	if !found || len(entities) == 0 {
 		return "", "", 0, 0, false
 	}

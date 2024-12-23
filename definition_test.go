@@ -307,13 +307,21 @@ func TestSaveYAMLWithoutExamples(t *testing.T) {
 
 			definitionWithoutExamples := *definition
 			definitionWithoutExamples.Examples = nil
+			for i := range definitionWithoutExamples.Properties {
+				definitionWithoutExamples.Properties[i].definition = nil
+				definitionWithoutExamples.Properties[i].re = nil
+			}
 
 			buffer := bytes.NewBuffer([]byte{})
 			err = SaveDefinitionYAML(buffer, definition, false)
-			assert.NoError(t, err, "save")
+			require.NoError(t, err, "save")
 
 			loadedDefinition, err := LoadDefinitionYAML(buffer)
-			assert.NoError(t, err, "load")
+			require.NoError(t, err, "load")
+			for i := range loadedDefinition.Properties {
+				loadedDefinition.Properties[i].definition = nil
+				loadedDefinition.Properties[i].re = nil
+			}
 
 			assert.Equal(t, definitionWithoutExamples, *loadedDefinition)
 		})
@@ -503,7 +511,7 @@ properties:
   source: src
   expression: "\\d*([A-Z]).*"
 exchange:
-- fields: 
+- fields:
   - [src]`,
 			exchange: []string{"B36", "b36", "70DARC", "1A", "B", "C"},
 			expected: []string{"B", "B", "D", "", "", ""},
@@ -521,14 +529,13 @@ properties:
 		},
 	}
 
-	prefixes, err := NewPrefixDatabase()
-	require.NoError(t, err)
-
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
 			buffer := bytes.NewBufferString(tc.yaml)
 			definition, err := LoadDefinitionYAML(buffer)
 			assert.NoError(t, err)
+			prefixes, err := NewPrefixDatabase(definition.ARRLCountryList)
+			require.NoError(t, err)
 
 			getter, ok := definition.PropertyGetter("pty")
 			assert.True(t, ok)

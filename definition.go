@@ -23,6 +23,7 @@ type Definition struct {
 	Name                string                `yaml:"name"`
 	Identifier          ContestIdentifier     `yaml:"identifier"`
 	OfficialRules       string                `yaml:"official_rules"`
+	ARRLCountryList     bool                  `yaml:"arrl_country_list"`
 	UploadURL           string                `yaml:"upload_url"`
 	UploadFormat        string                `yaml:"upload_format"`
 	Duration            time.Duration         `yaml:"duration,omitempty"`

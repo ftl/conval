@@ -1,121 +1,122 @@
 identifier: ARRL-DX-CW
 name: ARRL International DX Contest CW
 official_rules: https://www.arrl.org/arrl-dx
+arrl_country_list: true
 upload_url: https://contest-log-submission.arrl.org/
 upload_format: cabrillo
 duration: 48h
 duration-constraints:
 breaks:
 categories:
-- name: Single Operator High
-  operator_mode: single
-  power: high
-  bands: [all]
-- name: Single Operator Low
-  operator_mode: single
-  power: low
-  bands: [all]
-- name: Single Operator QRP
-  operator_mode: single
-  power: qrp
-  bands: [all]
-- name: Single Operator Unlimited High
-  operator_mode: single
-  power: high
-  bands: [all]
-- name: Single Operator Unlimited Low
-  operator_mode: single
-  power: low
-  bands: [all]
-- name: Single Operator Unlimited QRP
-  operator_mode: single
-  power: qrp
-  bands: [all]
-- name: Single Operator High
-  operator_mode: single
-  power: high
-  band_count: 1
-- name: Single Operator Low
-  operator_mode: single
-  power: low
-  band_count: 1
-- name: Single Operator QRP
-  operator_mode: single
-  power: qrp
-  band_count: 1
-- name: Single Operator Unlimited High
-  operator_mode: single
-  power: high
-  band_count: 1
-- name: Single Operator Unlimited Low
-  operator_mode: single
-  power: low
-  band_count: 1
-- name: Single Operator Unlimited QRP
-  operator_mode: single
-  power: qrp
-  band_count: 1
-- name: Multi-One High
-  operator_mode: multi
-  tx: 1
-  power: high
-  bands: [all]
-- name: Multi-One Low
-  operator_mode: multi
-  tx: 1
-  power: low
-  bands: [all]
-- name: Multi-Two
-  operator_mode: multi
-  tx: 2
-  power: high
-  bands: [all]
-- name: Multi-Multi
-  operator_mode: multi
-  tx: multi
-  power: high
-  bands: [all]
-- name: Checklog
-  operator_mode: single
-  bands: [all]
+  - name: Single Operator High
+    operator_mode: single
+    power: high
+    bands: [all]
+  - name: Single Operator Low
+    operator_mode: single
+    power: low
+    bands: [all]
+  - name: Single Operator QRP
+    operator_mode: single
+    power: qrp
+    bands: [all]
+  - name: Single Operator Unlimited High
+    operator_mode: single
+    power: high
+    bands: [all]
+  - name: Single Operator Unlimited Low
+    operator_mode: single
+    power: low
+    bands: [all]
+  - name: Single Operator Unlimited QRP
+    operator_mode: single
+    power: qrp
+    bands: [all]
+  - name: Single Operator High
+    operator_mode: single
+    power: high
+    band_count: 1
+  - name: Single Operator Low
+    operator_mode: single
+    power: low
+    band_count: 1
+  - name: Single Operator QRP
+    operator_mode: single
+    power: qrp
+    band_count: 1
+  - name: Single Operator Unlimited High
+    operator_mode: single
+    power: high
+    band_count: 1
+  - name: Single Operator Unlimited Low
+    operator_mode: single
+    power: low
+    band_count: 1
+  - name: Single Operator Unlimited QRP
+    operator_mode: single
+    power: qrp
+    band_count: 1
+  - name: Multi-One High
+    operator_mode: multi
+    tx: 1
+    power: high
+    bands: [all]
+  - name: Multi-One Low
+    operator_mode: multi
+    tx: 1
+    power: low
+    bands: [all]
+  - name: Multi-Two
+    operator_mode: multi
+    tx: 2
+    power: high
+    bands: [all]
+  - name: Multi-Multi
+    operator_mode: multi
+    tx: multi
+    power: high
+    bands: [all]
+  - name: Checklog
+    operator_mode: single
+    bands: [all]
 overlays:
 modes:
-- cw
+  - cw
 bands:
-- 160m
-- 80m
-- 40m
-- 20m
-- 15m
-- 10m
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
 exchange:
-- their_country: [k, ve]
-  fields:
-  - [rst]
-  - [state_province]
-- fields:
-  - [rst]
-  - [power]
+  - their_country: [k, ve]
+    fields:
+      - [rst]
+      - [state_province]
+  - fields:
+      - [rst]
+      - [power]
 scoring:
   qsos:
-  - my_country: [k, ve]
-    their_country: [not, k, ve]
-    value: 3
-  - my_country: [not, k, ve]
-    their_country: [k, ve]
-    value: 3
+    - my_country: [k, ve]
+      their_country: [not, k, ve]
+      value: 3
+    - my_country: [not, k, ve]
+      their_country: [k, ve]
+      value: 3
   qso_band_rule: once_per_band
-  multis: 
-  - property: dxcc_entity
-    my_country: [k, ve]
-    their_country: [not, k, ve]
-    band_rule: once_per_band
-    value: 1
-  - property: state_province
-    my_country: [not, k, ve]
-    their_country: [k, ve]
-    band_rule: once_per_band
-    value: 1
+  multis:
+    - property: dxcc_entity
+      my_country: [k, ve]
+      their_country: [not, k, ve]
+      band_rule: once_per_band
+      value: 1
+    - property: state_province
+      my_country: [not, k, ve]
+      their_country: [k, ve]
+      band_rule: once_per_band
+      value: 1
 examples:
   - setup:
       bands: [80m, 40m, 20m]
@@ -123,62 +124,62 @@ examples:
       my_country: k
       my_exchange:
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 100]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      points: 3
-      multis: 1
-    - their_call: dl1abc
-      their_exchange: [599, 100]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 3
-      multis: 1
-    - their_call: dl2abc
-      their_exchange: [599, 100]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 3
-      multis: 0
-    - their_call: w8xyz
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: kh6xyz
-      their_exchange: [599, 10]
-      their_continent: oc
-      their_country: kh6
-      band: 80m
-      points: 3
-      multis: 1
-    - their_call: kl7xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: kl
-      band: 80m
-      points: 3
-      multis: 1
-    - their_call: cy9xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: cy9
-      band: 80m
-      points: 3
-      multis: 1
-    - their_call: cy0xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: cy0
-      band: 80m
-      points: 3
-      multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 100]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 100]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 3
+        multis: 1
+      - their_call: dl2abc
+        their_exchange: [599, 100]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 3
+        multis: 0
+      - their_call: w8xyz
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: kh6xyz
+        their_exchange: [599, 10]
+        their_continent: oc
+        their_country: kh6
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: kl7xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: kl
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: cy9xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: cy9
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: cy0xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: cy0
+        band: 80m
+        points: 3
+        multis: 1
     score:
       qsos: 8
       points: 21
@@ -190,62 +191,62 @@ examples:
       my_country: kh6
       my_exchange:
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 100]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: w8xyz
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 80m
-      points: 3
-      multis: 1
-    - their_call: w8xyz
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 40m
-      points: 3
-      multis: 1
-    - their_call: w8zyc
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 40m
-      points: 3
-      multis: 0
-    - their_call: kh6xyz
-      their_exchange: [599, 10]
-      their_continent: oc
-      their_country: kh6
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: kl7xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: kl
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: cy9xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: cy9
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: cy0xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: cy0
-      band: 80m
-      points: 0
-      multis: 0
+      - their_call: dl1abc
+        their_exchange: [599, 100]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: w8xyz
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: w8xyz
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 3
+        multis: 1
+      - their_call: w8zyc
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 3
+        multis: 0
+      - their_call: kh6xyz
+        their_exchange: [599, 10]
+        their_continent: oc
+        their_country: kh6
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: kl7xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: kl
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: cy9xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: cy9
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: cy0xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: cy0
+        band: 80m
+        points: 0
+        multis: 0
     score:
       qsos: 8
       points: 9
@@ -257,62 +258,62 @@ examples:
       my_country: dl
       my_exchange:
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 100]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: w8xyz
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 80m
-      points: 3
-      multis: 1
-    - their_call: w8xyz
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 40m
-      points: 3
-      multis: 1
-    - their_call: w8zyc
-      their_exchange: [599, id]
-      their_continent: na
-      their_country: k
-      band: 40m
-      points: 3
-      multis: 0
-    - their_call: kh6xyz
-      their_exchange: [599, 10]
-      their_continent: oc
-      their_country: kh6
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: kl7xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: kl
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: cy9xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: cy9
-      band: 80m
-      points: 0
-      multis: 0
-    - their_call: cy0xyz
-      their_exchange: [599, 10]
-      their_continent: na
-      their_country: cy0
-      band: 80m
-      points: 0
-      multis: 0
+      - their_call: dl1abc
+        their_exchange: [599, 100]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: w8xyz
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 80m
+        points: 3
+        multis: 1
+      - their_call: w8xyz
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 3
+        multis: 1
+      - their_call: w8zyc
+        their_exchange: [599, id]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 3
+        multis: 0
+      - their_call: kh6xyz
+        their_exchange: [599, 10]
+        their_continent: oc
+        their_country: kh6
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: kl7xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: kl
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: cy9xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: cy9
+        band: 80m
+        points: 0
+        multis: 0
+      - their_call: cy0xyz
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: cy0
+        band: 80m
+        points: 0
+        multis: 0
     score:
       qsos: 8
       points: 9

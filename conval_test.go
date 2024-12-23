@@ -3,6 +3,7 @@ package conval
 import (
 	"testing"
 
+	"github.com/ftl/hamradio/dxcc"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -60,6 +61,50 @@ func TestParseExchange(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			actual := ParseExchange(tc.fields, tc.values, nil, PropertyValidatorsFunc(CommonPropertyValidator))
 			assert.Equal(t, tc.expected, actual)
+		})
+	}
+}
+
+func TestPrefixDatabase_Find(t *testing.T) {
+	prefixes, _, err := dxcc.DefaultPrefixes(true)
+	assert.NoError(t, err)
+
+	tt := []struct {
+		call         string
+		compliant    DXCCEntity
+		notCompliant DXCCEntity
+	}{
+		{
+			call:         "4U1VIC",
+			compliant:    "oe",
+			notCompliant: "4u1v",
+		},
+		{
+			call:         "IT9ABC",
+			compliant:    "i",
+			notCompliant: "it9",
+		},
+		{
+			call:         "IP9P",
+			compliant:    "i",
+			notCompliant: "ig9",
+		},
+		{
+			call:         "JW/LB2PG",
+			compliant:    "jw",
+			notCompliant: "jw/b",
+		},
+	}
+	for _, tc := range tt {
+		t.Run(tc.call, func(t *testing.T) {
+			db := &prefixDatabase{prefixes: prefixes, arrlCompliant: true}
+			_, entity, _, _, found := db.Find(tc.call)
+			assert.True(t, found)
+			assert.Equal(t, tc.compliant, entity, "compliant")
+			db.arrlCompliant = false
+			_, entity, _, _, found = db.Find(tc.call)
+			assert.True(t, found)
+			assert.Equal(t, tc.notCompliant, entity, "not compliant")
 		})
 	}
 }
