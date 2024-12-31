@@ -3,177 +3,177 @@ name: CQ World Wide DX Contest CW
 official_rules: https://www.cqww.com/rules.htm
 duration: 48h
 duration-constraints:
-- operator_mode: single
-  overlay: classic
-  duration: 24h
+  - operator_mode: single
+    overlay: classic
+    duration: 24h
 breaks:
-- operator_mode: single
-  overlay: classic
-  duration: 1h
+  - operator_mode: single
+    overlay: classic
+    duration: 1h
 categories:
-- name: Single Operator High Power All Band
-  operator_mode: single
-  power: high
-  band_count: all
-- name: Single Operator High Power Single Band
-  operator_mode: single
-  power: high
-  band_count: single
-- name: Single Operator Low Power All Band
-  operator_mode: single
-  power: low
-  band_count: all
-- name: Single Operator Low Power Single Band
-  operator_mode: single
-  power: low
-  band_count: single
-- name: Single Operator QRP All Band
-  operator_mode: single
-  power: qrp
-  band_count: all
-- name: Single Operator QRP Single Band
-  operator_mode: single
-  power: qrp
-  band_count: single
-- name: Single Operator High Power All Band Assisted
-  operator_mode: single
-  power: high
-  band_count: all
-  assisted: true
-- name: Single Operator High Power Single Band Assisted
-  operator_mode: single
-  power: high
-  band_count: single
-  assisted: true
-- name: Single Operator Low Power All Band Assisted
-  operator_mode: single
-  power: low
-  band_count: all
-  assisted: true
-- name: Single Operator Low Power Single band Assisted
-  operator_mode: single
-  power: low
-  band_count: single
-  assisted: true
-- name: Single Operator QRP All Band Assisted
-  operator_mode: single
-  power: qrp
-  band_count: all
-  assisted: true
-- name: Single Operator QRP Single Band Assisted
-  operator_mode: single
-  power: qrp
-  band_count: single
-  assisted: true
-- name: Multi-Single High Power
-  operator_mode: multi
-  tx: one
-  power: high
-- name: Multi-Single Low Power
-  operator_mode: multi
-  tx: one
-  power: high
-- name: Multi-Two
-  operator_mode: multi
-  tx: two
-- name: Multi-Multi
-  operator_mode: multi
-  tx: multi
-- name: Checklog
+  - name: SO-AB High
+    operator_mode: single
+    power: high
+    band_count: all
+  - name: SO-SB High
+    operator_mode: single
+    power: high
+    band_count: single
+  - name: SO-AB Low
+    operator_mode: single
+    power: low
+    band_count: all
+  - name: SO-SB Low
+    operator_mode: single
+    power: low
+    band_count: single
+  - name: SO-AB QRP
+    operator_mode: single
+    power: qrp
+    band_count: all
+  - name: SO-SB QRP
+    operator_mode: single
+    power: qrp
+    band_count: single
+  - name: SO-AB High Assisted
+    operator_mode: single
+    power: high
+    band_count: all
+    assisted: true
+  - name: SO-SB High Assisted
+    operator_mode: single
+    power: high
+    band_count: single
+    assisted: true
+  - name: SO-AB Low Assisted
+    operator_mode: single
+    power: low
+    band_count: all
+    assisted: true
+  - name: SO-SB Low Assisted
+    operator_mode: single
+    power: low
+    band_count: single
+    assisted: true
+  - name: SO-AB QRP Assisted
+    operator_mode: single
+    power: qrp
+    band_count: all
+    assisted: true
+  - name: SO-SB QRP Assisted
+    operator_mode: single
+    power: qrp
+    band_count: single
+    assisted: true
+  - name: MS High
+    operator_mode: multi
+    tx: one
+    power: high
+  - name: MS Low
+    operator_mode: multi
+    tx: one
+    power: high
+  - name: M2
+    operator_mode: multi
+    tx: two
+  - name: Multi-Multi
+    operator_mode: multi
+    tx: multi
+  - name: Checklog
 overlays:
-- tb_wires
-- rookie
-- classic
-- youth
+  - tb_wires
+  - rookie
+  - classic
+  - youth
 modes:
-- cw
+  - cw
 bands:
-- 160m
-- 80m
-- 40m
-- 20m
-- 15m
-- 10m
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
 exchange:
-- fields:
-  - [rst]
-  - [cq_zone]
+  - fields:
+      - [rst]
+      - [cq_zone]
 scoring:
   qsos:
-  - their_continent: [other]
-    value: 3
-  - their_continent: [same]
-    their_country: [other]
-    value: 1
-  - my_continent: [na]
-    their_continent: [na]
-    additional_weight: 1
-    value: 2
-  - their_country: [same]
-    additional_weight: 10
-    value: 0
+    - their_continent: [other]
+      value: 3
+    - their_continent: [same]
+      their_country: [other]
+      value: 1
+    - my_continent: [na]
+      their_continent: [na]
+      additional_weight: 1
+      value: 2
+    - their_country: [same]
+      additional_weight: 10
+      value: 0
   qso_band_rule: once_per_band
-  multis: 
-  - property: cq_zone
-    band_rule: once_per_band
-    value: 1
-  - property: dxcc_entity
-    band_rule: once_per_band
-    value: 1
+  multis:
+    - property: cq_zone
+      band_rule: once_per_band
+      value: 1
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
 examples:
   - setup:
       my_continent: na
       my_country: k
-      my_exchange: 
+      my_exchange:
         cq_zone: 5
       bands: [15m]
       modes: [cw]
     qsos:
-    - their_call: k1ab
-      their_continent: na
-      their_country: k
-      their_exchange: [599, 5]
-      band: 15m
-      mode: cw
-      points: 0
-      multis: 2
-      duplicate: false
-    - their_call: ve1abc
-      their_continent: na
-      their_country: ve
-      their_exchange: [599, 5]
-      band: 15m
-      mode: cw
-      points: 2
-      multis: 1
-      duplicate: false
-    - their_call: ve2abc
-      their_continent: na
-      their_country: ve
-      their_exchange: [599, 5]
-      band: 15m
-      mode: cw
-      points: 2
-      multis: 0
-      duplicate: false
-    - their_call: py1abc
-      their_continent: sa
-      their_country: py
-      their_exchange: [599, 11]
-      band: 15m
-      mode: cw
-      points: 3
-      multis: 2
-      duplicate: false
-    - their_call: lu1abc
-      their_continent: sa
-      their_country: lu
-      their_exchange: [599, 13]
-      band: 15m
-      mode: cw
-      points: 3
-      multis: 2
-      duplicate: false
+      - their_call: k1ab
+        their_continent: na
+        their_country: k
+        their_exchange: [599, 5]
+        band: 15m
+        mode: cw
+        points: 0
+        multis: 2
+        duplicate: false
+      - their_call: ve1abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, 5]
+        band: 15m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: ve2abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, 5]
+        band: 15m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: py1abc
+        their_continent: sa
+        their_country: py
+        their_exchange: [599, 11]
+        band: 15m
+        mode: cw
+        points: 3
+        multis: 2
+        duplicate: false
+      - their_call: lu1abc
+        their_continent: sa
+        their_country: lu
+        their_exchange: [599, 13]
+        band: 15m
+        mode: cw
+        points: 3
+        multis: 2
+        duplicate: false
     score:
       qsos: 5
       points: 10
@@ -187,54 +187,53 @@ examples:
       bands: [15m]
       modes: [cw]
     qsos:
-    - their_call: k1ab
-      their_continent: na
-      their_country: k
-      their_exchange: [599, 5]
-      band: 15m
-      mode: cw
-      points: 3
-      multis: 2
-      duplicate: false
-    - their_call: ve1abc
-      their_continent: na
-      their_country: ve
-      their_exchange: [599, 5]
-      band: 15m
-      mode: cw
-      points: 3
-      multis: 1
-      duplicate: false
-    - their_call: ve2abc
-      their_continent: na
-      their_country: ve
-      their_exchange: [599, 5]
-      band: 15m
-      mode: cw
-      points: 3
-      multis: 0
-      duplicate: false
-    - their_call: py1abc
-      their_continent: sa
-      their_country: py
-      their_exchange: [599, 11]
-      band: 15m
-      mode: cw
-      points: 0
-      multis: 2
-      duplicate: false
-    - their_call: lu1abc
-      their_continent: sa
-      their_country: lu
-      their_exchange: [599, 13]
-      band: 15m
-      mode: cw
-      points: 1
-      multis: 2
-      duplicate: false
+      - their_call: k1ab
+        their_continent: na
+        their_country: k
+        their_exchange: [599, 5]
+        band: 15m
+        mode: cw
+        points: 3
+        multis: 2
+        duplicate: false
+      - their_call: ve1abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, 5]
+        band: 15m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: ve2abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, 5]
+        band: 15m
+        mode: cw
+        points: 3
+        multis: 0
+        duplicate: false
+      - their_call: py1abc
+        their_continent: sa
+        their_country: py
+        their_exchange: [599, 11]
+        band: 15m
+        mode: cw
+        points: 0
+        multis: 2
+        duplicate: false
+      - their_call: lu1abc
+        their_continent: sa
+        their_country: lu
+        their_exchange: [599, 13]
+        band: 15m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
     score:
       qsos: 5
       points: 10
       multis: 7
       total: 70
-

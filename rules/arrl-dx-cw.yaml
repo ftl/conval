@@ -8,70 +8,70 @@ duration: 48h
 duration-constraints:
 breaks:
 categories:
-  - name: Single Operator High
+  - name: SO High
     operator_mode: single
     power: high
     bands: [all]
-  - name: Single Operator Low
+  - name: SO Low
     operator_mode: single
     power: low
     bands: [all]
-  - name: Single Operator QRP
+  - name: SO QRP
     operator_mode: single
     power: qrp
     bands: [all]
-  - name: Single Operator Unlimited High
+  - name: SOU High
     operator_mode: single
     power: high
     bands: [all]
-  - name: Single Operator Unlimited Low
+  - name: SOU Low
     operator_mode: single
     power: low
     bands: [all]
-  - name: Single Operator Unlimited QRP
+  - name: SOU QRP
     operator_mode: single
     power: qrp
     bands: [all]
-  - name: Single Operator High
+  - name: SOSB High
     operator_mode: single
     power: high
     band_count: 1
-  - name: Single Operator Low
+  - name: SOSB Low
     operator_mode: single
     power: low
     band_count: 1
-  - name: Single Operator QRP
+  - name: SOSB QRP
     operator_mode: single
     power: qrp
     band_count: 1
-  - name: Single Operator Unlimited High
+  - name: SOUSB High
     operator_mode: single
     power: high
     band_count: 1
-  - name: Single Operator Unlimited Low
+  - name: SOUSB Low
     operator_mode: single
     power: low
     band_count: 1
-  - name: Single Operator Unlimited QRP
+  - name: SOUSB QRP
     operator_mode: single
     power: qrp
     band_count: 1
-  - name: Multi-One High
+  - name: MS High
     operator_mode: multi
     tx: 1
     power: high
     bands: [all]
-  - name: Multi-One Low
+  - name: MS Low
     operator_mode: multi
     tx: 1
     power: low
     bands: [all]
-  - name: Multi-Two
+  - name: M2
     operator_mode: multi
     tx: 2
     power: high
     bands: [all]
-  - name: Multi-Multi
+  - name: MM
     operator_mode: multi
     tx: multi
     power: high

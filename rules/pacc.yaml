@@ -7,211 +7,211 @@ duration: 24h
 duration-constraints:
 breaks:
 categories:
-- name: SINGLE-OP ALL HIGH CW
-  operator_mode: single
-  power: high
-  bands: [all]
-  modes: [cw]
-- name: SINGLE-OP ALL LOW CW
-  operator_mode: single
-  power: low
-  bands: [all]
-  modes: [cw]
-- name: SINGLE-OP ALL HIGH SSB
-  operator_mode: single
-  power: high
-  bands: [all]
-  modes: [ssb]
-- name: SINGLE-OP ALL LOW SSB
-  operator_mode: single
-  power: low
-  bands: [all]
-  modes: [ssb]
-- name: SINGLE-OP ALL HIGH MIXED
-  operator_mode: single
-  power: high
-  bands: [all]
-  modes: [all]
-- name: SINGLE-OP ALL LOW MIXED
-  operator_mode: single
-  power: low
-  bands: [all]
-  modes: [all]
-- name: SINGLE-OP ALL QRP MIXED
-  operator_mode: single
-  power: qrp
-  bands: [all]
-  modes: [all]
-- name: MULTI-ONE ALL HIGH MIXED
-  operator_mode: multi
-  tx: 1
-  power: high
-  bands: [all]
-  modes: [all]
-- name: MULTI-TWO ALL HIGH MIXED
-  operator_mode: multi
-  tx: 2
-  power: high
-  bands: [all]
-  modes: [all]
-- name: MULTI-UNLIMITED ALL HIGH MIXED
-  operator_mode: multi
-  tx: multi
-  power: high
-  bands: [all]
-  modes: [all]
-- name: SINGLE-OP SINGLE-BAND HIGH CW
-  operator_mode: single
-  power: high
-  band_count: 1
-  modes: [cw]
-- name: SINGLE-OP SINGLE-BAND LOW SSB
-  operator_mode: single
-  power: low
-  band_count: 1
-  modes: [ssb]
-- name: SINGLE-OP NOVICE LOW MIXED
-  operator_mode: single
-  power: low
-  bands: [40m, 20m, 10m]
-  modes: [all]
-- name: SINGLE-OP NOVICE LOW SSB
-  operator_mode: single
-  power: low
-  bands: [40m, 20m, 10m]
-  modes: [ssb]
-- name: SINGLE-OP NOVICE LOW CW
-  operator_mode: single
-  power: low
-  bands: [40m, 20m, 10m]
-  modes: [cw]
-- name: SWL ALL MIXED
-  operator_mode: single
-  bands: [all]
+  - name: SO-AB HIGH CW
+    operator_mode: single
+    power: high
+    bands: [all]
+    modes: [cw]
+  - name: SO-AB LOW CW
+    operator_mode: single
+    power: low
+    bands: [all]
+    modes: [cw]
+  - name: SO-AB HIGH SSB
+    operator_mode: single
+    power: high
+    bands: [all]
+    modes: [ssb]
+  - name: SO-AB LOW SSB
+    operator_mode: single
+    power: low
+    bands: [all]
+    modes: [ssb]
+  - name: SO-AB HIGH MIXED
+    operator_mode: single
+    power: high
+    bands: [all]
+    modes: [all]
+  - name: SO-AB LOW MIXED
+    operator_mode: single
+    power: low
+    bands: [all]
+    modes: [all]
+  - name: SO-AB QRP MIXED
+    operator_mode: single
+    power: qrp
+    bands: [all]
+    modes: [all]
+  - name: MULTI-ONE ALL HIGH MIXED
+    operator_mode: multi
+    tx: 1
+    power: high
+    bands: [all]
+    modes: [all]
+  - name: MULTI-TWO ALL HIGH MIXED
+    operator_mode: multi
+    tx: 2
+    power: high
+    bands: [all]
+    modes: [all]
+  - name: MULTI-UNLIMITED ALL HIGH MIXED
+    operator_mode: multi
+    tx: multi
+    power: high
+    bands: [all]
+    modes: [all]
+  - name: SO-SB HIGH CW
+    operator_mode: single
+    power: high
+    band_count: 1
+    modes: [cw]
+  - name: SO-SB LOW SSB
+    operator_mode: single
+    power: low
+    band_count: 1
+    modes: [ssb]
+  - name: SO NOVICE LOW MIXED
+    operator_mode: single
+    power: low
+    bands: [40m, 20m, 10m]
+    modes: [all]
+  - name: SO NOVICE LOW SSB
+    operator_mode: single
+    power: low
+    bands: [40m, 20m, 10m]
+    modes: [ssb]
+  - name: SO NOVICE LOW CW
+    operator_mode: single
+    power: low
+    bands: [40m, 20m, 10m]
+    modes: [cw]
+  - name: SWL ALL MIXED
+    operator_mode: single
+    bands: [all]
 overlays:
 modes:
-- cw
-- ssb
+  - cw
+  - ssb
 bands:
-- 160m
-- 80m
-- 40m
-- 20m
-- 15m
-- 10m
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
 exchange:
-- their_country: [pa]
-  fields:
-  - [rst]
-  - [pa_province]
-- fields:
-  - [rst]
-  - [serial]
+  - their_country: [pa]
+    fields:
+      - [rst]
+      - [pa_province]
+  - fields:
+      - [rst]
+      - [serial]
 scoring:
   qsos:
-  - my_country: [not, pa]
-    their_country: [pa]
-    value: 1
-  - my_country: [pa]
-    value: 1
+    - my_country: [not, pa]
+      their_country: [pa]
+      value: 1
+    - my_country: [pa]
+      value: 1
   qso_band_rule: once_per_band_and_mode
-  multis: 
-  - property: pa_province
-    my_country: [not, pa]
-    band_rule: once_per_band_and_mode
-    value: 1
-  - property: veron_entity
-    my_country: [pa]
-    band_rule: once_per_band_and_mode
-    value: 1
+  multis:
+    - property: pa_province
+      my_country: [not, pa]
+      band_rule: once_per_band_and_mode
+      value: 1
+    - property: veron_entity
+      my_country: [pa]
+      band_rule: once_per_band_and_mode
+      value: 1
 examples:
   - setup:
       bands: [80m, 40m, 20m]
-      modes: [cw,ssb]
+      modes: [cw, ssb]
       my_country: pa
       my_exchange:
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 123]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: dl1abc
-      their_exchange: [599, 124]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: dl1abc
-      their_exchange: [599, 125]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 0
-      duplicate: true
-    - their_call: dl1abc
-      their_exchange: [599, 126]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: ssb
-      points: 1
-      multis: 1
-    - their_call: dl2abc
-      their_exchange: [599, 234]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 0
-    - their_call: dl3abc
-      their_exchange: [599, 345]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 0
-    - their_call: dl3abc
-      their_exchange: [599, 346]
-      their_continent: eu
-      their_country: dl
-      band: 20m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: xk2abc
-      their_exchange: [599, 346]
-      their_continent: na
-      their_country: ve
-      band: 20m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: ve2abc
-      their_exchange: [599, 346]
-      their_continent: na
-      their_country: ve
-      band: 20m
-      mode: cw
-      points: 1
-      multis: 0
-    - their_call: vo2abc
-      their_exchange: [599, 346]
-      their_continent: na
-      their_country: ve
-      band: 20m
-      mode: cw
-      points: 1
-      multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 125]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [599, 126]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: ssb
+        points: 1
+        multis: 1
+      - their_call: dl2abc
+        their_exchange: [599, 234]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+      - their_call: dl3abc
+        their_exchange: [599, 345]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+      - their_call: dl3abc
+        their_exchange: [599, 346]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: xk2abc
+        their_exchange: [599, 346]
+        their_continent: na
+        their_country: ve
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: ve2abc
+        their_exchange: [599, 346]
+        their_continent: na
+        their_country: ve
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+      - their_call: vo2abc
+        their_exchange: [599, 346]
+        their_continent: na
+        their_country: ve
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
     score:
       qsos: 10
       points: 9
@@ -219,67 +219,67 @@ examples:
       total: 54
   - setup:
       bands: [80m, 40m, 20m]
-      modes: [cw,ssb]
+      modes: [cw, ssb]
       my_country: dl
       my_exchange:
     qsos:
-    - their_call: pa1abc
-      their_exchange: [599, dr]
-      their_continent: eu
-      their_country: pa
-      band: 80m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: pa1abc
-      their_exchange: [599, dr]
-      their_continent: eu
-      their_country: pa
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: pa1abc
-      their_exchange: [599, dr]
-      their_continent: eu
-      their_country: pa
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 0
-      duplicate: true
-    - their_call: pa1abc
-      their_exchange: [599, dr]
-      their_continent: eu
-      their_country: pa
-      band: 40m
-      mode: ssb
-      points: 1
-      multis: 1
-    - their_call: dl2abc
-      their_exchange: [599, 234]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 0
-      multis: 0
-    - their_call: pa3abc
-      their_exchange: [599, zl]
-      their_continent: eu
-      their_country: pa
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 1
-    - their_call: pa3abc
-      their_exchange: [599, zl]
-      their_continent: eu
-      their_country: pa
-      band: 20m
-      mode: cw
-      points: 1
-      multis: 1
+      - their_call: pa1abc
+        their_exchange: [599, dr]
+        their_continent: eu
+        their_country: pa
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: pa1abc
+        their_exchange: [599, dr]
+        their_continent: eu
+        their_country: pa
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: pa1abc
+        their_exchange: [599, dr]
+        their_continent: eu
+        their_country: pa
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: pa1abc
+        their_exchange: [599, dr]
+        their_continent: eu
+        their_country: pa
+        band: 40m
+        mode: ssb
+        points: 1
+        multis: 1
+      - their_call: dl2abc
+        their_exchange: [599, 234]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 0
+        multis: 0
+      - their_call: pa3abc
+        their_exchange: [599, zl]
+        their_continent: eu
+        their_country: pa
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+      - their_call: pa3abc
+        their_exchange: [599, zl]
+        their_continent: eu
+        their_country: pa
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
     score:
       qsos: 7
       points: 5

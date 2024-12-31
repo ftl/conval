@@ -5,98 +5,98 @@ upload_url: https://www.ham-yota.com/contest/
 upload_format: cabrillo
 duration: 12h
 duration-constraints:
-- operator_mode: single
-  overlay: youth
-  duration: 6h
-  constraint_mode: active_time
+  - operator_mode: single
+    overlay: youth
+    duration: 6h
+    constraint_mode: active_time
 breaks:
 categories:
-- name: Single Operator 3 Bands Mixed (open)
-  operator_mode: single
-  band_count: 3
-  modes: [all]
-  score_mode: best
-- name: Single Operator 3 Bands Mixed (YOTA)
-  operator_mode: single
-  band_count: 3
-  modes: [all]
-  overlay: youth
-  score_mode: best
-- name: Single Operator All Bands Mixed (open)
-  operator_mode: single
-  band_count: all
-  modes: [all]
-- name: Single Operator All Bands Mixed (YOTA)
-  operator_mode: single
-  band_count: all
-  modes: [all]
-  overlay: youth
-- name: Single Operator All Bands Mixed 6 hours (YOTA only)
-  operator_mode: single
-  band_count: all
-  modes: [all]
-  overlay: youth
-- name: Multi Operator Single Transmitter All Bands Mixed (YOTA only)
-  operator_mode: multi
-  tx: one
-  band_count: all
-  modes: [all]
-  overlay: youth
-- name: SWL
-  band_count: all
-  modes: [all]
-- name: Station Sponsor
+  - name: SO-3B Mixed (open)
+    operator_mode: single
+    band_count: 3
+    modes: [all]
+    score_mode: best
+  - name: SO-3B Mixed (YOTA)
+    operator_mode: single
+    band_count: 3
+    modes: [all]
+    overlay: youth
+    score_mode: best
+  - name: SO-AB Mixed (open)
+    operator_mode: single
+    band_count: all
+    modes: [all]
+  - name: SO-AB Mixed (YOTA)
+    operator_mode: single
+    band_count: all
+    modes: [all]
+    overlay: youth
+  - name: SO-AB Mixed 6h (YOTA only)
+    operator_mode: single
+    band_count: all
+    modes: [all]
+    overlay: youth
+  - name: MS-AB Mixed (YOTA only)
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [all]
+    overlay: youth
+  - name: SWL
+    band_count: all
+    modes: [all]
+  - name: Station Sponsor
 overlays:
-- youth
+  - youth
 modes:
-- cw
-- ssb
+  - cw
+  - ssb
 bands:
-- 80m
-- 40m
-- 20m
-- 15m
-- 10m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
 exchange:
-- fields:
-  - [rst]
-  - [age]
+  - fields:
+      - [rst]
+      - [age]
 scoring:
   qsos:
-  - their_continent: [same]
-    property_constraints:
-      - name: age
-        min: 26
-    value: 1
-  - their_continent: [other]
-    property_constraints:
-      - name: age
-        min: 26
-    value: 3
-  - property_constraints:
-      - name: age
-        max: 11
-    value: 13
-  - property_constraints:
-      - name: age
-        min: 12
-        max: 16
-    value: 12
-  - property_constraints:
-      - name: age
-        min: 17
-        max: 21
-    value: 11
-  - property_constraints:
-      - name: age
-        min: 22
-        max: 25
-    value: 10
+    - their_continent: [same]
+      property_constraints:
+        - name: age
+          min: 26
+      value: 1
+    - their_continent: [other]
+      property_constraints:
+        - name: age
+          min: 26
+      value: 3
+    - property_constraints:
+        - name: age
+          max: 11
+      value: 13
+    - property_constraints:
+        - name: age
+          min: 12
+          max: 16
+      value: 12
+    - property_constraints:
+        - name: age
+          min: 17
+          max: 21
+      value: 11
+    - property_constraints:
+        - name: age
+          min: 22
+          max: 25
+      value: 10
   qso_band_rule: once_per_band_and_mode
-  multis: 
-  - property: age
-    band_rule: once_per_band
-    value: 1
+  multis:
+    - property: age
+      band_rule: once_per_band
+      value: 1
 examples:
   - setup:
       my_continent: eu
@@ -104,87 +104,87 @@ examples:
       bands: [80m, 40m, 20m]
       modes: [cw, ssb]
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 68]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      mode: cw
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 68]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      mode: ssb
-      points: 1
-      multis: 0
-      duplicate: false
-    - their_call: n1abc
-      their_exchange: [599, 68]
-      their_continent: na 
-      their_country: k
-      band: 80m
-      mode: ssb
-      points: 3
-      multis: 0
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 68]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 68]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 0
-      duplicate: true
-    - their_call: dl2abc
-      their_exchange: [599, 11]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 13
-      multis: 1
-      duplicate: false
-    - their_call: dl3abc
-      their_exchange: [599, 12]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 12
-      multis: 1
-    - their_call: dl4abc
-      their_exchange: [599, 17]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 11
-      multis: 1
-    - their_call: dl5abc
-      their_exchange: [599, 25]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 10
-      multis: 1
-    - their_call: dl3abc
-      their_exchange: [599, 12]
-      their_continent: eu
-      their_country: dl
-      band: 20m
-      points: 12
-      multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 68]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 68]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: ssb
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: n1abc
+        their_exchange: [599, 68]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: ssb
+        points: 3
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 68]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 68]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl2abc
+        their_exchange: [599, 11]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 13
+        multis: 1
+        duplicate: false
+      - their_call: dl3abc
+        their_exchange: [599, 12]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 12
+        multis: 1
+      - their_call: dl4abc
+        their_exchange: [599, 17]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 11
+        multis: 1
+      - their_call: dl5abc
+        their_exchange: [599, 25]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 10
+        multis: 1
+      - their_call: dl3abc
+        their_exchange: [599, 12]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 12
+        multis: 1
     score:
       qsos: 10
       points: 64

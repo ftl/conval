@@ -7,193 +7,193 @@ duration: 24h
 duration-constraints:
 breaks:
 categories:
-- name: Category A, SO-AB-CW-QRP
-  operator_mode: single
-  power: qrp
-  bands: [all]
-  modes: [cw]
-- name: Category B, SO-AB-CW-LP
-  operator_mode: single
-  power: low
-  bands: [all]
-  modes: [cw]
-- name: Category C, SO-AB-CW-HP
-  operator_mode: single
-  power: high
-  bands: [all]
-  modes: [cw]
-- name: Category D, SO-AB-SSB-LP
-  operator_mode: single
-  power: low
-  bands: [all]
-  modes: [ssb]
-- name: Category E, SO-AB-SSB-HP
-  operator_mode: single
-  power: high
-  bands: [all]
-  modes: [ssb]
-- name: Category F, SO-AB-Mixed-LP
-  operator_mode: single
-  power: low
-  bands: [all]
-  modes: [cw,ssb]
-- name: Category G, SO-AB-Mixed-HP
-  operator_mode: single
-  power: high
-  bands: [all]
-  modes: [cw,ssb]
-- name: Category H, SO-SB-Mixed
-  operator_mode: single
-  bands: [80m]
-  modes: [cw,ssb]
-- name: Category I, SO-SB-Mixed
-  operator_mode: single
-  bands: [40m]
-  modes: [cw,ssb]
-- name: Category J, SO-SB-Mixed
-  operator_mode: single
-  bands: [20m]
-  modes: [cw,ssb]
-- name: Category K, SO-SB-Mixed
-  operator_mode: single
-  bands: [15m]
-  modes: [cw,ssb]
-- name: Category L, SO-SB-Mixed
-  operator_mode: single
-  bands: [10m]
-  modes: [cw,ssb]
-- name: Category M, MOST-AB-Mixed
-  operator_mode: multi
-  bands: [all]
-  modes: [cw,ssb]
+  - name: "A: SO-AB-CW-QRP"
+    operator_mode: single
+    power: qrp
+    bands: [all]
+    modes: [cw]
+  - name: "B: SO-AB-CW-LP"
+    operator_mode: single
+    power: low
+    bands: [all]
+    modes: [cw]
+  - name: "C: SO-AB-CW-HP"
+    operator_mode: single
+    power: high
+    bands: [all]
+    modes: [cw]
+  - name: "D: SO-AB-SSB-LP"
+    operator_mode: single
+    power: low
+    bands: [all]
+    modes: [ssb]
+  - name: "E: SO-AB-SSB-HP"
+    operator_mode: single
+    power: high
+    bands: [all]
+    modes: [ssb]
+  - name: "F: SO-AB-Mixed-LP"
+    operator_mode: single
+    power: low
+    bands: [all]
+    modes: [cw, ssb]
+  - name: "G: SO-AB-Mixed-HP"
+    operator_mode: single
+    power: high
+    bands: [all]
+    modes: [cw, ssb]
+  - name: "H: SO-SB-Mixed"
+    operator_mode: single
+    bands: [80m]
+    modes: [cw, ssb]
+  - name: "I: SO-SB-Mixed"
+    operator_mode: single
+    bands: [40m]
+    modes: [cw, ssb]
+  - name: "J: SO-SB-Mixed"
+    operator_mode: single
+    bands: [20m]
+    modes: [cw, ssb]
+  - name: "K: SO-SB-Mixed"
+    operator_mode: single
+    bands: [15m]
+    modes: [cw, ssb]
+  - name: "L: SO-SB-Mixed"
+    operator_mode: single
+    bands: [10m]
+    modes: [cw, ssb]
+  - name: "M: MOST-AB-Mixed"
+    operator_mode: multi
+    bands: [all]
+    modes: [cw, ssb]
 overlays:
 modes:
-- cw
-- ssb
+  - cw
+  - ssb
 bands:
-- 80m
-- 40m
-- 20m
-- 15m
-- 10m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
 properties:
-- name: serbian_county
-  expression: "(BGD)|(BOR)|(BRA)|(JAB)|(JBB)|(JBN)|(KMO)|(KOL)|(KOS)|(KPO)|(MAC)|(MOR)|(NIS)|(PCI)|(PEC)|(PIR)|(POD)|(POM)|(PRI)|(RAN)|(RAS)|(SBB)|(SBN)|(SBT)|(SRM)|(SUM)|(TOP)|(ZAJ)|(ZBB)|(ZLA)"
+  - name: serbian_county
+    expression: "(BGD)|(BOR)|(BRA)|(JAB)|(JBB)|(JBN)|(KMO)|(KOL)|(KOS)|(KPO)|(MAC)|(MOR)|(NIS)|(PCI)|(PEC)|(PIR)|(POD)|(POM)|(PRI)|(RAN)|(RAS)|(SBB)|(SBN)|(SBT)|(SRM)|(SUM)|(TOP)|(ZAJ)|(ZBB)|(ZLA)"
 exchange:
-- their_country: [yu]
-  fields:
-  - [rst]
-  - [serbian_county]
-- fields:
-  - [rst]
-  - [serial]
+  - their_country: [yu]
+    fields:
+      - [rst]
+      - [serbian_county]
+  - fields:
+      - [rst]
+      - [serial]
 scoring:
   qsos:
-  - my_country: [not, yu]
-    their_country: [yu]
-    additional_weight: 10
-    value: 10
-  - their_continent: [other]
-    value: 4
-  - their_continent: [same]
-    their_country: [other]
-    value: 2
-  - their_country: [same]
-    value: 1
+    - my_country: [not, yu]
+      their_country: [yu]
+      additional_weight: 10
+      value: 10
+    - their_continent: [other]
+      value: 4
+    - their_continent: [same]
+      their_country: [other]
+      value: 2
+    - their_country: [same]
+      value: 1
   qso_band_rule: once_per_band_and_mode
-  multis: 
-  - property: dxcc_entity
-    band_rule: once_per_band
-    value: 1
-  - property: serbian_county
-    my_country: [not, yu]
-    band_rule: once_per_band
-    value: 1  
+  multis:
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+    - property: serbian_county
+      my_country: [not, yu]
+      band_rule: once_per_band
+      value: 1
 examples:
   - setup:
       my_continent: eu
       my_country: dl
       bands: [80m, 40m, 20m, 15m, 10m]
-      modes: [cw,ssb]
+      modes: [cw, ssb]
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 123]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 124]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 125]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 1
-      multis: 0
-      duplicate: true
-    - their_call: dl1abc
-      their_exchange: [599, 126]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: ssb
-      points: 1
-      multis: 0
-      duplicate: false
-    - their_call: dl2abc
-      their_exchange: [599, 234]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 1
-      multis: 0
-      duplicate: false
-    - their_call: dl3abc
-      their_exchange: [599, 345]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 1
-      multis: 0
-    - their_call: dl3abc
-      their_exchange: [599, 346]
-      their_continent: eu
-      their_country: dl
-      band: 20m
-      points: 1
-      multis: 1
-    - their_call: yu3abc
-      their_exchange: [599, SBB]
-      their_continent: eu
-      their_country: yu
-      band: 20m
-      points: 10
-      multis: 2
-    - their_call: k3abc
-      their_exchange: [599, 001]
-      their_continent: na
-      their_country: k
-      band: 20m
-      points: 4
-      multis: 1
-    - their_call: pa3abc
-      their_exchange: [599, 002]
-      their_continent: eu
-      their_country: pa
-      band: 20m
-      points: 2
-      multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 125]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [599, 126]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: ssb
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 234]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl3abc
+        their_exchange: [599, 345]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 1
+        multis: 0
+      - their_call: dl3abc
+        their_exchange: [599, 346]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 1
+      - their_call: yu3abc
+        their_exchange: [599, SBB]
+        their_continent: eu
+        their_country: yu
+        band: 20m
+        points: 10
+        multis: 2
+      - their_call: k3abc
+        their_exchange: [599, 001]
+        their_continent: na
+        their_country: k
+        band: 20m
+        points: 4
+        multis: 1
+      - their_call: pa3abc
+        their_exchange: [599, 002]
+        their_continent: eu
+        their_country: pa
+        band: 20m
+        points: 2
+        multis: 1
     score:
       qsos: 10
       points: 22
@@ -203,86 +203,86 @@ examples:
       my_continent: eu
       my_country: yu
       bands: [80m, 40m, 20m, 15m, 10m]
-      modes: [cw,ssb]
+      modes: [cw, ssb]
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 123]
-      their_continent: eu
-      their_country: dl
-      band: 80m
-      points: 2
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 124]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 2
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 125]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: cw
-      points: 2
-      multis: 0
-      duplicate: true
-    - their_call: dl1abc
-      their_exchange: [599, 126]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      mode: ssb
-      points: 2
-      multis: 0
-      duplicate: false
-    - their_call: dl2abc
-      their_exchange: [599, 234]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 2
-      multis: 0
-      duplicate: false
-    - their_call: dl3abc
-      their_exchange: [599, 345]
-      their_continent: eu
-      their_country: dl
-      band: 40m
-      points: 2
-      multis: 0
-    - their_call: dl3abc
-      their_exchange: [599, 346]
-      their_continent: eu
-      their_country: dl
-      band: 20m
-      points: 2
-      multis: 1
-    - their_call: yu3abc
-      their_exchange: [599, SBB]
-      their_continent: eu
-      their_country: yu
-      band: 20m
-      points: 1
-      multis: 1
-    - their_call: k3abc
-      their_exchange: [599, 001]
-      their_continent: na
-      their_country: k
-      band: 20m
-      points: 4
-      multis: 1
-    - their_call: pa3abc
-      their_exchange: [599, 002]
-      their_continent: eu
-      their_country: pa
-      band: 20m
-      points: 2
-      multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 125]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [599, 126]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: ssb
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 234]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: dl3abc
+        their_exchange: [599, 345]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 2
+        multis: 0
+      - their_call: dl3abc
+        their_exchange: [599, 346]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 2
+        multis: 1
+      - their_call: yu3abc
+        their_exchange: [599, SBB]
+        their_continent: eu
+        their_country: yu
+        band: 20m
+        points: 1
+        multis: 1
+      - their_call: k3abc
+        their_exchange: [599, 001]
+        their_continent: na
+        their_country: k
+        band: 20m
+        points: 4
+        multis: 1
+      - their_call: pa3abc
+        their_exchange: [599, 002]
+        their_continent: eu
+        their_country: pa
+        band: 20m
+        points: 2
+        multis: 1
     score:
       qsos: 10
       points: 19

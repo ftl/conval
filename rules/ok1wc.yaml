@@ -7,84 +7,84 @@ duration: 1h
 duration-constraints:
 breaks:
 categories:
-- name: Single OP, Single Band, CW, QRP
-  operator_mode: single
-  power: qrp
-  band_count: single
-  bands: [80m,40m]
-- name: Single OP, Single Band, CW, low
-  operator_mode: single
-  power: low
-  band_count: single
-  bands: [80m,40m]
-- name: Single OP, All Band, CW, QRP
-  operator_mode: single
-  power: qrp
-  band_count: all
-  bands: [80m,40m]
-- name: Single OP, All Band, CW, low
-  operator_mode: single
-  power: low
-  band_count: all
-  bands: [80m,40m]
+  - name: SO-SB CW QRP
+    operator_mode: single
+    power: qrp
+    band_count: single
+    bands: [80m, 40m]
+  - name: SO-SB CW low
+    operator_mode: single
+    power: low
+    band_count: single
+    bands: [80m, 40m]
+  - name: SO-AB CW QRP
+    operator_mode: single
+    power: qrp
+    band_count: all
+    bands: [80m, 40m]
+  - name: SO-AB CW low
+    operator_mode: single
+    power: low
+    band_count: all
+    bands: [80m, 40m]
 overlays:
 modes:
-- cw
+  - cw
 bands:
-- 80m
-- 40m
+  - 80m
+  - 40m
 properties:
-- name: mwc_multi
-  source: their_call
-  expression: ".*([A-Z0-9])"
+  - name: mwc_multi
+    source: their_call
+    expression: ".*([A-Z0-9])"
 exchange:
-- fields:
-  - [rst]
-  - [serial]
+  - fields:
+      - [rst]
+      - [serial]
 scoring:
   qsos:
-  - value: 1
+    - value: 1
   qso_band_rule: once_per_band
-  multis: 
-  - property: mwc_multi
-    band_rule: once_per_band
-    value: 1
+  multis:
+    - property: mwc_multi
+      band_rule: once_per_band
+      value: 1
 examples:
   - setup:
       bands: [80m, 40m]
       modes: [cw]
       my_exchange:
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 123]
-      band: 80m
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 124]
-      band: 40m
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 125]
-      band: 40m
-      points: 1
-      multis: 0
-      duplicate: true
-    - their_call: dl1cba
-      their_exchange: [599, 567]
-      band: 40m
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl2abc
-      their_exchange: [599, 23]
-      band: 40m
-      points: 1
-      multis: 0
-      duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        band: 40m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 125]
+        band: 40m
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1cba
+        their_exchange: [599, 567]
+        band: 40m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 23]
+        band: 40m
+        points: 1
+        multis: 0
+        duplicate: false
     score:
       qsos: 5
       points: 4
