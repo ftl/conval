@@ -1,9 +1,9 @@
 identifier: ARRL-DX-CW
 name: ARRL International DX Contest CW
 official_rules: https://www.arrl.org/arrl-dx
-arrl_country_list: true
 upload_url: https://contest-log-submission.arrl.org/
 upload_format: cabrillo
+arrl_country_list: true
 duration: 48h
 duration-constraints:
 breaks:
