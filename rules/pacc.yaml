@@ -1,7 +1,7 @@
 identifier: PACC
 name: Dutch PACC Contest
 official_rules: https://www.veron.nl/vereniging/commissies-en-werkgroepen/traffic-bureau/hf-contesten/pacc-rules
-upload_url: mailto:pacc@veron.nl
+upload_url: https://contest.veron.nl/PACC/
 upload_format: cabrillo
 duration: 24h
 duration-constraints:

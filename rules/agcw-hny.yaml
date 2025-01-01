@@ -1,45 +1,47 @@
 identifier: AGCW-HNY
 name: AGCW Happy New Year Contest
 official_rules: https://www.agcw.de/contest/hnyc/
+upload_url: https://contest.agcw.de/hnyc/logupload01.php
+upload_format: cabrillo
 duration: 3h
 duration-constraints:
 breaks:
 categories:
-- name: Class 1, High Power
-  operator_mode: single
-  power: high
-  bands: [all]
-- name: Class 2, Low Power
-  operator_mode: single
-  power: low
-  bands: [all]
-- name: Class 3, QRP
-  operator_mode: single
-  power: qrp
-  bands: [all]
-- name: Class 4, SWL
-  operator_mode: single
-  bands: [all]
+  - name: Class 1, High Power
+    operator_mode: single
+    power: high
+    bands: [all]
+  - name: Class 2, Low Power
+    operator_mode: single
+    power: low
+    bands: [all]
+  - name: Class 3, QRP
+    operator_mode: single
+    power: qrp
+    bands: [all]
+  - name: Class 4, SWL
+    operator_mode: single
+    bands: [all]
 overlays:
 modes:
-- cw
+  - cw
 bands:
-- 80m
-- 40m
-- 20m
+  - 80m
+  - 40m
+  - 20m
 exchange:
-- fields:
-  - [rst]
-  - [serial]
-  - [member_number, nm]
+  - fields:
+      - [rst]
+      - [serial]
+      - [member_number, nm]
 scoring:
   qsos:
-  - value: 1
+    - value: 1
   qso_band_rule: once_per_band
-  multis: 
-  - property: member_number
-    band_rule: once_per_band
-    value: 1
+  multis:
+    - property: member_number
+      band_rule: once_per_band
+      value: 1
 examples:
   - setup:
       bands: [80m, 40m, 20m]
@@ -47,40 +49,40 @@ examples:
       my_exchange:
         nm: nm
     qsos:
-    - their_call: dl1abc
-      their_exchange: [599, 123, 1234]
-      band: 80m
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 123, 1234]
-      band: 40m
-      points: 1
-      multis: 1
-      duplicate: false
-    - their_call: dl1abc
-      their_exchange: [599, 123, 1234]
-      band: 40m
-      points: 1
-      multis: 0
-      duplicate: true
-    - their_call: dl2abc
-      their_exchange: [599, 123, nm]
-      band: 40m
-      points: 1
-      multis: 0
-      duplicate: false
-    - their_call: dl3abc
-      their_exchange: [599, 123, nm]
-      band: 40m
-      points: 1
-      multis: 0
-    - their_call: dl3abc
-      their_exchange: [599, 123, nm]
-      band: 20m
-      points: 1
-      multis: 0
+      - their_call: dl1abc
+        their_exchange: [599, 123, 1234]
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 123, 1234]
+        band: 40m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 123, 1234]
+        band: 40m
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl2abc
+        their_exchange: [599, 123, nm]
+        band: 40m
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl3abc
+        their_exchange: [599, 123, nm]
+        band: 40m
+        points: 1
+        multis: 0
+      - their_call: dl3abc
+        their_exchange: [599, 123, nm]
+        band: 20m
+        points: 1
+        multis: 0
     score:
       qsos: 6
       points: 5

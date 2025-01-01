@@ -1,6 +1,8 @@
 identifier: CQ-WPX-CW
 name: CQ World Wide WPX Contest CW
 official_rules: https://www.cqwpx.com/rules.htm
+upload_url: https://www.cqwpx.com/logcheck/
+upload_format: cabrillo
 duration: 48h
 duration-constraints:
   - operator_mode: single
