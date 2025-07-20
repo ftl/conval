@@ -1,0 +1,158 @@
+identifier: CQ-160-CW
+name: CQ World Wide 160-Meter Contest CW
+official_rules: https://www.cqww.com/rules.htm
+upload_url: https://www.cqww.com/logcheck/
+upload_format: cabrillo
+duration: 48h
+duration-constraints:
+  - operator_mode: single
+    overlay: classic
+    duration: 30h
+breaks:
+  - operator_mode: single
+    overlay: classic
+    duration: 30m
+categories:
+  - name: SO
+    operator_mode: single
+    power: high
+  - name: SO Low
+    operator_mode: single
+    power: low
+  - name: SO QRP
+    operator_mode: single
+    power: qrp
+  - name: SO High Assisted
+    operator_mode: single
+    power: high
+    assisted: true
+  - name: SO Low Assisted
+    operator_mode: single
+    power: low
+    assisted: true
+  - name: MO High
+    operator_mode: multi
+    tx: one
+    power: high
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+exchange:
+  - their_country: [k, ve]
+    fields:
+      - [rst]
+      - [state_province]
+  - fields:
+      - [rst]
+      - [cq_zone]
+scoring:
+  qsos:
+    - their_continent: [other]
+      value: 10
+    - their_continent: [same]
+      their_country: [other]
+      value: 5
+    - their_country: [same]
+      additional_weight: 10
+      value: 2
+    - their_working_condition: [mm]
+      additional_weigth: 100
+      value: 5
+  qso_band_rule: once_per_band
+  multis:
+    - their_country: [k, ve]
+      property: state_province
+      band_rule: once_per_band
+      value: 1
+    - their_country: [not, k, ve]
+      property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: na
+      my_country: k
+      my_exchange:
+        state_province: ca
+    qsos:
+      - their_call: k1ab
+        their_continent: na
+        their_country: k
+        their_exchange: [599, ca]
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: ve1abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, ab]
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: ve1abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, ab]
+        points: 5
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_continent: eu
+        their_country: dl
+        their_exchange: [599, 14]
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: dk1abc
+        their_continent: eu
+        their_country: dl
+        their_exchange: [599, 14]
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: f1abc
+        their_continent: eu
+        their_country: f
+        their_exchange: [599, 14]
+        points: 10
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 37
+      multis: 4
+      total: 148
+  - setup:
+      my_continent: sa
+      my_country: py
+      my_exchange:
+        cq_zone: 11
+    qsos:
+      - their_call: k1ab
+        their_continent: na
+        their_country: k
+        their_exchange: [599, ca]
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: ve1abc
+        their_continent: na
+        their_country: ve
+        their_exchange: [599, ab]
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: lu2abc
+        their_continent: sa
+        their_country: lu
+        their_exchange: [599, 13]
+        points: 5
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 25
+      multis: 3
+      total: 75
