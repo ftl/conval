@@ -1,0 +1,97 @@
+identifier: BCC-QP
+name: BCC QSO-Party
+official_rules: https://www.bavarian-contest-club.de/2025/01/bcc-qso-partys-2025-ausschreibung/
+upload_url: http://dl6mhw.de/~dl6mhw/bcc
+upload_format: cabrillo
+duration: 2h
+duration-constraints:
+breaks:
+categories:
+  - name: High
+    power: high
+  - name: Low
+    power: low
+  - name: QRP
+    power: qrp
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+properties:
+  - name: t_shirt_size
+    values: [XS, S, M, L, XL, 2XL, 3XL, 4XL, 5XL]
+exchange:
+  - fields:
+      - [rst]
+      - [t_shirt_size]
+scoring:
+  qsos:
+    - value: 1
+    - property_constraints:
+        - name: their_call
+          their_value: da0bcc
+      additional_value: 10
+      value: 5
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: t_shirt_size
+      band_rule: once_per_band_and_mode
+      value: 1
+examples:
+  - setup:
+      bands: [80m]
+      modes: [cw, ssb]
+      my_exchange:
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, XL]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, XL]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: ssb
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, XL]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl3abc
+        their_exchange: [599, L]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: da0bcc
+        their_exchange: [599, S]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 5
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 5
+      points: 9
+      multis: 4
+      total: 36
