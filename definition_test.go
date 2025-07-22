@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ftl/hamradio/callsign"
+	"github.com/ftl/hamradio/scp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -555,4 +556,29 @@ properties:
 			}
 		})
 	}
+}
+
+func TestPropertyDefinition_getMemberOfProperty(t *testing.T) {
+	qso := QSO{
+		TheirCall: callsign.MustParse("DL1ABC"),
+	}
+
+	pd := PropertyDefinition{
+		MemberOf:     "test",
+		membersDB:    scp.NewDatabase(),
+		membersCache: make(map[string]string),
+	}
+
+	actual := pd.getMemberOfProperty(qso, Setup{}, nil)
+	assert.Equal(t, "false", actual, "empty database")
+
+	qso.TheirCall = callsign.MustParse("DL2ABC")
+	pd.membersDB.Add("DL2ABC")
+	actual = pd.getMemberOfProperty(qso, Setup{}, nil)
+	assert.Equal(t, "true", actual, "from database")
+
+	qso.TheirCall = callsign.MustParse("DL3ABC")
+	pd.membersCache["DL3ABC"] = "from cache"
+	actual = pd.getMemberOfProperty(qso, Setup{}, nil)
+	assert.Equal(t, "from cache", actual, "from cache")
 }
