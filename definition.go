@@ -1,9 +1,13 @@
 package conval
 
 import (
+	"crypto/sha1"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"os/user"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,6 +15,8 @@ import (
 
 	"github.com/ftl/hamradio/callsign"
 	"github.com/ftl/hamradio/locator"
+	"github.com/ftl/hamradio/scp"
+	"github.com/ftl/localcopy"
 	"gopkg.in/yaml.v3"
 )
 
@@ -101,9 +107,10 @@ func (d Definition) PropertyValidator(property Property) (PropertyValidator, boo
 }
 
 func (d Definition) propertyDefinition(property Property) (*PropertyDefinition, bool) {
-	for _, definition := range d.Properties {
+	for i, definition := range d.Properties {
 		if definition.Name == property {
-			return &definition, true
+			// use the address of the slice element to avoid copying
+			return &d.Properties[i], true
 		}
 	}
 	return nil, false
@@ -159,9 +166,12 @@ type PropertyDefinition struct {
 	Values     []string `yaml:"values,omitempty"`
 	Expression string   `yaml:"expression,omitempty"`
 	Source     Property `yaml:"source,omitempty"`
+	MemberOf   string   `yaml:"member_of,omitempty"`
 
-	definition *Definition
-	re         *regexp.Regexp
+	definition   *Definition
+	re           *regexp.Regexp
+	membersDB    *scp.Database
+	membersCache map[string]string
 }
 
 func (d *PropertyDefinition) GetLabel() string {
@@ -177,6 +187,9 @@ func (d *PropertyDefinition) ValidateProperty(value string, _ PrefixDatabase) er
 		return d.validatePropertyExpression(value)
 	case len(d.Values) > 0:
 		return d.validatePropertyValue(value)
+	case d.MemberOf != "":
+		// MemberOf does not make use of the value, but of QSO.TheirCall; it does not matter if this is a valid callsign
+		return nil
 	default:
 		return fmt.Errorf("%s is not defined properly", d.GetLabel())
 	}
@@ -219,10 +232,17 @@ func (d *PropertyDefinition) validatePropertyValue(value string) error {
 }
 
 func (d *PropertyDefinition) GetProperty(qso QSO, setup Setup, prefixes PrefixDatabase) string {
-	if d.Source == "" {
+	switch {
+	case d.Source != "":
+		return d.getPropertyFromSource(qso, setup, prefixes)
+	case d.MemberOf != "":
+		return d.getMemberOfProperty(qso, setup, prefixes)
+	default:
 		return qso.TheirExchange[d.Name]
 	}
+}
 
+func (d *PropertyDefinition) getPropertyFromSource(qso QSO, setup Setup, prefixes PrefixDatabase) string {
 	getter, getterOK := d.definition.PropertyGetter(d.Source)
 	if !getterOK {
 		return ""
@@ -252,6 +272,34 @@ func (d *PropertyDefinition) GetProperty(qso QSO, setup Setup, prefixes PrefixDa
 	}
 
 	return sanitize(matches[1])
+}
+
+func (d *PropertyDefinition) getMemberOfProperty(qso QSO, _ Setup, _ PrefixDatabase) string {
+	result := "false"
+	if d.membersDB == nil {
+		return result
+	}
+
+	theirCall := qso.TheirCall.String()
+	if fromCache, ok := d.membersCache[theirCall]; ok {
+		return fromCache
+	}
+
+	defer func() {
+		d.membersCache[theirCall] = result
+	}()
+
+	matches, err := d.membersDB.FindStrings(theirCall)
+	if err != nil {
+		return result
+	}
+	for _, match := range matches {
+		if match == theirCall {
+			result = "true"
+			return result
+		}
+	}
+	return result
 }
 
 type ExchangeDefinition struct {
@@ -509,9 +557,57 @@ func LoadDefinitionYAML(r io.Reader) (*Definition, error) {
 func initDefinition(d *Definition) *Definition {
 	for i, pd := range d.Properties {
 		pd.definition = d
+
+		if pd.MemberOf != "" {
+			db, err := loadMembersDB(pd.MemberOf)
+			if err != nil {
+				log.Printf("failed to load members list from %s: %v", pd.MemberOf, err)
+				pd.membersDB = scp.NewDatabase()
+			} else {
+				pd.membersDB = db
+			}
+			pd.membersCache = make(map[string]string)
+		}
+
 		d.Properties[i] = pd
 	}
 	return d
+}
+
+func loadMembersDB(url string) (*scp.Database, error) {
+	filename, err := localMembersFilename(url)
+	if err != nil {
+		return nil, fmt.Errorf("failed to calculate the local filename for %s: %w", url, err)
+	}
+	_, err = localcopy.Update(url, filename, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update members database from %s: %w", url, err)
+	}
+	database, err := localcopy.LoadLocal(filename, func(r io.Reader) (any, error) {
+		return scp.ReadCallHistory(r)
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to load members database from %s: %w", url, err)
+	}
+
+	return database.(*scp.Database), nil
+}
+
+func localMembersFilename(url string) (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+	path := filepath.Join(usr.HomeDir, ".cache", "conval")
+
+	hash := sha1.New()
+	_, err = hash.Write([]byte(url))
+	if err != nil {
+		return "", err
+	}
+	filename := fmt.Sprintf("%x.txt", hash.Sum(nil))
+
+	return filepath.Join(path, filename), nil
 }
 
 func SaveDefinitionYAML(w io.Writer, definition *Definition, withExamples bool) error {

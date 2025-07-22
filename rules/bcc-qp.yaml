@@ -22,18 +22,24 @@ bands:
 properties:
   - name: t_shirt_size
     values: [XS, S, M, L, XL, 2XL, 3XL, 4XL, 5XL]
+  - name: bcc_member
+    member_of: https://www.bavarian-contest-club.de/data/bcc-members.txt
 exchange:
   - fields:
       - [rst]
       - [t_shirt_size]
 scoring:
   qsos:
-    - value: 1
+    - property_constraints:
+        - name: bcc_member
+          their_value: true
+      value: 2
     - property_constraints:
         - name: their_call
           their_value: da0bcc
       additional_value: 10
       value: 5
+    - value: 1
   qso_band_rule: once_per_band_and_mode
   multis:
     - property: t_shirt_size
@@ -81,6 +87,15 @@ examples:
         points: 1
         multis: 1
         duplicate: false
+      - their_call: dl1neo
+        their_exchange: [599, M]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
       - their_call: da0bcc
         their_exchange: [599, S]
         their_continent: eu
@@ -91,7 +106,7 @@ examples:
         multis: 1
         duplicate: false
     score:
-      qsos: 5
-      points: 9
-      multis: 4
-      total: 36
+      qsos: 6
+      points: 11
+      multis: 5
+      total: 55
