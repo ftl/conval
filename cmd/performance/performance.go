@@ -56,7 +56,7 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 		counter.Add(qso)
 	}
 
-	scoreBins := counter.EvaluateAll(startTime, resolution)
+	scoreBins, _ := counter.EvaluateAll(startTime, resolution)
 	result := Result{
 		Resolution: resolution,
 		DataPoints: make([]DataPoint, len(scoreBins)),

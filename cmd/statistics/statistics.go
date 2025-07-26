@@ -30,18 +30,19 @@ func (r *Rate) UpdateMinMax(value int, offset time.Duration) {
 }
 
 type Result struct {
-	ContestName string        `yaml:"contest_name" json:"contest_name"`
-	ContestID   string        `yaml:"contest_id" json:"contest_id"`
-	StartTime   time.Time     `yaml:"start_time" json:"start_time"`
-	Duration    time.Duration `yaml:"duration" json:"duration"`
-	ActiveHours int           `yaml:"active_hours" json:"active_hours"`
-	QSOs        int           `yaml:"qsos" json:"qsos"`
-	Points      int           `yaml:"points" json:"points"`
-	Multis      int           `yaml:"multis" json:"multis"`
-	Total       int           `yaml:"total" json:"total"`
-	QSORate     Rate          `yaml:"qso_rate" json:"qso_rate"`
-	PointsRate  Rate          `yaml:"points_rate" json:"points_rate"`
-	MultiRate   Rate          `yaml:"multi_rate" json:"multi_rate"`
+	ContestName   string        `yaml:"contest_name" json:"contest_name"`
+	ContestID     string        `yaml:"contest_id" json:"contest_id"`
+	StartTime     time.Time     `yaml:"start_time" json:"start_time"`
+	Duration      time.Duration `yaml:"duration" json:"duration"`
+	OperationTime time.Duration `yaml:"opration_time" json:"operation_time"`
+	TotalTime     time.Duration `yaml:"total_time" json:"total_time"`
+	QSOs          int           `yaml:"qsos" json:"qsos"`
+	Points        int           `yaml:"points" json:"points"`
+	Multis        int           `yaml:"multis" json:"multis"`
+	Total         int           `yaml:"total" json:"total"`
+	QSORate       Rate          `yaml:"qso_rate" json:"qso_rate"`
+	PointsRate    Rate          `yaml:"points_rate" json:"points_rate"`
+	MultiRate     Rate          `yaml:"multi_rate" json:"multi_rate"`
 }
 
 func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.Setup, startTime time.Time) (Result, error) {
@@ -77,25 +78,28 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 		counter.Add(qso)
 	}
 
-	scoreBins := counter.EvaluateAll(startTime, time.Hour)
-	totalHours := float64(len(scoreBins))
+	resolution := 1 * time.Hour
+	scoreBins, timeReport := counter.EvaluateAll(startTime, resolution)
+	activeHours := timeReport.OperationTime().Hours()
+	totalHours := float64(timeReport.TotalMinutes) / 60.0
+
 	result := Result{
-		ContestName: definitionForFile.Name,
-		ContestID:   string(definitionForFile.Identifier),
-		StartTime:   startTime,
-		Duration:    definitionForFile.Duration,
-		QSORate:     Rate{Min: math.MaxInt},
-		PointsRate:  Rate{Min: math.MaxInt},
-		MultiRate:   Rate{Min: math.MaxInt},
+		ContestName:   definitionForFile.Name,
+		ContestID:     string(definitionForFile.Identifier),
+		StartTime:     startTime,
+		Duration:      definitionForFile.Duration,
+		OperationTime: timeReport.OperationTime(),
+		TotalTime:     time.Duration(timeReport.TotalMinutes) * time.Minute,
+		QSORate:       Rate{Min: math.MaxInt},
+		PointsRate:    Rate{Min: math.MaxInt},
+		MultiRate:     Rate{Min: math.MaxInt},
 	}
 
-	result.ActiveHours = 0
 	for i, bin := range scoreBins {
-		offset := time.Duration(i+1) * time.Hour
+		offset := time.Duration(i+1) * resolution
 		if bin.QSOs == 0 {
 			continue
 		}
-		result.ActiveHours++
 
 		result.QSOs += bin.QSOs
 		result.Points += bin.Points
@@ -106,11 +110,11 @@ func Evaluate(logfile app.Logfile, definition *conval.Definition, setup *conval.
 	}
 	result.Total = result.Points * result.Multis
 	result.QSORate.TotalAverage = float64(result.QSOs) / totalHours
-	result.QSORate.ActiveAverage = float64(result.QSOs) / float64(result.ActiveHours)
+	result.QSORate.ActiveAverage = float64(result.QSOs) / activeHours
 	result.PointsRate.TotalAverage = float64(result.Points) / totalHours
-	result.PointsRate.ActiveAverage = float64(result.Points) / float64(result.ActiveHours)
+	result.PointsRate.ActiveAverage = float64(result.Points) / activeHours
 	result.MultiRate.TotalAverage = float64(result.Multis) / totalHours
-	result.MultiRate.ActiveAverage = float64(result.Multis) / float64(result.ActiveHours)
+	result.MultiRate.ActiveAverage = float64(result.Multis) / activeHours
 
 	return result, nil
 }

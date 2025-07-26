@@ -46,18 +46,18 @@ func WriteOutput(w io.Writer, format app.OutputFormat, result Result) error {
 func writeText(w io.Writer, result Result) error {
 	_, err := fmt.Fprintf(w, `Contest: %s (%s)
 
-Start at:     %s
-Duration:     %s
-Active Hours: %d
+Start at:       %s
+Duration:       %s
+Operation Time: %s
 
-Rate   | Total  | Active | Min    | Max    | Best Hour | Slowest Hour |
------------------------------------------------------------------------
+Rate   | Total/h | Active/h | Min/h  | Max/h  | Best Hour | Slowest Hour |
+--------------------------------------------------------------------------
 `,
 		result.ContestName,
 		result.ContestID,
 		result.StartTime,
 		result.Duration,
-		result.ActiveHours)
+		result.OperationTime)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ Rate   | Total  | Active | Min    | Max    | Best Hour | Slowest Hour |
 }
 
 func writeRate(w io.Writer, name string, rate Rate) error {
-	_, err := fmt.Fprintf(w, "%-6s | % 6.1f | % 6.1f | % 6.1f | % 6.1f | %9s | %12s |\n",
+	_, err := fmt.Fprintf(w, "%-6s |  % 6.1f |   % 6.1f | % 6.1f | % 6.1f | %9s | %12s |\n",
 		name, rate.TotalAverage, rate.ActiveAverage, rate.Min, rate.Max, rate.MaxHour, rate.MinHour)
 	return err
 }

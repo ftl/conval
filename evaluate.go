@@ -38,12 +38,13 @@ func (b *ScoreBin) Add(qso ScoredQSO) {
 	b.Bands[qso.Band] = true
 }
 
-func (c Counter) EvaluateAll(startTime time.Time, resolution time.Duration) []ScoreBin {
+func (c Counter) EvaluateAll(startTime time.Time, resolution time.Duration) ([]ScoreBin, TimeReport) {
 	if resolution == 0 {
 		resolution = time.Hour
 	}
 	binCount := c.definition.Duration / resolution
 
+	timeSheet := NewTimeSheet(startTime, c.definition.Duration)
 	result := make([]ScoreBin, binCount)
 
 	for _, qso := range c.qsos {
@@ -53,9 +54,10 @@ func (c Counter) EvaluateAll(startTime time.Time, resolution time.Duration) []Sc
 			continue
 		}
 		result[binIndex].Add(qso)
+		timeSheet.MarkActive(qso.Timestamp)
 	}
 
-	return result
+	return result, timeSheet.TimeRecord(c.ComputeMinBreakDuration())
 }
 
 func toBinIndex(t time.Time, startTime time.Time, resolution time.Duration) int {

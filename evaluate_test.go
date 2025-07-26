@@ -15,9 +15,9 @@ func TestCounter_EvaluateAll_ResultSize(t *testing.T) {
 	counter := NewCounter(definition, setup, nil)
 	startTime := time.Now().Truncate(time.Hour)
 
-	perHour := counter.EvaluateAll(startTime, time.Hour)
+	perHour, _ := counter.EvaluateAll(startTime, time.Hour)
 	assert.Equal(t, 12, len(perHour))
-	per5Minute := counter.EvaluateAll(startTime, 5*time.Minute)
+	per5Minute, _ := counter.EvaluateAll(startTime, 5*time.Minute)
 	assert.Equal(t, 144, len(per5Minute))
 }
 
