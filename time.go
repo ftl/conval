@@ -61,7 +61,7 @@ func (s *TimeSheet) getMinuteIndex(now time.Time) int {
 	return minutes
 }
 
-func (s *TimeSheet) TimeRecord(minBreakDuration time.Duration) TimeReport {
+func (s *TimeSheet) TimeReport(minBreakDuration time.Duration) TimeReport {
 	result := TimeReport{
 		MinBreakDuration: minBreakDuration,
 	}

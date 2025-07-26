@@ -20,7 +20,7 @@ func TestTimeSheet_TimeRecord(t *testing.T) {
 	timeSheet.MarkActive(startTime.Add(20 * time.Minute))
 	timeSheet.MarkActive(startTime.Add(33 * time.Minute))
 	timeSheet.MarkActive(startTime.Add(35 * time.Minute))
-	timeRecord := timeSheet.TimeRecord(minBreakDuration)
+	timeRecord := timeSheet.TimeReport(minBreakDuration)
 
 	assert.Equal(t, 6, timeRecord.ActiveMinutes)
 	assert.Equal(t, 6, timeRecord.IdleMinutes)

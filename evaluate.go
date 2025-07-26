@@ -57,7 +57,7 @@ func (c Counter) EvaluateAll(startTime time.Time, resolution time.Duration) ([]S
 		timeSheet.MarkActive(qso.Timestamp)
 	}
 
-	return result, timeSheet.TimeRecord(c.ComputeMinBreakDuration())
+	return result, timeSheet.TimeReport(c.ComputeMinBreakDuration())
 }
 
 func toBinIndex(t time.Time, startTime time.Time, resolution time.Duration) int {
