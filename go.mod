@@ -1,10 +1,6 @@
 module github.com/ftl/conval
 
-go 1.19
-
-// replace github.com/ftl/cabrillo => ../cabrillo
-
-// replace github.com/ftl/hamradio => ../hamradio
+go 1.24.3
 
 require (
 	github.com/ftl/cabrillo v0.2.2
