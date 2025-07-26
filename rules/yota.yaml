@@ -8,7 +8,7 @@ duration-constraints:
   - operator_mode: single
     overlay: youth
     duration: 6h
-    constraint_mode: active_time
+    constraint_mode: operation_time
 breaks:
 categories:
   - name: SO-3B Mixed (open)

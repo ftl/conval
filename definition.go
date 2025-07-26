@@ -127,8 +127,8 @@ type DurationConstraintMode string
 const (
 	// TotalTime counts from the timestamp of the first QSO until the timestamp of the last QSO without considering breaks.
 	TotalTime DurationConstraintMode = "total_time"
-	// ActiveTime counts from the timestamp of the first QSO until the timestamp of the last QSO, breaks that last at least one hour are subtracted.
-	ActiveTime DurationConstraintMode = "active_time"
+	// OperationTime counts from the timestamp of the first QSO until the timestamp of the last QSO, breaks in between are subtracted.
+	OperationTime DurationConstraintMode = "operation_time"
 )
 
 type BandChangeRule struct {
