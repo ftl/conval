@@ -1,0 +1,223 @@
+identifier: LABRE-DX
+name: LABRE DX Contest
+official_rules: https://www.labre.org.br/contest/en/regulamento/
+upload_url: https://www.labre.org.br/contest/en/enviar-log/
+upload_format: cabrillo
+duration: 48h
+duration-constraints:
+  - operator_mode: single
+    duration: 36h
+    constraint_mode: operation_time
+  - operator_mode: single
+    overlay: classic
+    duration: 36h
+    constraint_mode: operation_time
+breaks:
+  - operator_mode: single
+    overlay: classic
+    duration: 60m
+categories:
+  - name: SO-AB High
+    operator_mode: single
+    power: high
+    bands: [all]
+  - name: SO-AB Low
+    operator_mode: single
+    power: low
+    bands: [all]
+  - name: SO-SB High
+    operator_mode: single
+    power: high
+    band_count: single
+    bands: [all]
+  - name: SO-SB Low
+    operator_mode: single
+    power: low
+    band_count: single
+    bands: [all]
+  - name: SO Classic
+    operator_mode: single
+    power: high
+    bands: [all]
+  - name: SO Youth
+    operator_mode: single
+    power: high
+    bands: [all]
+  - name: Multi-1
+    operator_mode: multi
+    tx: 1
+  - name: Multi-2
+    operator_mode: multi
+    tx: 2
+  - name: Multi-Multi
+    operator_mode: multi
+    tx: 6
+  - name: Checklog
+overlays:
+  - classic
+  - youth
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: brazilian_state
+    values:
+      [
+        AC,
+        AL,
+        AP,
+        AM,
+        BA,
+        CE,
+        DF,
+        ES,
+        GO,
+        MA,
+        MT,
+        MS,
+        MG,
+        PA,
+        PB,
+        PR,
+        PE,
+        PI,
+        RJ,
+        RN,
+        RS,
+        RO,
+        RR,
+        SC,
+        SP,
+        SE,
+        TO,
+      ]
+  - name: brazilian_hq
+    values: [HQ]
+exchange:
+  - their_country: [py]
+    fields:
+      - [rst]
+      - [brazilian_state, brazilian_hq]
+  - their_country: [not, py]
+    fields:
+      - [rst]
+      - [continent]
+scoring:
+  qsos:
+    - their_continent: [other]
+      bands: [10m, 15m, 20m]
+      value: 3
+    - their_continent: [other]
+      bands: [40m, 80m, 160m]
+      value: 6
+    - their_continent: [same]
+      their_country: [other]
+      bands: [10m, 15m, 20m]
+      value: 2
+    - their_continent: [same]
+      their_country: [other]
+      bands: [40m, 80m, 160m]
+      value: 4
+    - their_continent: [same]
+      their_country: [same]
+      bands: [10m, 15m, 20m]
+      value: 1
+    - their_continent: [same]
+      their_country: [same]
+      bands: [40m, 80m, 160m]
+      value: 2
+  qso_band_rule: once_per_band
+  multis:
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+    - property: brazilian_state
+      band_rule: once_per_band
+      value: 1
+    - property: their_call
+      property_constraints:
+        - name: brazilian_hq
+          their_value_not_empty: true
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      my_exchange:
+        rst: 599
+        continent: eu
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, eu]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, eu]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, eu]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: py1abc
+        their_exchange: [599, sp]
+        their_continent: sa
+        their_country: py
+        band: 40m
+        points: 6
+        multis: 2
+        duplicate: false
+      - their_call: py2abc
+        their_exchange: [599, ac]
+        their_continent: sa
+        their_country: py
+        band: 40m
+        points: 6
+        multis: 1
+      - their_call: py1hq
+        their_exchange: [599, hq]
+        their_continent: sa
+        their_country: py
+        band: 20m
+        points: 3
+        multis: 2
+      - their_call: py1hq
+        their_exchange: [599, hq]
+        their_continent: sa
+        their_country: py
+        band: 15m
+        points: 3
+        multis: 2
+      - their_call: py2hq
+        their_exchange: [599, hq]
+        their_continent: sa
+        their_country: py
+        band: 15m
+        points: 3
+        multis: 1
+    score:
+      qsos: 8
+      points: 24
+      multis: 10
+      total: 240
