@@ -1,0 +1,635 @@
+identifier: EUDXC
+name: European Union DX Contest
+official_rules: https://www.eudx-contest.com/rules/
+upload_url: https://www.eudx-contest.com/logs/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB-MIX-HP
+    operator_mode: single
+    power: high
+    modes: [cw, ssb]
+    bands: [all]
+  - name: SOAB-MIX-LP
+    operator_mode: single
+    power: low
+    modes: [cw, ssb]
+    bands: [all]
+  - name: SOAB-MIX-QRP
+    operator_mode: single
+    power: qrp
+    modes: [cw, ssw]
+    bands: [all]
+  - name: SOAB-CW-HP
+    operator_mode: single
+    power: high
+    modes: [cw]
+    bands: [all]
+  - name: SOAB-CW-LP
+    operator_mode: single
+    power: low
+    modes: [cw]
+    bands: [all]
+  - name: SOAB-SSB-HP
+    operator_mode: single
+    power: high
+    modes: [ssb]
+    bands: [all]
+  - name: SOAB-SSB-LP
+    operator_mode: single
+    power: low
+    modes: [ssb]
+    bands: [all]
+  - name: SOSB
+    operator_mode: single
+    power: low
+    band_count: 1
+  - name: MOST
+    operator_mode: multi
+    tx: 1
+    power: high
+    modes: [cw, ssb]
+    bands: [all]
+  - name: M/M
+    operator_mode: multi
+    tx: multi
+    power: high
+    modes: [cw, ssb]
+    bands: [all]
+  - name: MULTI-DISTRIBUTED
+    operator_mode: multi
+    tx: multi
+    power: high
+    modes: [cw, ssb]
+    bands: [all]
+  - name: SWL-MIXED
+    operator_mode: single
+    modes: [cw, ssb]
+    bands: [all]
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+exchange:
+  - their_country:
+      [
+        oe,
+        on,
+        lz,
+        ok,
+        5b,
+        9a,
+        oz,
+        es,
+        oh,
+        f,
+        dl,
+        sv,
+        ha,
+        ei,
+        i,
+        yl,
+        lx,
+        9h,
+        pa,
+        sp,
+        ct,
+        yo,
+        om,
+        s5,
+        ea,
+        sm,
+      ]
+    fields:
+      - [rst]
+      - [eu_region]
+  - fields:
+      - [rst]
+      - [itu_zone]
+scoring:
+  qsos:
+    - my_country:
+        [
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_country: [same]
+      additional_weight: 10
+      value: 2
+    - my_country:
+        [
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_country:
+        [
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      value: 10
+    - my_country:
+        [
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_country:
+        [
+          not,
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_continent: [same]
+      value: 3
+    - my_country:
+        [
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_continent: [other]
+      value: 5
+    - my_country:
+        [
+          not,
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_country:
+        [
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      additional_weight: 10
+      value: 10
+    - my_country:
+        [
+          not,
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_country: [same]
+      value: 2
+    - my_country:
+        [
+          not,
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_continent: [same]
+      their_country: [other]
+      value: 3
+    - my_country:
+        [
+          not,
+          oe,
+          on,
+          lz,
+          ok,
+          5b,
+          9a,
+          oz,
+          es,
+          oh,
+          f,
+          dl,
+          sv,
+          ha,
+          ei,
+          i,
+          yl,
+          lx,
+          9h,
+          pa,
+          sp,
+          ct,
+          yo,
+          om,
+          s5,
+          ea,
+          sm,
+        ]
+      their_continent: [other]
+      value: 5
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: eu_region
+      band_rule: once_per_band
+      value: 1
+    - property: wae_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_continent: eu
+      my_country: dl
+      my_exchange:
+        eu_region: de02
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 2
+        multis: 2
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 2
+        multis: 2
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 2
+        multis: 0
+        duplicate: true
+      - their_call: i1abc
+        their_exchange: [599, it02]
+        their_continent: eu
+        their_country: i
+        band: 40m
+        points: 10
+        multis: 2
+      - their_call: k2abc
+        their_exchange: [599, 6]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 5
+        multis: 1
+      - their_call: g2abc
+        their_exchange: [599, 27]
+        their_continent: eu
+        their_country: g
+        band: 40m
+        points: 3
+        multis: 1
+    score:
+      qsos: 6
+      points: 22
+      multis: 8
+      total: 176
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_continent: eu
+      my_country: g
+      my_exchange:
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 10
+        multis: 2
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 10
+        multis: 2
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 10
+        multis: 0
+        duplicate: true
+      - their_call: i1abc
+        their_exchange: [599, it02]
+        their_continent: eu
+        their_country: i
+        band: 40m
+        points: 10
+        multis: 2
+      - their_call: k2abc
+        their_exchange: [599, 6]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 5
+        multis: 1
+      - their_call: g2abc
+        their_exchange: [599, 27]
+        their_continent: eu
+        their_country: g
+        band: 40m
+        points: 2
+        multis: 1
+    score:
+      qsos: 6
+      points: 37
+      multis: 8
+      total: 296
+  - setup:
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+      my_continent: na
+      my_country: k
+      my_exchange:
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 10
+        multis: 2
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 10
+        multis: 2
+      - their_call: dl1abc
+        their_exchange: [599, de02]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 10
+        multis: 0
+        duplicate: true
+      - their_call: xe1abc
+        their_exchange: [599, 10]
+        their_continent: na
+        their_country: xe
+        band: 40m
+        points: 3
+        multis: 1
+      - their_call: k2abc
+        their_exchange: [599, 6]
+        their_continent: na
+        their_country: k
+        band: 40m
+        points: 2
+        multis: 1
+      - their_call: g2abc
+        their_exchange: [599, 27]
+        their_continent: eu
+        their_country: g
+        band: 40m
+        points: 5
+        multis: 1
+    score:
+      qsos: 6
+      points: 30
+      multis: 7
+      total: 210
