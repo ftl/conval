@@ -757,6 +757,53 @@ func TestFilterScoringRules(t *testing.T) {
 				},
 			},
 		},
+		{
+			desc: "count their_call if the hq property has a value",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{
+							Name:               "hq",
+							TheirValueNotEmpty: true,
+						},
+					},
+					Value: 1,
+				},
+			},
+			theirExchange: QSOExchange{
+				"hq": "HQ",
+			},
+			expected: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{
+							Name:               "hq",
+							TheirValueNotEmpty: true,
+						},
+					},
+					Value: 1,
+				},
+			},
+		},
+		{
+			desc: "do not count their_call if the hq property is empty",
+			rules: []ScoringRule{
+				{
+					PropertyConstraints: []PropertyConstraint{
+						{
+							Name:               "hq",
+							TheirValueNotEmpty: true,
+						},
+					},
+					Value: 1,
+				},
+			},
+			theirExchange: QSOExchange{
+				"rst":       "599",
+				"continent": "EU",
+			},
+			expected: []ScoringRule{},
+		},
 	}
 
 	for _, tc := range tt {
