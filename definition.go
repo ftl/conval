@@ -363,6 +363,8 @@ type PropertyConstraint struct {
 	Min                string   `yaml:"min,omitempty"`
 	Max                string   `yaml:"max,omitempty"`
 	MyValue            string   `yaml:"my_value,omitempty"`
+	MyValueEmpty       bool     `yaml:"my_value_empty,omitempty"`
+	MyValueNotEmpty    bool     `yaml:"my_value_not_empty,omitempty"`
 	TheirValue         string   `yaml:"their_value,omitempty"`
 	TheirValueEmpty    bool     `yaml:"their_value_empty,omitempty"`
 	TheirValueNotEmpty bool     `yaml:"their_value_not_empty,omitempty"`
@@ -379,6 +381,11 @@ func (c PropertyConstraint) Matches(myValue string, theirValue string) bool {
 	}
 	if c.MyValue != "" {
 		result = result && myValue == c.MyValue
+	}
+	if c.MyValueEmpty {
+		result = result && (myValue == "")
+	} else if c.MyValueNotEmpty {
+		result = result && (myValue != "")
 	}
 	if c.TheirValue != "" {
 		result = result && (theirValue == c.TheirValue)
