@@ -36,7 +36,7 @@ bands:
   - 10m
 properties:
   - name: iota_reference
-    expression: "((AF)|(AS)|(EU)|(NA)|(OC)|(SA))[0123456789]+"
+    expression: "((AF)|(AS)|(EU)|(NA)|(OC)|(SA))[[:digit:]]+"
 exchange:
   - fields:
       - [rst]
