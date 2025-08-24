@@ -9,6 +9,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -293,11 +294,9 @@ func (d *PropertyDefinition) getMemberOfProperty(qso QSO, _ Setup, _ PrefixDatab
 	if err != nil {
 		return result
 	}
-	for _, match := range matches {
-		if match == theirCall {
-			result = "true"
-			return result
-		}
+
+	if slices.Contains(matches, theirCall) {
+		result = "true"
 	}
 	return result
 }
@@ -323,12 +322,7 @@ func (f ExchangeField) Strings() []string {
 }
 
 func (f ExchangeField) Contains(property Property) bool {
-	for _, p := range f {
-		if p == property {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(f, property)
 }
 
 type Scoring struct {
