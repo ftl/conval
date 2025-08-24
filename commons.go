@@ -32,6 +32,7 @@ const (
 	DXCCPrefixProperty       Property = "dxcc_prefix" // can be used as exchange, e.g. in the CWops contests
 	WAEEntityProperty        Property = "wae_entity"
 	WPXPrefixProperty        Property = "wpx_prefix"
+	ContinentProperty        Property = "continent" // can be used as exchange, e.g. in the LABRE-DX contest
 
 	GenericTextProperty   Property = "generic_text"
 	GenericNumberProperty Property = "generic_number"
@@ -52,6 +53,7 @@ func init() {
 	commonPropertyValidators[ClassProperty] = RegexpValidator(validName, "class")
 	commonPropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
 	commonPropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
+	commonPropertyValidators[ContinentProperty] = RegexpValidator(validContinent, "continent")
 	commonPropertyValidators[GenericTextProperty] = RegexpValidator(validGenericText, "generic text")
 	commonPropertyValidators[GenericNumberProperty] = RegexpValidator(validGenericNumber, "generic number")
 	commonPropertyValidators[EmptyProperty] = EmptyValidator
@@ -73,6 +75,7 @@ func init() {
 	commonPropertyGetters[DXCCPrefixProperty] = getTheirExchangeProperty(DXCCPrefixProperty)
 	commonPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
 	commonPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getWPXPrefix)
+	commonPropertyGetters[ContinentProperty] = PropertyGetterFunc(getContinent)
 	commonPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	commonPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	commonPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
@@ -93,6 +96,7 @@ func init() {
 	myPropertyGetters[DXCCPrefixProperty] = getMyExchangeProperty(DXCCPrefixProperty)
 	myPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getMyWAEEntity)
 	myPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getMyWPXPrefix)
+	myPropertyGetters[ContinentProperty] = PropertyGetterFunc(getMyContinent)
 	myPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	myPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	myPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
@@ -142,6 +146,7 @@ var (
 	validPower        = regexp.MustCompile(`[A-Z0-9]+`)
 	// according to https://contests.arrl.org/contestmultipliers.php
 	validStateProvince = regexp.MustCompile(`AB|BC|LB|MB|NB|NF|NS|NT|NU|ON|PE|QC|SK|YT|AL|AK|AZ|AR|CA|CO|CT|DC|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY`)
+	validContinent     = regexp.MustCompile(`AF|AN|AS|EU|OC|NA|SA`)
 	validGenericText   = regexp.MustCompile(`[A-Z][A-Z0-9]*`)
 	validGenericNumber = regexp.MustCompile(`[0-9]*`)
 
@@ -354,4 +359,20 @@ func WPXPrefix(call callsign.Callsign) string {
 		p += "0"
 	}
 	return p
+}
+
+func getMyContinent(_ QSO, setup Setup, prefixes PrefixDatabase) string {
+	return string(ContinentForCallsign(setup.MyCall, prefixes))
+}
+
+func getContinent(qso QSO, _ Setup, prefixes PrefixDatabase) string {
+	return string(ContinentForCallsign(qso.TheirCall, prefixes))
+}
+
+func ContinentForCallsign(call callsign.Callsign, prefixes PrefixDatabase) Continent {
+	result, _, _, _, found := prefixes.Find(call.String())
+	if !found {
+		return ""
+	}
+	return result
 }
