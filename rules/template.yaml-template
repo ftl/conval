@@ -30,6 +30,7 @@ bands:
 - 80m
 - 40m
 - 20m
+band_change_rules:
 properties:
 exchange:
 - fields:

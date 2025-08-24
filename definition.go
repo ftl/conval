@@ -136,6 +136,10 @@ type BandChangeRule struct {
 	Constraint          `yaml:",inline"`
 	GracePeriod         time.Duration `yaml:"grace_period"`
 	MultiplierException bool          `yaml:"multiplier_exception"`
+
+	// see https://euhf.s5cc.eu/rules/euhfc_rules_latest.pdf, chapter 9 for more details
+	ChangesPerHour     int  `yaml:"changes_per_hour"`
+	IncludeModeChanges bool `yaml:"include_mode_changes"`
 }
 
 type Category struct {
