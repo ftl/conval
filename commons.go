@@ -11,6 +11,7 @@ import (
 	"unicode"
 
 	"github.com/ftl/hamradio/callsign"
+	"github.com/ftl/hamradio/locator"
 )
 
 const (
@@ -33,6 +34,8 @@ const (
 	WAEEntityProperty        Property = "wae_entity"
 	WPXPrefixProperty        Property = "wpx_prefix"
 	ContinentProperty        Property = "continent" // can be used as exchange, e.g. in the LABRE-DX contest
+	LocatorProperty          Property = "locator"   // can be used as exchange
+	DistanceProperty         Property = "distance"  // derived, needs the locator property
 
 	GenericTextProperty   Property = "generic_text"
 	GenericNumberProperty Property = "generic_number"
@@ -54,6 +57,7 @@ func init() {
 	commonPropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
 	commonPropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
 	commonPropertyValidators[ContinentProperty] = RegexpValidator(validContinent, "continent")
+	commonPropertyValidators[LocatorProperty] = RegexpValidator(validContinent, "locator")
 	commonPropertyValidators[GenericTextProperty] = RegexpValidator(validGenericText, "generic text")
 	commonPropertyValidators[GenericNumberProperty] = RegexpValidator(validGenericNumber, "generic number")
 	commonPropertyValidators[EmptyProperty] = EmptyValidator
@@ -76,6 +80,8 @@ func init() {
 	commonPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getWAEEntity)
 	commonPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getWPXPrefix)
 	commonPropertyGetters[ContinentProperty] = PropertyGetterFunc(getContinent)
+	commonPropertyGetters[LocatorProperty] = getTheirExchangeProperty(LocatorProperty)
+	commonPropertyGetters[DistanceProperty] = PropertyGetterFunc(getDistance)
 	commonPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	commonPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	commonPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
@@ -97,6 +103,7 @@ func init() {
 	myPropertyGetters[WAEEntityProperty] = PropertyGetterFunc(getMyWAEEntity)
 	myPropertyGetters[WPXPrefixProperty] = PropertyGetterFunc(getMyWPXPrefix)
 	myPropertyGetters[ContinentProperty] = PropertyGetterFunc(getMyContinent)
+	myPropertyGetters[LocatorProperty] = PropertyGetterFunc(getMyLocator)
 	myPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	myPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	myPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
@@ -164,6 +171,13 @@ var (
 		}
 		if exchange != string(entity) {
 			return fmt.Errorf("%s is not a primary DXCC prefix", exchange)
+		}
+		return nil
+	})
+	LocatorValidator = PropertyValidatorFunc(func(exchange string, _ PrefixDatabase) error {
+		_, err := locator.Parse(exchange)
+		if err != nil {
+			return err
 		}
 		return nil
 	})
@@ -375,4 +389,24 @@ func ContinentForCallsign(call callsign.Callsign, prefixes PrefixDatabase) Conti
 		return ""
 	}
 	return result
+}
+
+func getMyLocator(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return setup.GridLocator.String()
+}
+
+func getDistance(qso QSO, setup Setup, _ PrefixDatabase) string {
+	distance := Distance(setup.GridLocator, qso.TheirExchange[LocatorProperty])
+	return strconv.Itoa(distance)
+}
+
+func Distance(myLocator locator.Locator, theirLocatorExchange string) int {
+	if myLocator.IsZero() {
+		return 0
+	}
+	theirLocator, err := locator.Parse(theirLocatorExchange)
+	if err != nil {
+		return 0
+	}
+	return int(locator.Distance(myLocator, theirLocator))
 }

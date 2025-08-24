@@ -2,6 +2,7 @@ package conval
 
 import (
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/ftl/hamradio/callsign"
@@ -249,12 +250,12 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
 	tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
 	if len(qsoRules) == 1 {
-		result.Points = qsoRules[0].Value
+		result.Points = valueOfRule(qsoRules[0], getTheirProperty)
 	} else if len(qsoRules) > 1 {
-		value := qsoRules[0].Value
+		value := valueOfRule(qsoRules[0], getTheirProperty)
 		allEqual := true
 		for _, rule := range qsoRules {
-			if value != rule.Value {
+			if value != valueOfRule(rule, getTheirProperty) {
 				allEqual = false
 				break
 			}
@@ -283,7 +284,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	tracef("found %d relevant multi rules", len(multiRules))
 	for i, rule := range multiRules {
 		if rule.Property == "" {
-			result.Multis += rule.Value
+			result.Multis += valueOfRule(rule, getTheirProperty)
 			continue
 		}
 
@@ -314,13 +315,27 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 		// count the multi if it is new
 		if !duplicateValue {
-			result.Multis += rule.Value
+			result.Multis += valueOfRule(rule, getTheirProperty)
 			result.MultiValues[rule.Property] = value
 			result.MultiBandAndMode[rule.Property] = bandAndMode
 		}
 	}
 
 	return result
+}
+
+func valueOfRule(rule ScoringRule, getProperty propertyProvider) int {
+	if rule.ValueOfProperty == "" {
+		return rule.Value
+	}
+
+	tracef("parsing int value of property %s", rule.ValueOfProperty)
+	value, err := strconv.Atoi(getProperty(rule.ValueOfProperty))
+	if err != nil {
+		tracef("cannot parse property %s as int value: %v", rule.ValueOfProperty, err)
+		return 0
+	}
+	return value
 }
 
 func effectiveBandAndMode(band ContestBand, mode Mode, rule BandRule) BandAndMode {

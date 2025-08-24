@@ -352,6 +352,7 @@ type ScoringRule struct {
 	BandRule              BandRule             `yaml:"band_rule,omitempty"`
 	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`
 	Value                 int                  `yaml:"value,omitempty"`
+	ValueOfProperty       Property             `yaml:"value_of_property,omitempty"`
 }
 
 type MultiOperation string
