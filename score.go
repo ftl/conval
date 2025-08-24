@@ -153,6 +153,9 @@ func (c Counter) Total(score BandScore) int {
 	case AddMultis:
 		return score.Points + score.Multis
 	default:
+		if score.Multis == 0 {
+			return score.Points
+		}
 		return score.Points * score.Multis
 	}
 }

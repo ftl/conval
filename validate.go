@@ -47,7 +47,7 @@ func validateExample(definition *Definition, example Example, prefixes PrefixDat
 		log.Printf("%+v = %d", totalScore, counter.Total(totalScore))
 	}
 	if !equalScore(counter, example.Score, totalScore) {
-		return fmt.Errorf("the total score is wrong, expected %d qsos with %d points * %d multis, but got %d qsos with %d points * %d multis", example.Score.QSOs, example.Score.Points, example.Score.Multis, totalScore.QSOs, totalScore.Points, totalScore.Multis)
+		return fmt.Errorf("the total score is wrong, expected %d qsos with %d points, %d multis, and total %d, but got %d qsos with %d points, %d multis, and total %d", example.Score.QSOs, example.Score.Points, example.Score.Multis, example.Score.Total, totalScore.QSOs, totalScore.Points, totalScore.Multis, counter.Total(totalScore))
 	}
 
 	return nil
