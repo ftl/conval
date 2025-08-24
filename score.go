@@ -1,7 +1,6 @@
 package conval
 
 import (
-	"log"
 	"sort"
 	"strings"
 
@@ -17,7 +16,6 @@ type Counter struct {
 	definition Definition
 	setup      Setup
 	prefixes   PrefixDatabase
-	trace      bool
 
 	qsos                    []ScoredQSO
 	callsignsPerBandAndMode map[BandAndMode]map[callsign.Callsign]bool
@@ -62,14 +60,7 @@ func NewCounter(definition Definition, setup Setup, prefixes PrefixDatabase) *Co
 }
 
 func (c *Counter) SetTrace(trace bool) {
-	c.trace = trace
-}
-
-func (c *Counter) tracef(format string, args ...any) {
-	if !c.trace {
-		return
-	}
-	log.Printf(format, args...)
+	traceActive = trace
 }
 
 func (c Counter) UsedBands() []ContestBand {
@@ -167,7 +158,7 @@ func (c Counter) Total(score BandScore) int {
 
 func (c *Counter) EffectiveExchangeFields(theirCall callsign.Callsign) []ExchangeField {
 	theirContinent, theirCountry, _, _, ok := c.prefixes.Find(theirCall.String())
-	c.tracef("filtering exchange fields for %s on continent %s in country %s (found: %t)", theirCall, theirContinent, theirCountry, ok)
+	tracef("filtering exchange fields for %s on continent %s in country %s (found: %t)", theirCall, theirContinent, theirCountry, ok)
 	if !ok {
 		theirContinent = ""
 		theirCountry = ""
@@ -229,7 +220,7 @@ func (c *Counter) Add(qso QSO) QSOScore {
 }
 
 func (c Counter) Probe(qso QSO) QSOScore {
-	c.tracef("probing %+v", qso)
+	tracef("probing %+v", qso)
 
 	result := QSOScore{
 		MultiValues:      make(map[Property]string),
@@ -247,16 +238,16 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	getTheirProperty := func(property Property) string {
 		getter, getterOK := c.definition.PropertyGetter(property)
 		if !getterOK {
-			c.tracef("no property getter for %s", property)
+			tracef("no property getter for %s", property)
 			return ""
 		}
 		return getter.GetProperty(qso, c.setup, c.prefixes)
 	}
 
 	// find the relevant QSO rules
-	c.tracef("filtering %d scoring rules", len(c.definition.Scoring.QSORules))
+	tracef("filtering %d scoring rules", len(c.definition.Scoring.QSORules))
 	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
-	c.tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
+	tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
 	if len(qsoRules) == 1 {
 		result.Points = qsoRules[0].Value
 	} else if len(qsoRules) > 1 {
@@ -271,7 +262,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		if allEqual {
 			result.Points = value
 		} else {
-			c.tracef("inconsistent QSO rules for QSO with %s (%s, %s) at %v: %+v", qso.TheirCall, qso.TheirContinent, qso.TheirCountry, qso.Timestamp, qsoRules)
+			tracef("inconsistent QSO rules for QSO with %s (%s, %s) at %v: %+v", qso.TheirCall, qso.TheirContinent, qso.TheirCountry, qso.Timestamp, qsoRules)
 		}
 	}
 
@@ -287,9 +278,9 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant multi rules
-	c.tracef("filtering %d multi rules", len(c.definition.Scoring.MultiRules))
+	tracef("filtering %d multi rules", len(c.definition.Scoring.MultiRules))
 	multiRules := c.filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
-	c.tracef("found %d relevant multi rules", len(multiRules))
+	tracef("found %d relevant multi rules", len(multiRules))
 	for i, rule := range multiRules {
 		if rule.Property == "" {
 			result.Multis += rule.Value
@@ -299,11 +290,11 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		// get the property value
 		value := getTheirProperty(rule.Property)
 		if value == "" {
-			c.tracef("rule #%d: value is empty", i+1)
+			tracef("rule #%d: value is empty", i+1)
 			continue
 		}
 		if contains(rule.Except, value) {
-			c.tracef("rule #%d: value %s is excluded", i+1, value)
+			tracef("rule #%d: value %s is excluded", i+1, value)
 			continue
 		}
 
@@ -314,7 +305,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		var duplicateValue bool
 		properties, propertiesOK := c.multisPerBandAndMode[bandAndMode]
 		if propertiesOK {
-			c.tracef("rule #%d: multis for band and mode %v already exist: %v", i+1, bandAndMode, properties)
+			tracef("rule #%d: multis for band and mode %v already exist: %v", i+1, bandAndMode, properties)
 			values, propertyOK := properties[rule.Property]
 			if propertyOK {
 				_, duplicateValue = values[value]
@@ -353,7 +344,7 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 	maxRuleScores := make(map[Property]int)
 	maxRuleScore := 0
 	for i, rule := range rules {
-		c.tracef("evaluating rule #%d:", i+1)
+		tracef("evaluating rule #%d:", i+1)
 		ruleScore := 0
 
 		if myContinent != "" && len(rule.MyContinent) > 0 {
@@ -362,7 +353,7 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 					continue
 				}
 			} else if !contains(rule.MyContinent, myContinent) {
-				c.tracef("not my continent %s %v", myContinent, rule.MyContinent)
+				tracef("not my continent %s %v", myContinent, rule.MyContinent)
 				continue
 			}
 			ruleScore++
@@ -373,7 +364,7 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 					continue
 				}
 			} else if !contains(rule.MyCountry, myCountry) {
-				c.tracef("not my prefix %s %v", myPrefix, rule.MyPrefix)
+				tracef("not my prefix %s %v", myPrefix, rule.MyPrefix)
 				continue
 			}
 			ruleScore++
@@ -384,7 +375,7 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 					continue
 				}
 			} else if !contains(rule.MyPrefix, myPrefix) {
-				c.tracef("not my country %s %v", myCountry, rule.MyCountry)
+				tracef("not my country %s %v", myCountry, rule.MyCountry)
 				continue
 			}
 			ruleScore++
@@ -403,7 +394,7 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 			} else if contains(rule.TheirContinent, theirContinent) {
 				ruleScore++
 			} else {
-				c.tracef("not their continent %s %v", theirContinent, rule.TheirContinent)
+				tracef("not their continent %s %v", theirContinent, rule.TheirContinent)
 				continue
 			}
 		}
@@ -445,78 +436,78 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 			if contains(rule.Bands, band) {
 				ruleScore++
 			} else {
-				c.tracef("not a valid band %s %v", band, rule.Bands)
+				tracef("not a valid band %s %v", band, rule.Bands)
 				continue
 			}
 		}
 		if len(rule.MyWorkingCondition) > 0 {
 			value := strings.ToLower(strings.TrimSpace(getMyProperty(WorkingConditionProperty)))
-			c.tracef("evaluating my working condition %s %v", value, rule.MyWorkingCondition)
+			tracef("evaluating my working condition %s %v", value, rule.MyWorkingCondition)
 			if len(rule.MyWorkingCondition) == 1 && value == rule.MyWorkingCondition[0] {
-				c.tracef("my working condition exact match")
+				tracef("my working condition exact match")
 				ruleScore++
 			} else if len(rule.MyWorkingCondition) > 1 && rule.MyWorkingCondition[0] == NotPrefix {
 				if !contains(rule.MyWorkingCondition, value) {
-					c.tracef("my working condition match with not")
+					tracef("my working condition match with not")
 					ruleScore++
 				} else {
-					c.tracef("my working condition NO match with not")
+					tracef("my working condition NO match with not")
 					continue
 				}
 			} else if contains(rule.MyWorkingCondition, value) {
-				c.tracef("my working condition match")
+				tracef("my working condition match")
 				ruleScore++
 			} else {
-				c.tracef("my working condition NO match")
+				tracef("my working condition NO match")
 				continue
 			}
 		}
 		if len(rule.TheirWorkingCondition) > 0 {
 			value := strings.ToLower(strings.TrimSpace(getTheirProperty(WorkingConditionProperty)))
-			c.tracef("evaluating their working condition %s %v", value, rule.TheirWorkingCondition)
+			tracef("evaluating their working condition %s %v", value, rule.TheirWorkingCondition)
 			if len(rule.TheirWorkingCondition) == 1 && value == rule.TheirWorkingCondition[0] {
-				c.tracef("their working condition exact match")
+				tracef("their working condition exact match")
 				ruleScore++
 			} else if len(rule.TheirWorkingCondition) > 1 && rule.TheirWorkingCondition[0] == NotPrefix {
 				if !contains(rule.TheirWorkingCondition, value) {
-					c.tracef("their working condition match with not")
+					tracef("their working condition match with not")
 					ruleScore++
 				} else {
-					c.tracef("their working condition NO match with not")
+					tracef("their working condition NO match with not")
 					continue
 				}
 			} else if contains(rule.TheirWorkingCondition, value) {
-				c.tracef("their working condition match")
+				tracef("their working condition match")
 				ruleScore++
 			} else {
-				c.tracef("their working condition NO match")
+				tracef("their working condition NO match")
 				continue
 			}
 		}
 		if rule.Property != "" {
 			value := getTheirProperty(rule.Property)
 			if value == "" {
-				c.tracef("empty property %s", rule.Property)
+				tracef("empty property %s", rule.Property)
 				continue
 			}
 			ruleScore++
 		}
 		if len(rule.PropertyConstraints) > 0 {
-			c.tracef("rule #%d has %d property constraints", i, len(rule.PropertyConstraints))
+			tracef("rule #%d has %d property constraints", i, len(rule.PropertyConstraints))
 			propertyConstraintsMatched := 0
 
 			for _, constraint := range rule.PropertyConstraints {
 				myValue := getMyProperty(constraint.Name)
 				theirValue := getTheirProperty(constraint.Name)
 				if constraint.Matches(myValue, theirValue) {
-					c.tracef("property constraint on %s matched: my %q their %q", constraint.Name, myValue, theirValue)
+					tracef("property constraint on %s matched: my %q their %q", constraint.Name, myValue, theirValue)
 					propertyConstraintsMatched++
 				} else {
-					c.tracef("property constraint on %s NO match: my %q their %q", constraint.Name, myValue, theirValue)
+					tracef("property constraint on %s NO match: my %q their %q", constraint.Name, myValue, theirValue)
 				}
 			}
 			if propertyConstraintsMatched != len(rule.PropertyConstraints) {
-				c.tracef("only %d of %d property constraints matched", propertyConstraintsMatched, len(rule.PropertyConstraints))
+				tracef("only %d of %d property constraints matched", propertyConstraintsMatched, len(rule.PropertyConstraints))
 				continue
 			}
 
@@ -535,7 +526,7 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 		}
 	}
 
-	c.tracef("%d matching rules with a max score of %d", len(matchingRules), maxRuleScore)
+	tracef("%d matching rules with a max score of %d", len(matchingRules), maxRuleScore)
 
 	if maxRuleScore == 0 && len(matchingRules) > 1 {
 		return []ScoringRule{}
@@ -572,7 +563,7 @@ func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myConti
 					continue
 				}
 			} else if !contains(definition.MyContinent, myContinent) {
-				c.tracef("not my continent %s %v", myContinent, definition.MyContinent)
+				tracef("not my continent %s %v", myContinent, definition.MyContinent)
 				continue
 			}
 			definitionScore++
@@ -583,7 +574,7 @@ func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myConti
 					continue
 				}
 			} else if !contains(definition.MyCountry, myCountry) {
-				c.tracef("not my country %s %v", myCountry, definition.MyCountry)
+				tracef("not my country %s %v", myCountry, definition.MyCountry)
 				continue
 			}
 			definitionScore++
@@ -602,7 +593,7 @@ func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myConti
 			} else if contains(definition.TheirContinent, theirContinent) {
 				definitionScore++
 			} else {
-				c.tracef("not their continent %s %v", theirContinent, definition.TheirContinent)
+				tracef("not their continent %s %v", theirContinent, definition.TheirContinent)
 				continue
 			}
 		}
@@ -620,28 +611,28 @@ func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myConti
 			} else if contains(definition.TheirCountry, theirCountry) {
 				definitionScore++
 			} else {
-				c.tracef("not their country %s %v", theirCountry, definition.TheirCountry)
+				tracef("not their country %s %v", theirCountry, definition.TheirCountry)
 				continue
 			}
 		}
 		if len(definition.TheirWorkingCondition) > 0 {
-			c.tracef("evaluating working condition %s %v", theirWorkingCondition, definition.TheirWorkingCondition)
+			tracef("evaluating working condition %s %v", theirWorkingCondition, definition.TheirWorkingCondition)
 			if len(definition.TheirWorkingCondition) == 1 && theirWorkingCondition == definition.TheirWorkingCondition[0] {
-				c.tracef("working condition exact match")
+				tracef("working condition exact match")
 				definitionScore++
 			} else if len(definition.TheirWorkingCondition) > 1 && definition.TheirWorkingCondition[0] == NotPrefix {
 				if !contains(definition.TheirWorkingCondition, theirWorkingCondition) {
-					c.tracef("working condition match with not")
+					tracef("working condition match with not")
 					definitionScore++
 				} else {
-					c.tracef("working condition NO match with not")
+					tracef("working condition NO match with not")
 					continue
 				}
 			} else if contains(definition.TheirWorkingCondition, theirWorkingCondition) {
-				c.tracef("working condition match")
+				tracef("working condition match")
 				definitionScore++
 			} else {
-				c.tracef("working condition NO match")
+				tracef("working condition NO match")
 				continue
 			}
 		}
