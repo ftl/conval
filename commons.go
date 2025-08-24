@@ -57,7 +57,7 @@ func init() {
 	commonPropertyValidators[StateProvinceProperty] = RegexpValidator(validStateProvince, "state or province")
 	commonPropertyValidators[DXCCPrefixProperty] = DXCCPrefixValidator
 	commonPropertyValidators[ContinentProperty] = RegexpValidator(validContinent, "continent")
-	commonPropertyValidators[LocatorProperty] = RegexpValidator(validContinent, "locator")
+	commonPropertyValidators[LocatorProperty] = LocatorValidator
 	commonPropertyValidators[GenericTextProperty] = RegexpValidator(validGenericText, "generic text")
 	commonPropertyValidators[GenericNumberProperty] = RegexpValidator(validGenericNumber, "generic number")
 	commonPropertyValidators[EmptyProperty] = EmptyValidator
@@ -397,6 +397,7 @@ func getMyLocator(_ QSO, setup Setup, _ PrefixDatabase) string {
 
 func getDistance(qso QSO, setup Setup, _ PrefixDatabase) string {
 	distance := Distance(setup.GridLocator, qso.TheirExchange[LocatorProperty])
+	tracef("distance between %s and %s: %d", setup.GridLocator, qso.TheirExchange[LocatorProperty], distance)
 	return strconv.Itoa(distance)
 }
 
