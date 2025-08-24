@@ -30,6 +30,7 @@ bands:
 - 80m
 - 40m
 - 20m
+properties:
 exchange:
 - fields:
   - [rst]
@@ -38,7 +39,7 @@ scoring:
   qsos:
   - value: 1
   qso_band_rule: once_per_band
-  multis: 
+  multis:
   - property: dxcc_entity
     band_rule: once_per_band
     value: 1
