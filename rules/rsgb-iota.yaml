@@ -1,0 +1,158 @@
+identifier: RSGB-IOTA
+name: RSGB IOTA Contest
+official_rules: https://www.rsgbcc.org/hf/rules/2025/riota.shtml
+upload_url: https://www.rsgbcc.org/hf/robot.shtml
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+  - overlay: 12-hour
+    duration: 12h
+    constraint_mode: operation_time
+breaks:
+  - overlay: 12-hour
+    duration: 60m
+categories:
+  - name: High Power
+    power: high
+    bands: [all]
+  - name: Low Power
+    power: low
+    bands: [all]
+  - name: QRP
+    power: qrp
+    bands: [all]
+overlays:
+  - dxpedition
+  - newcomer
+  - 12-hour
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+properties:
+  - name: iota_reference
+    expression: "((AF)|(AS)|(EU)|(NA)|(OC)|(SA))[0123456789]+"
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+      - [iota_reference, empty]
+scoring:
+  qsos:
+    - property_constraints:
+        - name: iota_reference
+          my_value_not_empty: true
+          their_value_empty: true
+      value: 5
+    - property_constraints:
+        - name: iota_reference
+          my_value_not_empty: true
+          their_value_not_empty: true
+          other: true
+      value: 15
+    - property_constraints:
+        - name: iota_reference
+          my_value_not_empty: true
+          same: true
+      value: 5
+    - property_constraints:
+        - name: iota_reference
+          my_value_empty: true
+          their_value_empty: true
+      value: 2
+    - property_constraints:
+        - name: iota_reference
+          my_value_empty: true
+          their_value_not_empty: true
+      value: 15
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: iota_reference
+      band_rule: once_per_band_and_mode
+      value: 1
+examples:
+  - setup:
+      my_exchange:
+        rst: 599
+        iota_reference: eu005
+    qsos:
+      - their_call: g1abc
+        their_exchange: [599, 001, eu005]
+        band: 80m
+        points: 5
+        multis: 1
+      - their_call: n1abc
+        their_exchange: [599, 001, na123]
+        band: 80m
+        points: 15
+        multis: 1
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        band: 80m
+        points: 5
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        band: 40m
+        points: 5
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        band: 40m
+        points: 5
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 5
+      points: 30
+      multis: 2
+      total: 60
+  - setup:
+      my_exchange:
+        rst: 599
+    qsos:
+      - their_call: g1abc
+        their_exchange: [599, 001, eu005]
+        band: 80m
+        points: 15
+        multis: 1
+      - their_call: n1abc
+        their_exchange: [599, 001, na123]
+        band: 80m
+        points: 15
+        multis: 1
+      - their_call: n2abc
+        their_exchange: [599, 002]
+        band: 80m
+        points: 2
+        multis: 0
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        band: 80m
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        band: 40m
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 124]
+        band: 40m
+        points: 2
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 6
+      points: 36
+      multis: 2
+      total: 72
