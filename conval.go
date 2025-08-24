@@ -277,6 +277,8 @@ func (e QSOExchange) Add(fields []ExchangeField, values []string, prefixes Prefi
 			if err == nil {
 				e[property] = value
 				break
+			} else {
+				tracef("property %s: %v", property, err)
 			}
 		}
 	}
