@@ -290,7 +290,7 @@ type QTCPropertyGetter interface {
 
 type QTCPropertyGetterFunc func(QTC, Setup, PrefixDatabase) string
 
-func (f QTCPropertyGetterFunc) GetProperty(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
+func (f QTCPropertyGetterFunc) GetQTCProperty(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
 	return f(qtc, setup, prefixes)
 }
 

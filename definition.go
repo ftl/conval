@@ -265,11 +265,6 @@ func (d *PropertyDefinition) GetProperty(qso QSO, setup Setup, prefixes PrefixDa
 	}
 }
 
-func (d *PropertyDefinition) GetQTCProperty(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
-	// TODO: implement
-	return ""
-}
-
 func (d *PropertyDefinition) getPropertyFromSource(qso QSO, setup Setup, prefixes PrefixDatabase) string {
 	getter, getterOK := d.definition.PropertyGetter(d.Source)
 	if !getterOK {
@@ -309,6 +304,75 @@ func (d *PropertyDefinition) getMemberOfProperty(qso QSO, _ Setup, _ PrefixDatab
 	}
 
 	theirCall := qso.TheirCall.String()
+	if fromCache, ok := d.membersCache[theirCall]; ok {
+		return fromCache
+	}
+
+	defer func() {
+		d.membersCache[theirCall] = result
+	}()
+
+	matches, err := d.membersDB.FindStrings(theirCall)
+	if err != nil {
+		return result
+	}
+
+	if slices.Contains(matches, theirCall) {
+		result = "true"
+	}
+	return result
+}
+
+func (d *PropertyDefinition) GetQTCProperty(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
+	switch {
+	case d.Source != "":
+		return d.getQTCPropertyFromSource(qtc, setup, prefixes)
+	case d.MemberOf != "":
+		return d.getQTCMemberOfProperty(qtc, setup, prefixes)
+	default:
+		return ""
+	}
+}
+
+func (d *PropertyDefinition) getQTCPropertyFromSource(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
+	getter, getterOK := d.definition.QTCPropertyGetter(d.Source)
+	if !getterOK {
+		return ""
+	}
+
+	sourceValue := getter.GetQTCProperty(qtc, setup, prefixes)
+
+	sanitize := func(s string) string {
+		return strings.ToUpper(strings.TrimSpace(s))
+	}
+	sourceValue = sanitize(sourceValue)
+	if len(sourceValue) == 0 {
+		return ""
+	}
+
+	if d.re == nil {
+		re, err := regexp.Compile(d.Expression)
+		if err != nil {
+			return ""
+		}
+		d.re = re
+	}
+
+	matches := d.re.FindStringSubmatch(sourceValue)
+	if len(matches) != 2 {
+		return ""
+	}
+
+	return sanitize(matches[1])
+}
+
+func (d *PropertyDefinition) getQTCMemberOfProperty(qtc QTC, _ Setup, _ PrefixDatabase) string {
+	result := "false"
+	if d.membersDB == nil {
+		return result
+	}
+
+	theirCall := qtc.TheirCall.String()
 	if fromCache, ok := d.membersCache[theirCall]; ok {
 		return fromCache
 	}

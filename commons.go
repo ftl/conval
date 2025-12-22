@@ -107,6 +107,26 @@ func init() {
 	myPropertyGetters[GenericTextProperty] = getTheirExchangeProperty(GenericTextProperty)
 	myPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	myPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
+
+	commonQTCPropertyGetters[TheirCallProperty] = QTCPropertyGetterFunc(getQTCTheirCall)
+	commonQTCPropertyGetters[CQZoneProperty] = QTCPropertyGetterFunc(getQTCCQZone)
+	commonQTCPropertyGetters[ITUZoneProperty] = QTCPropertyGetterFunc(getQTCITUZone)
+	commonQTCPropertyGetters[DXCCEntityProperty] = QTCPropertyGetterFunc(getQTCDXCCEntity)
+	commonQTCPropertyGetters[WorkingConditionProperty] = QTCPropertyGetterFunc(getQTCCallsignWorkingCondition)
+	commonQTCPropertyGetters[WAEEntityProperty] = QTCPropertyGetterFunc(getQTCWAEEntity)
+	commonQTCPropertyGetters[WPXPrefixProperty] = QTCPropertyGetterFunc(getQTCWPXPrefix)
+	commonQTCPropertyGetters[ContinentProperty] = QTCPropertyGetterFunc(getQTCContinent)
+	commonQTCPropertyGetters[EmptyProperty] = QTCPropertyGetterFunc(getQTCEmpty)
+
+	myQTCPropertyGetters[CQZoneProperty] = QTCPropertyGetterFunc(getMyQTCCQZone)
+	myQTCPropertyGetters[ITUZoneProperty] = QTCPropertyGetterFunc(getMyQTCITUZone)
+	myQTCPropertyGetters[DXCCEntityProperty] = QTCPropertyGetterFunc(getMyQTCDXCCEntity)
+	myQTCPropertyGetters[WorkingConditionProperty] = QTCPropertyGetterFunc(getMyQTCWorkingCondition)
+	myQTCPropertyGetters[WAEEntityProperty] = QTCPropertyGetterFunc(getMyQTCWAEEntity)
+	myQTCPropertyGetters[WPXPrefixProperty] = QTCPropertyGetterFunc(getMyQTCWPXPrefix)
+	myQTCPropertyGetters[ContinentProperty] = QTCPropertyGetterFunc(getMyQTCContinent)
+	myQTCPropertyGetters[LocatorProperty] = QTCPropertyGetterFunc(getMyQTCLocator)
+	myQTCPropertyGetters[EmptyProperty] = QTCPropertyGetterFunc(getQTCEmpty)
 }
 
 // Common Exchange Validators
@@ -189,11 +209,23 @@ func getTheirCall(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return qso.TheirCall.String()
 }
 
+func getQTCTheirCall(qtc QTC, _ Setup, _ PrefixDatabase) string {
+	return qtc.TheirCall.String()
+}
+
 func getMyCQZone(qso QSO, setup Setup, prefixes PrefixDatabase) string {
 	exchange, ok := qso.MyExchange[CQZoneProperty]
 	if ok {
 		return exchange
 	}
+	_, _, cqZone, _, ok := prefixes.Find(setup.MyCall.String())
+	if ok {
+		return cqZone.String()
+	}
+	return ""
+}
+
+func getMyQTCCQZone(_ QTC, setup Setup, prefixes PrefixDatabase) string {
 	_, _, cqZone, _, ok := prefixes.Find(setup.MyCall.String())
 	if ok {
 		return cqZone.String()
@@ -213,11 +245,27 @@ func getCQZone(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	return ""
 }
 
+func getQTCCQZone(qtc QTC, _ Setup, prefixes PrefixDatabase) string {
+	_, _, cqZone, _, ok := prefixes.Find(qtc.TheirCall.String())
+	if ok {
+		return cqZone.String()
+	}
+	return ""
+}
+
 func getMyITUZone(qso QSO, setup Setup, prefixes PrefixDatabase) string {
 	exchange, ok := qso.MyExchange[ITUZoneProperty]
 	if ok {
 		return exchange
 	}
+	_, _, _, ituZone, ok := prefixes.Find(setup.MyCall.String())
+	if ok {
+		return ituZone.String()
+	}
+	return ""
+}
+
+func getMyQTCITUZone(_ QTC, setup Setup, prefixes PrefixDatabase) string {
 	_, _, _, ituZone, ok := prefixes.Find(setup.MyCall.String())
 	if ok {
 		return ituZone.String()
@@ -237,7 +285,26 @@ func getITUZone(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	return ""
 }
 
-func getMyDXCCEntity(qso QSO, setup Setup, prefixes PrefixDatabase) string {
+func getQTCITUZone(qtc QTC, _ Setup, prefixes PrefixDatabase) string {
+	_, _, _, ituZone, ok := prefixes.Find(qtc.TheirCall.String())
+	if ok {
+		return ituZone.String()
+	}
+	return ""
+}
+
+func getMyDXCCEntity(_ QSO, setup Setup, prefixes PrefixDatabase) string {
+	if setup.MyCountry != "" {
+		return string(setup.MyCountry)
+	}
+	_, entity, _, _, ok := prefixes.Find(setup.MyCall.String())
+	if ok {
+		return entity.String()
+	}
+	return ""
+}
+
+func getMyQTCDXCCEntity(_ QTC, setup Setup, prefixes PrefixDatabase) string {
 	if setup.MyCountry != "" {
 		return string(setup.MyCountry)
 	}
@@ -259,12 +326,31 @@ func getDXCCEntity(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	return ""
 }
 
+func getQTCDXCCEntity(qtc QTC, _ Setup, prefixes PrefixDatabase) string {
+	if qtc.TheirCountry != "" {
+		return string(qtc.TheirCountry)
+	}
+	_, entity, _, _, ok := prefixes.Find(qtc.TheirCall.String())
+	if ok {
+		return entity.String()
+	}
+	return ""
+}
+
 func getMyWAEEntity(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return WAEEntity(setup.MyCall, setup.MyCountry)
+}
+
+func getMyQTCWAEEntity(_ QTC, setup Setup, _ PrefixDatabase) string {
 	return WAEEntity(setup.MyCall, setup.MyCountry)
 }
 
 func getWAEEntity(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return WAEEntity(qso.TheirCall, qso.TheirCountry)
+}
+
+func getQTCWAEEntity(qtc QTC, _ Setup, _ PrefixDatabase) string {
+	return WAEEntity(qtc.TheirCall, qtc.TheirCountry)
 }
 
 func WAEEntity(call callsign.Callsign, dxccEntity DXCCEntity) string {
@@ -324,8 +410,16 @@ func getMyWorkingCondition(_ QSO, setup Setup, _ PrefixDatabase) string {
 	return setup.MyCall.WorkingCondition
 }
 
+func getMyQTCWorkingCondition(_ QTC, setup Setup, _ PrefixDatabase) string {
+	return setup.MyCall.WorkingCondition
+}
+
 func getCallsignWorkingCondition(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return qso.TheirCall.WorkingCondition
+}
+
+func getQTCCallsignWorkingCondition(qtc QTC, _ Setup, _ PrefixDatabase) string {
+	return qtc.TheirCall.WorkingCondition
 }
 
 func getMyExchangeProperty(property Property) PropertyGetter {
@@ -344,12 +438,24 @@ func getEmpty(_ QSO, _ Setup, _ PrefixDatabase) string {
 	return ""
 }
 
+func getQTCEmpty(_ QTC, _ Setup, _ PrefixDatabase) string {
+	return ""
+}
+
 func getMyWPXPrefix(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return WPXPrefix(setup.MyCall)
+}
+
+func getMyQTCWPXPrefix(_ QTC, setup Setup, _ PrefixDatabase) string {
 	return WPXPrefix(setup.MyCall)
 }
 
 func getWPXPrefix(qso QSO, _ Setup, _ PrefixDatabase) string {
 	return WPXPrefix(qso.TheirCall)
+}
+
+func getQTCWPXPrefix(qtc QTC, _ Setup, _ PrefixDatabase) string {
+	return WPXPrefix(qtc.TheirCall)
 }
 
 var parseWPXPrefixExpression = regexp.MustCompile(`^[A-Z0-9]?[A-Z][0-9]*`)
@@ -379,8 +485,16 @@ func getMyContinent(_ QSO, setup Setup, prefixes PrefixDatabase) string {
 	return string(ContinentForCallsign(setup.MyCall, prefixes))
 }
 
+func getMyQTCContinent(_ QTC, setup Setup, prefixes PrefixDatabase) string {
+	return string(ContinentForCallsign(setup.MyCall, prefixes))
+}
+
 func getContinent(qso QSO, _ Setup, prefixes PrefixDatabase) string {
 	return string(ContinentForCallsign(qso.TheirCall, prefixes))
+}
+
+func getQTCContinent(qtc QTC, _ Setup, prefixes PrefixDatabase) string {
+	return string(ContinentForCallsign(qtc.TheirCall, prefixes))
 }
 
 func ContinentForCallsign(call callsign.Callsign, prefixes PrefixDatabase) Continent {
@@ -392,6 +506,10 @@ func ContinentForCallsign(call callsign.Callsign, prefixes PrefixDatabase) Conti
 }
 
 func getMyLocator(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return setup.GridLocator.String()
+}
+
+func getMyQTCLocator(_ QTC, setup Setup, _ PrefixDatabase) string {
 	return setup.GridLocator.String()
 }
 
