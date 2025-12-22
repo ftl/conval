@@ -45,6 +45,13 @@ scoring:
       their_continent: [eu]
       value: 1
   qso_band_rule: once_per_band
+  qtcs:
+    - my_continent: [eu]
+      their_continent: [other]
+      value: 1
+    - my_continent: [not, eu]
+      their_continent: [eu]
+      value: 1
   multis:
     - property: wae_entity
       my_continent: [eu]
@@ -141,11 +148,34 @@ examples:
         points: 1
         multis: 2
         duplicate: false
+    qtcs:
+      - kind: received
+        their_call: k1abc
+        their_continent: na
+        their_country: k
+        band: 40m
+        count: 3
+        value: 3
+      - kind: received
+        their_call: k2abc
+        their_continent: na
+        their_country: k
+        band: 80m
+        count: 2
+        value: 2
+      - kind: received
+        their_call: dk2abc
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        count: 2
+        value: 0
     score:
       qsos: 6
       points: 6
+      qtcs: 5
       multis: 18
-      total: 108
+      total: 198
   - setup:
       my_continent: na
       my_country: ve
@@ -194,8 +224,31 @@ examples:
         points: 1
         multis: 0
         duplicate: false
+    qtcs:
+      - kind: sent
+        their_call: dl1abc
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        count: 4
+        value: 4
+      - kind: sent
+        their_call: dl2abc
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        count: 2
+        value: 2
+      - kind: sent
+        their_call: n2abc
+        their_continent: na
+        their_country: k
+        band: 20m
+        count: 2
+        value: 0
     score:
       qsos: 6
       points: 6
+      qtcs: 6
       multis: 9
-      total: 54
+      total: 108

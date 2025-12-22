@@ -87,7 +87,7 @@ func TestPrefixDatabase_Find(t *testing.T) {
 		{
 			call:         "IP9P",
 			compliant:    "i",
-			notCompliant: "ig9",
+			notCompliant: "it9",
 		},
 		{
 			call:         "JW/LB2PG",

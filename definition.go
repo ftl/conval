@@ -89,12 +89,26 @@ func (d Definition) MyPropertyGetter(property Property) (PropertyGetter, bool) {
 	return getter, ok
 }
 
+func (d Definition) MyQTCPropertyGetter(property Property) (QTCPropertyGetter, bool) {
+	getter, ok := myQTCPropertyGetters[property]
+	return getter, ok
+}
+
 func (d Definition) PropertyGetter(property Property) (PropertyGetter, bool) {
 	definition, ok := d.propertyDefinition(property)
 	if ok {
 		return definition, true
 	}
 	getter, ok := commonPropertyGetters[property]
+	return getter, ok
+}
+
+func (d Definition) QTCPropertyGetter(property Property) (QTCPropertyGetter, bool) {
+	definition, ok := d.propertyDefinition(property)
+	if ok {
+		return definition, true
+	}
+	getter, ok := commonQTCPropertyGetters[property]
 	return getter, ok
 }
 
@@ -115,6 +129,10 @@ func (d Definition) propertyDefinition(property Property) (*PropertyDefinition, 
 		}
 	}
 	return nil, false
+}
+
+func (d Definition) HasQTCs() bool {
+	return d.Scoring.HasQTCs()
 }
 
 type ConstrainedDuration struct {
@@ -247,6 +265,11 @@ func (d *PropertyDefinition) GetProperty(qso QSO, setup Setup, prefixes PrefixDa
 	}
 }
 
+func (d *PropertyDefinition) GetQTCProperty(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
+	// TODO: implement
+	return ""
+}
+
 func (d *PropertyDefinition) getPropertyFromSource(qso QSO, setup Setup, prefixes PrefixDatabase) string {
 	getter, getterOK := d.definition.PropertyGetter(d.Source)
 	if !getterOK {
@@ -332,8 +355,13 @@ func (f ExchangeField) Contains(property Property) bool {
 type Scoring struct {
 	QSORules       []ScoringRule  `yaml:"qsos,omitempty"`
 	QSOBandRule    BandRule       `yaml:"qso_band_rule,omitempty"`
+	QTCRules       []ScoringRule  `yaml:"qtcs,omitempty"`
 	MultiRules     []ScoringRule  `yaml:"multis,omitempty"`
 	MultiOperation MultiOperation `yaml:"multi_operation,omitempty"`
+}
+
+func (s Scoring) HasQTCs() bool {
+	return len(s.QTCRules) > 0
 }
 
 type ScoringRule struct {
@@ -452,6 +480,7 @@ func sanitizePropertyValue(s string) string {
 type Example struct {
 	Setup SetupExample `yaml:"setup"`
 	QSOs  []QSOExample `yaml:"qsos"`
+	QTCs  []QTCExample `yaml:"qtcs,omitempty"`
 	Score ScoreExample `yaml:"score"`
 }
 
@@ -531,8 +560,36 @@ func (q QSOExample) ToQSO(fields []ExchangeField, myExchange QSOExchange, prefix
 	}
 }
 
+type QTCExample struct {
+	Kind           string     `yaml:"kind,omitempty"`
+	TheirCall      string     `yaml:"their_call,omitempty"`
+	TheirContinent Continent  `yaml:"their_continent,omitempty"`
+	TheirCountry   DXCCEntity `yaml:"their_country,omitempty"`
+
+	Header string      `yaml:"header,omitempty"`
+	Band   ContestBand `yaml:"band,omitempty"`
+	Mode   Mode        `yaml:"mode,omitempty"`
+	Count  int         `yaml:"count,omitempty"`
+
+	Score QTCScore `yaml:",inline"`
+}
+
+func (q QTCExample) ToQTC() QTC {
+	return QTC{
+		Kind:           QTCKind(q.Kind),
+		TheirCall:      callsign.MustParse(q.TheirCall),
+		TheirContinent: q.TheirContinent,
+		TheirCountry:   q.TheirCountry,
+		Header:         q.Header,
+		Band:           q.Band,
+		Mode:           q.Mode,
+		Count:          q.Count,
+	}
+}
+
 type ScoreExample struct {
 	QSOs   int `yaml:"qsos,omitempty"`
+	QTCs   int `yaml:"qtcs,omitempty"`
 	Points int `yaml:"points,omitempty"`
 	Multis int `yaml:"multis,omitempty"`
 	Total  int `yaml:"total,omitempty"`

@@ -1,6 +1,7 @@
 package conval
 
 import (
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -19,6 +20,7 @@ type Counter struct {
 	prefixes   PrefixDatabase
 
 	qsos                    []ScoredQSO
+	qtcs                    []ScoredQTC
 	callsignsPerBandAndMode map[BandAndMode]map[callsign.Callsign]bool
 	multisPerBandAndMode    map[BandAndMode]map[Property]map[string]bool
 	scorePerBand            map[ContestBand]BandScore
@@ -43,6 +45,7 @@ func (s QSOScore) Equal(other QSOScore) bool {
 
 type BandScore struct {
 	QSOs   int `yaml:"qsos" json:"qsos"`
+	QTCs   int `yaml:"qtcs" json:"qtcs"`
 	Points int `yaml:"points" json:"points"`
 	Multis int `yaml:"multis" json:"multis"`
 }
@@ -54,6 +57,7 @@ func NewCounter(definition Definition, setup Setup, prefixes PrefixDatabase) *Co
 		prefixes:   prefixes,
 
 		qsos:                    make([]ScoredQSO, 0, 10000),
+		qtcs:                    make([]ScoredQTC, 0, 10000),
 		callsignsPerBandAndMode: make(map[BandAndMode]map[callsign.Callsign]bool),
 		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]bool),
 		scorePerBand:            make(map[ContestBand]BandScore),
@@ -149,14 +153,19 @@ func (c Counter) TotalScore() BandScore {
 }
 
 func (c Counter) Total(score BandScore) int {
+	points := score.Points
+	if c.definition.HasQTCs() {
+		points += score.QTCs
+	}
+
 	switch c.definition.Scoring.MultiOperation {
 	case AddMultis:
-		return score.Points + score.Multis
+		return points + score.Multis
 	default:
 		if score.Multis == 0 {
-			return score.Points
+			return points
 		}
-		return score.Points * score.Multis
+		return points * score.Multis
 	}
 }
 
@@ -249,7 +258,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	}
 
 	// find the relevant QSO rules
-	tracef("filtering %d scoring rules", len(c.definition.Scoring.QSORules))
+	tracef("filtering %d QSO scoring rules", len(c.definition.Scoring.QSORules))
 	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
 	tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
 	if len(qsoRules) == 1 {
@@ -673,10 +682,5 @@ func (c *Counter) filterExchangeFields(definitions []ExchangeDefinition, myConti
 }
 
 func contains[T comparable](elems []T, v T) bool {
-	for _, s := range elems {
-		if v == s {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(elems, v)
 }

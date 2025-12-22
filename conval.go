@@ -284,6 +284,45 @@ func (e QSOExchange) Add(fields []ExchangeField, values []string, prefixes Prefi
 	}
 }
 
+type QTCPropertyGetter interface {
+	GetQTCProperty(QTC, Setup, PrefixDatabase) string
+}
+
+type QTCPropertyGetterFunc func(QTC, Setup, PrefixDatabase) string
+
+func (f QTCPropertyGetterFunc) GetProperty(qtc QTC, setup Setup, prefixes PrefixDatabase) string {
+	return f(qtc, setup, prefixes)
+}
+
+var myQTCPropertyGetters = map[Property]QTCPropertyGetter{}
+
+var commonQTCPropertyGetters = map[Property]QTCPropertyGetter{}
+
+type QTC struct {
+	Kind QTCKind
+
+	TheirCall      callsign.Callsign
+	TheirContinent Continent
+	TheirCountry   DXCCEntity
+
+	Header string
+	Band   ContestBand
+	Mode   Mode
+
+	Count int
+}
+
+func (q QTC) TheirPrefix() string {
+	return WPXPrefix(q.TheirCall)
+}
+
+type QTCKind string
+
+const (
+	ReceivedQTC QTCKind = "received"
+	SentQTC     QTCKind = "sent"
+)
+
 type Setup struct {
 	MyCall      callsign.Callsign
 	MyContinent Continent

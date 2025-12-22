@@ -41,13 +41,22 @@ func validateExample(definition *Definition, example Example, prefixes PrefixDat
 			return fmt.Errorf("the score of QSO #%d is wrong, expected %d points * %d multis, duplicate should be %t, but got %d points * %d multis, duplicate is %t", i+1, qso.Score.Points, qso.Score.Multis, qso.Score.Duplicate, qsoScore.Points, qsoScore.Multis, qsoScore.Duplicate)
 		}
 	}
+	for i, qtc := range example.QTCs {
+		qtcScore := counter.AddQTC(qtc.ToQTC())
+		if trace {
+			log.Printf("QTC #%d: %+v", i+1, qtcScore)
+		}
+		if qtc.Score.Value != qtcScore.Value {
+			return fmt.Errorf("the score of QTC #%d is wrong, expected %d, but got %d", i+1, qtc.Score.Value, qtcScore.Value)
+		}
+	}
 
 	totalScore := counter.TotalScore()
 	if trace {
 		log.Printf("%+v = %d", totalScore, counter.Total(totalScore))
 	}
 	if !equalScore(counter, example.Score, totalScore) {
-		return fmt.Errorf("the total score is wrong, expected %d qsos with %d points, %d multis, and total %d, but got %d qsos with %d points, %d multis, and total %d", example.Score.QSOs, example.Score.Points, example.Score.Multis, example.Score.Total, totalScore.QSOs, totalScore.Points, totalScore.Multis, counter.Total(totalScore))
+		return fmt.Errorf("the total score is wrong, expected %d qsos, %d qtcs with %d points, %d multis, and total %d, but got %d qsos, %d qtcs with %d points, %d multis, and total %d", example.Score.QSOs, example.Score.QTCs, example.Score.Points, example.Score.Multis, example.Score.Total, totalScore.QSOs, totalScore.QTCs, totalScore.Points, totalScore.Multis, counter.Total(totalScore))
 	}
 
 	return nil
