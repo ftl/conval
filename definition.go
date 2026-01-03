@@ -445,6 +445,7 @@ type ScoringRule struct {
 	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`
 	Value                 int                  `yaml:"value,omitempty"`
 	ValueOfProperty       Property             `yaml:"value_of_property,omitempty"`
+	QTCKind               QTCKind              `yaml:"kind,omitempty"` // only useful for QTCs
 }
 
 type MultiOperation string

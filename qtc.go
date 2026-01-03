@@ -50,7 +50,7 @@ func (c *Counter) ProbeQTC(qtc QTC) QTCScore {
 
 	// find the relevant QTC rules
 	tracef("filtering %d QTC scoring rules", len(c.definition.Scoring.QTCRules))
-	qtcRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qtc.TheirContinent, qtc.TheirCountry, qtc.TheirPrefix(), qtc.Band, getMyProperty, getTheirProperty)
+	qtcRules := c.filterScoringRules(c.definition.Scoring.QTCRules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qtc.TheirContinent, qtc.TheirCountry, qtc.TheirPrefix(), qtc.Band, qtc.Kind, getMyProperty, getTheirProperty)
 	tracef("found %d relevant QTC rules: %+v", len(qtcRules), qtcRules)
 	if len(qtcRules) == 1 {
 		result.Value = qtcRules[0].Value * qtc.Count

@@ -38,6 +38,7 @@ func TestFilterScoringRules(t *testing.T) {
 		theirCountry     DXCCEntity
 		theirPrefix      string
 		band             ContestBand
+		qtcKind          QTCKind
 		myExchange       QSOExchange
 		theirExchange    QSOExchange
 		onlyMostRelevant bool
@@ -816,7 +817,7 @@ func TestFilterScoringRules(t *testing.T) {
 			}
 			counter := Counter{}
 
-			actual := counter.filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, getMyProperty, getTheirProperty)
+			actual := counter.filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, tc.qtcKind, getMyProperty, getTheirProperty)
 
 			assert.Equal(t, tc.expected, actual)
 		})

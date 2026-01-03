@@ -46,10 +46,12 @@ scoring:
       value: 1
   qso_band_rule: once_per_band
   qtcs:
-    - my_continent: [eu]
+    - kind: received
+      my_continent: [eu]
       their_continent: [other]
       value: 1
-    - my_continent: [not, eu]
+    - kind: sent
+      my_continent: [not, eu]
       their_continent: [eu]
       value: 1
   multis:
@@ -170,6 +172,13 @@ examples:
         band: 80m
         count: 2
         value: 0
+      - kind: sent
+        their_call: k2abc
+        their_continent: na
+        their_country: k
+        band: 80m
+        count: 2
+        value: 0
     score:
       qsos: 6
       points: 6
@@ -243,6 +252,13 @@ examples:
         their_call: n2abc
         their_continent: na
         their_country: k
+        band: 20m
+        count: 2
+        value: 0
+      - kind: received
+        their_call: dl2abc
+        their_continent: eu
+        their_country: dl
         band: 20m
         count: 2
         value: 0

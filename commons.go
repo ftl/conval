@@ -36,6 +36,7 @@ const (
 	ContinentProperty        Property = "continent" // can be used as exchange, e.g. in the LABRE-DX contest
 	LocatorProperty          Property = "locator"   // can be used as exchange
 	DistanceProperty         Property = "distance"  // derived, needs the locator property
+	QTCKindProperty          Property = "kind"
 
 	GenericTextProperty   Property = "generic_text"
 	GenericNumberProperty Property = "generic_number"
@@ -108,6 +109,7 @@ func init() {
 	myPropertyGetters[GenericNumberProperty] = getTheirExchangeProperty(GenericNumberProperty)
 	myPropertyGetters[EmptyProperty] = PropertyGetterFunc(getEmpty)
 
+	commonQTCPropertyGetters[QTCKindProperty] = QTCPropertyGetterFunc(getQTCKind)
 	commonQTCPropertyGetters[TheirCallProperty] = QTCPropertyGetterFunc(getQTCTheirCall)
 	commonQTCPropertyGetters[CQZoneProperty] = QTCPropertyGetterFunc(getQTCCQZone)
 	commonQTCPropertyGetters[ITUZoneProperty] = QTCPropertyGetterFunc(getQTCITUZone)
@@ -528,4 +530,8 @@ func Distance(myLocator locator.Locator, theirLocatorExchange string) int {
 		return 0
 	}
 	return int(locator.Distance(myLocator, theirLocator))
+}
+
+func getQTCKind(qtc QTC, _ Setup, _ PrefixDatabase) string {
+	return string(qtc.Kind)
 }

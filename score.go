@@ -259,7 +259,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 	// find the relevant QSO rules
 	tracef("filtering %d QSO scoring rules", len(c.definition.Scoring.QSORules))
-	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
+	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, "" /* qtcKind */, getMyProperty, getTheirProperty)
 	tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
 	if len(qsoRules) == 1 {
 		result.Points = valueOfRule(qsoRules[0], getTheirProperty)
@@ -292,7 +292,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 	// find the relevant multi rules
 	tracef("filtering %d multi rules", len(c.definition.Scoring.MultiRules))
-	multiRules := c.filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, getMyProperty, getTheirProperty)
+	multiRules := c.filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, "" /* qtcKind */, getMyProperty, getTheirProperty)
 	tracef("found %d relevant multi rules", len(multiRules))
 	for i, rule := range multiRules {
 		if rule.Property == "" {
@@ -365,7 +365,7 @@ func effectiveBandAndMode(band ContestBand, mode Mode, rule BandRule) BandAndMod
 
 type propertyProvider func(property Property) string
 
-func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, myPrefix string, theirContinent Continent, theirCountry DXCCEntity, theirPrefix string, band ContestBand, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
+func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, myPrefix string, theirContinent Continent, theirCountry DXCCEntity, theirPrefix string, band ContestBand, qtcKind QTCKind, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
 	matchingRules := make([]ScoringRule, 0, len(rules))
 	ruleScores := make([]int, 0, len(matchingRules))
 	maxRuleScores := make(map[Property]int)
@@ -464,6 +464,14 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 				ruleScore++
 			} else {
 				tracef("not a valid band %s %v", band, rule.Bands)
+				continue
+			}
+		}
+		if qtcKind != "" && rule.QTCKind != "" {
+			if qtcKind == rule.QTCKind {
+				ruleScore++
+			} else {
+				tracef("expected QTC of kind %s but got %s", rule.QTCKind, qtcKind)
 				continue
 			}
 		}

@@ -237,6 +237,11 @@ scoring:
     - 160m
     value: 6
   - value: 1
+  qtcs:
+  - kind: received
+    value: 1
+  - kind: sent
+    value: 2
   qso_band_rule: once_per_band
   multis:
   - property: dxcc_entity
@@ -254,6 +259,10 @@ scoring:
 						{TheirContinent: []Continent{OtherContinent}, Bands: []ContestBand{Band10m, Band15m, Band20m}, Value: 3},
 						{TheirContinent: []Continent{OtherContinent}, Bands: []ContestBand{Band40m, Band80m, Band160m}, Value: 6},
 						{Value: 1},
+					},
+					QTCRules: []ScoringRule{
+						{QTCKind: ReceivedQTC, Value: 1},
+						{QTCKind: SentQTC, Value: 2},
 					},
 					QSOBandRule: OncePerBand,
 					MultiRules: []ScoringRule{
