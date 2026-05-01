@@ -24,8 +24,8 @@ func TestTimeSheet_TimeRecord(t *testing.T) {
 
 	assert.Equal(t, 6, timeRecord.ActiveMinutes)
 	assert.Equal(t, 6, timeRecord.IdleMinutes)
-	assert.Equal(t, 48, timeRecord.BreakMinutes)
-	assert.Equal(t, 3, timeRecord.Breaks)
+	assert.Equal(t, 12, timeRecord.BreakMinutes)
+	assert.Equal(t, 1, timeRecord.Breaks)
 	assert.Equal(t, 24, timeRecord.TotalMinutes)
 	assert.Equal(t, 12*time.Minute, timeRecord.OperationTime())
 }

@@ -80,7 +80,7 @@ func (s *TimeSheet) TimeReport(minBreakDuration time.Duration) TimeReport {
 		}
 
 		switch {
-		case !active && breakStart == -1:
+		case !active && breakStart == -1 && firstActive != -1:
 			breakStart = i
 		case active && breakStart != -1:
 			breakMinutes := i - breakStart
@@ -91,16 +91,6 @@ func (s *TimeSheet) TimeReport(minBreakDuration time.Duration) TimeReport {
 				result.IdleMinutes += breakMinutes
 			}
 			breakStart = -1
-		}
-	}
-
-	if breakStart != -1 {
-		breakMinutes := len(s.activeMinutes) - breakStart
-		if breakMinutes >= minBreakMinutes {
-			result.BreakMinutes += breakMinutes
-			result.Breaks++
-		} else {
-			result.IdleMinutes += breakMinutes
 		}
 	}
 
