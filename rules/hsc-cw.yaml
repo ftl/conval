@@ -44,13 +44,10 @@ scoring:
     - name: member_number
       their_value_not_empty: true
     value: 5
-  - value: 1
+  - value: 2
   qso_band_rule: once_per_band
-  multis: 
+  multis:
   - property: dxcc_entity
-    property_constraints:
-    - name: member_number
-      their_value_not_empty: true
     band_rule: once_per_band
     value: 1
 examples:
@@ -86,7 +83,7 @@ examples:
       their_continent: eu
       their_country: dl
       band: 40m
-      points: 1
+      points: 2
       multis: 0
     - their_call: dl3abc
       their_exchange: [599, 345]
@@ -104,6 +101,6 @@ examples:
       multis: 1
     score:
       qsos: 6
-      points: 21
+      points: 22
       multis: 3
-      total: 63
+      total: 66
