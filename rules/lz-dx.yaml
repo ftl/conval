@@ -1,0 +1,261 @@
+identifier: LZ-DX
+name: LZ DX Contest
+official_rules: https://bfra.bg/index.php/en/node/573
+upload_url: http://bfra.bg:8080/WebEditor/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB Mixed Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB CW High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB CW Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB SSB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [ssb]
+  - name: SOAB SSB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [ssb]
+  - name: SOAB Mixed QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOSB 10m Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [10m]
+    modes: [cw, ssb]
+  - name: SOSB 15m Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [15m]
+    modes: [cw, ssb]
+  - name: SOSB 20m Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [20m]
+    modes: [cw, ssb]
+  - name: SOSB 40m Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [40m]
+    modes: [cw, ssb]
+  - name: SOSB 80m Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [80m]
+    modes: [cw, ssb]
+  - name: MOAB Single TX Mixed High
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SWL
+    bands: [all]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    grace_period: 10m
+    multiplier_exception: true
+    include_mode_changes: true
+properties:
+  - name: lz_district
+    values: [BU, BL, VN, VT, VD, VR, GA, DO, KA, KD, LV, MN, PA, PK, PL, PD, RZ, RS, SS, SL, SM, SF, SO, SZ, TA, HA, SN, YA]
+exchange:
+  - their_country: [lz]
+    fields:
+      - [rst]
+      - [lz_district]
+  - fields:
+      - [rst]
+      - [itu_zone]
+scoring:
+  qsos:
+    - my_country: [not, lz]
+      their_country: [lz]
+      additional_weight: 10
+      value: 10
+    - my_country: [lz]
+      their_country: [lz]
+      additional_weight: 10
+      value: 1
+    - their_continent: [other]
+      value: 3
+    - their_continent: [same]
+      value: 1
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: itu_zone
+      band_rule: once_per_band
+      value: 1
+    - my_country: [not, lz]
+      property: lz_district
+      band_rule: once_per_band
+      value: 1
+    - my_country: [lz]
+      property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: lz1abc
+        their_exchange: [599, sf]
+        their_continent: eu
+        their_country: lz
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: lz2xyz
+        their_exchange: [599, vn]
+        their_continent: eu
+        their_country: lz
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: ua3abc
+        their_exchange: [599, 29]
+        their_continent: eu
+        their_country: ua
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 8]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: lz1abc
+        their_exchange: [59, sf]
+        their_continent: eu
+        their_country: lz
+        band: 20m
+        mode: ssb
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: lz1abc
+        their_exchange: [599, sf]
+        their_continent: eu
+        their_country: lz
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+      - their_call: lz1abc
+        their_exchange: [599, sf]
+        their_continent: eu
+        their_country: lz
+        band: 40m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+    score:
+      qsos: 7
+      points: 44
+      multis: 7
+      total: 308
+  - setup:
+      my_continent: eu
+      my_country: lz
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: lz2xyz
+        their_exchange: [599, vn]
+        their_continent: eu
+        their_country: lz
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 28]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 8]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 2
+        duplicate: false
+    score:
+      qsos: 3
+      points: 5
+      multis: 5
+      total: 25
