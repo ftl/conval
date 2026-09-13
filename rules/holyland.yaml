@@ -1,0 +1,251 @@
+identifier: HOLYLAND
+name: World Wide Holyland Contest
+official_rules: https://tools.iarc.org/wwhc/
+upload_url: https://tools.iarc.org/wwhc/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB-MIX-HP
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB-MIX-LP
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB-MIX-QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB-CW-HP
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB-CW-LP
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB-SSB-HP
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [ssb]
+  - name: SOAB-SSB-LP
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [ssb]
+  - name: SOSB
+    operator_mode: single
+    tx: one
+    band_count: single
+    modes: [cw, ssb]
+  - name: MOST
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: SWL
+    bands: [all]
+  - name: Checklog
+overlays:
+  - yn
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    grace_period: 10m
+    multiplier_exception: true
+properties:
+  - name: wwhc_area
+    expression: "[A-Z][0-9]{2}[A-Z]{2}"
+exchange:
+  - their_country: [4x]
+    fields:
+      - [rst]
+      - [wwhc_area]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - their_working_condition: [mm]
+      additional_weight: 100
+      value: 4
+    - my_country: [not, 4x]
+      their_country: [4x]
+      additional_weight: 10
+      value: 8
+    - my_country: [not, 4x]
+      their_continent: [other]
+      value: 4
+    - my_country: [not, 4x]
+      their_country: [other]
+      their_continent: [same]
+      value: 2
+    - my_country: [not, 4x]
+      their_country: [same]
+      value: 1
+    - my_country: [4x]
+      their_continent: [other]
+      value: 8
+    - my_country: [4x]
+      their_country: [not, 4x]
+      their_continent: [same]
+      value: 2
+    - my_country: [4x]
+      their_country: [4x]
+      value: 1
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: wwhc_area
+      their_working_condition: [not, mm]
+      band_rule: once_per_band
+      value: 1
+    - property: dxcc_entity
+      their_working_condition: [not, mm]
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: 4x1abc
+        their_exchange: [599, f15ta]
+        their_continent: as
+        their_country: 4x
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 2
+        duplicate: false
+      - their_call: 4z5xyz
+        their_exchange: [599, e14ta]
+        their_continent: as
+        their_country: 4x
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: 4x1abc
+        their_exchange: [59, f15ta]
+        their_continent: as
+        their_country: 4x
+        band: 20m
+        mode: ssb
+        points: 8
+        multis: 0
+        duplicate: false
+      - their_call: 4x1abc
+        their_exchange: [599, f15ta]
+        their_continent: as
+        their_country: 4x
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 0
+        duplicate: true
+      - their_call: f4abc/mm
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 8
+      points: 35
+      multis: 6
+      total: 210
+  - setup:
+      my_continent: as
+      my_country: 4x
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: 4z5xyz
+        their_exchange: [599, e14ta]
+        their_continent: as
+        their_country: 4x
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: ja1abc
+        their_exchange: [599, 1]
+        their_continent: as
+        their_country: ja
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 11
+      multis: 4
+      total: 44
