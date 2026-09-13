@@ -1,0 +1,149 @@
+identifier: EUCW-160M
+name: EUCW 160m Contest
+official_rules: https://www.uft.net/activites-et-concours/concours-eucw-uft-on5me/
+upload_url: mailto:commission-concours@uft.net
+upload_format: cabrillo
+duration: 3h
+duration-constraints:
+breaks:
+categories:
+  - name: Class A, EUCW Member High
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [all]
+    modes: [cw]
+  - name: Class B, EUCW Member Low
+    operator_mode: single
+    tx: one
+    power: low
+    bands: [all]
+    modes: [cw]
+  - name: Class C, EUCW Member QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    bands: [all]
+    modes: [cw]
+  - name: Class D, Non-Member
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw]
+  - name: Class E, SWL
+    bands: [all]
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+band_change_rules:
+properties:
+  - name: eucw_club
+    values: [3ACWG, 9ACWG, AGCWDL, BQC, BTC, CFT, CTC, CTCW, CWAS, EACW, EAQRPC, EHSC, ESSEX, FISTS, FOC, GACW, GQRP, GTC, HACWG, HCC, HSC, HTC, INORC, ISQRP, IQRP, ITC, LZCWC, MARCONI, MCWG, OECWG, OHTC, OKQRP, QRPARCI, RTC, SCAG, SHSC, SPCWC, RUQRP, UCWC, UFT, UQRQC, VHSC, YLCWG, ARCI, AGCW]
+  - name: eucw_club_multi
+    source: eucw_club
+    expression: "^(MARCONI|QRPARCI|EAQRPC|3ACWG|9ACWG|ESSEX|FISTS|HACWG|INORC|ISQRP|LZCWC|OECWG|OKQRP|RUQRP|SPCWC|UQRQC|YLCWG|AGCW|ARCI|CTCW|CWAS|EACW|EHSC|GACW|GQRP|IQRP|MCWG|OHTC|SCAG|SHSC|UCWC|VHSC|BQC|BTC|CFT|CTC|FOC|GTC|HCC|HSC|HTC|ITC|RTC|UFT)"
+  - name: eucw_official
+    source: their_call
+    expression: "^(DA0HSC|DF0ACW|DF0AGC|DK0AG|DK0HSC|DK0RTC|DL0CWG|DL0CWW|DL0DA|DL0HSC|DL0RTC|DL0XX|DL0YL|EA3HCC|F8UFT|EM0RSE|G4FOC|GX0IPX|HB9HC|MX5IPX|ON5CF)$"
+exchange:
+  - fields:
+      - [rst]
+      - [name]
+      - [nm, eucw_club]
+      - [member_number, empty]
+scoring:
+  qsos:
+    - their_country: [same]
+      value: 1
+    - their_country: [other]
+      their_continent: [same]
+      value: 2
+    - their_continent: [other]
+      value: 5
+    - property_constraints:
+        - name: eucw_official
+          their_value_not_empty: true
+      additional_weight: 100
+      value: 10
+  qso_band_rule: once_per_band
+  multis:
+    - property: eucw_club_multi
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: f
+      bands: [160m]
+      modes: [cw]
+    qsos:
+      - their_call: f6cel
+        their_exchange: [599, ghis, uft, 12]
+        their_continent: eu
+        their_country: f
+        band: 160m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl6mk
+        their_exchange: [599, ed, agcwdl, 1]
+        their_continent: eu
+        their_country: dl
+        band: 160m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1xyz
+        their_exchange: [599, otto, agcw, 2]
+        their_continent: eu
+        their_country: dl
+        band: 160m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: zl2cw
+        their_exchange: [599, ted, foc, 2]
+        their_continent: oc
+        their_country: zl
+        band: 160m
+        mode: cw
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: f8uft
+        their_exchange: [599, jean, uft, 1]
+        their_continent: eu
+        their_country: f
+        band: 160m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: dl6mk
+        their_exchange: [599, ed, agcwdl, 1]
+        their_continent: eu
+        their_country: dl
+        band: 160m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: true
+      - their_call: g4abc
+        their_exchange: [599, bob, nm]
+        their_continent: eu
+        their_country: g
+        band: 160m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 7
+      points: 22
+      multis: 3
+      total: 66
