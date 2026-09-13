@@ -1,0 +1,236 @@
+identifier: TESLA-HF
+name: TESLA Memorial HF CW Contest
+official_rules: https://www.radiosport.yu1srs.org.rs/HFTeslaMemorial/index.php/rules
+upload_url: https://www.radiosport.yu1srs.org.rs/HFTeslaMemorial/index.php/log-submitting-service
+upload_format: cabrillo
+duration: 12h
+duration-constraints:
+breaks:
+categories:
+  - name: MOAB Single TX
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: SOAB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SOSB 80m High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [80m]
+    modes: [cw]
+  - name: SOSB 80m Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: single
+    bands: [80m]
+    modes: [cw]
+  - name: SOSB 80m QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: single
+    bands: [80m]
+    modes: [cw]
+  - name: SOSB 40m High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    bands: [40m]
+    modes: [cw]
+  - name: SOSB 40m Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: single
+    bands: [40m]
+    modes: [cw]
+  - name: SOSB 40m QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: single
+    bands: [40m]
+    modes: [cw]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+      - [locator]
+scoring:
+  qsos:
+    - property_constraints:
+        - name: distance
+          max: "600"
+      value: 10
+    - property_constraints:
+        - name: distance
+          min: "601"
+          max: "1200"
+      value: 13
+    - property_constraints:
+        - name: distance
+          min: "1201"
+          max: "1800"
+      value: 16
+    - property_constraints:
+        - name: distance
+          min: "1801"
+          max: "2400"
+      value: 20
+    - property_constraints:
+        - name: distance
+          min: "2401"
+          max: "3600"
+      value: 24
+    - property_constraints:
+        - name: distance
+          min: "3601"
+          max: "4800"
+      value: 28
+    - property_constraints:
+        - name: distance
+          min: "4801"
+          max: "6000"
+      value: 32
+    - property_constraints:
+        - name: distance
+          min: "6001"
+          max: "7200"
+      value: 36
+    - property_constraints:
+        - name: distance
+          min: "7201"
+          max: "8400"
+      value: 40
+    - property_constraints:
+        - name: distance
+          min: "8401"
+      value: 45
+  qso_band_rule: once_per_band
+  multis:
+examples:
+  - setup:
+      my_continent: eu
+      grid_locator: kn04
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+      - their_call: yu1aa
+        their_exchange: [599, 1, jm99]
+        band: 80m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: s51aa
+        their_exchange: [599, 2, jm48]
+        band: 80m
+        mode: cw
+        points: 13
+        multis: 0
+        duplicate: false
+      - their_call: ok1aa
+        their_exchange: [599, 3, in92]
+        band: 80m
+        mode: cw
+        points: 16
+        multis: 0
+        duplicate: false
+      - their_call: dl1aa
+        their_exchange: [599, 4, im69]
+        band: 80m
+        mode: cw
+        points: 20
+        multis: 0
+        duplicate: false
+      - their_call: g3aa
+        their_exchange: [599, 5, hm97]
+        band: 80m
+        mode: cw
+        points: 24
+        multis: 0
+        duplicate: false
+      - their_call: ea1aa
+        their_exchange: [599, 6, gn88]
+        band: 80m
+        mode: cw
+        points: 28
+        multis: 0
+        duplicate: false
+      - their_call: w1aa
+        their_exchange: [599, 7, ar01]
+        band: 80m
+        mode: cw
+        points: 32
+        multis: 0
+        duplicate: false
+      - their_call: k7aa
+        their_exchange: [599, 8, aq00]
+        band: 80m
+        mode: cw
+        points: 36
+        multis: 0
+        duplicate: false
+      - their_call: ja1aa
+        their_exchange: [599, 9, ao09]
+        band: 80m
+        mode: cw
+        points: 40
+        multis: 0
+        duplicate: false
+      - their_call: vk3aa
+        their_exchange: [599, 10, aa00]
+        band: 80m
+        mode: cw
+        points: 45
+        multis: 0
+        duplicate: false
+      - their_call: yu1aa
+        their_exchange: [599, 11, jm99]
+        band: 40m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: yu1aa
+        their_exchange: [599, 12, jm99]
+        band: 80m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 12
+      points: 274
+      multis: 0
+      total: 274
