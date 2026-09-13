@@ -1,0 +1,247 @@
+identifier: RSGB-COMMONWEALTH
+name: Commonwealth (BERU) Contest
+official_rules: https://www.rsgbcc.org/hf/rules/2026/rcwc.shtml
+upload_url: https://www.rsgbcc.org/cgi-bin/hfenter.pl
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+  - operator_mode: single
+    duration: 1h
+categories:
+  - name: HP-SOU 12 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+    duration: 12h
+  - name: HP-SOU 24 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: HP-SOA 12 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+    assisted: true
+    duration: 12h
+  - name: HP-SOA 24 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+    assisted: true
+  - name: LP-SOU 12 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+    duration: 12h
+  - name: LP-SOU 24 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: LP-SOA 12 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+    assisted: true
+    duration: 12h
+  - name: LP-SOA 24 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+    assisted: true
+  - name: QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: MULTI-OP
+    operator_mode: multi
+    band_count: all
+    modes: [cw]
+    assisted: true
+  - name: HQ
+    operator_mode: multi
+    band_count: all
+    modes: [cw]
+    assisted: true
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+      - [commonwealth_hq, empty]
+scoring:
+  qsos:
+    - my_country: [g, gd, gi, gj, gm, gu, gw]
+      their_country: [g, gd, gi, gj, gm, gu, gw]
+      property_constraints:
+        - name: commonwealth_hq
+          their_value_empty: true
+      additional_weight: 50
+      value: 0
+    - property_constraints:
+        - name: commonwealth_area
+          same: true
+        - name: commonwealth_hq
+          their_value_empty: true
+      additional_weight: 50
+      value: 0
+    - property_constraints:
+        - name: commonwealth_area
+          their_value_empty: true
+      additional_weight: 50
+      value: 0
+    - their_continent: [same]
+      value: 5
+    - their_continent: [other]
+      value: 10
+  qso_band_rule: once_per_band
+  multis:
+    - property: commonwealth_area
+      property_constraints:
+        - name: commonwealth_area
+          other: true
+      band_rule: once_per_band
+      count: 3
+      value: 20
+    - my_country: [g, gd, gi, gj, gm, gu, gw]
+      their_country: [g, gd, gi, gj, gm, gu, gw]
+      property: commonwealth_area
+      property_constraints:
+        - name: commonwealth_hq
+          their_value_empty: true
+      additional_weight: 50
+      band_rule: once_per_band
+      value: 0
+  multi_operation: add
+examples:
+  - setup:
+      my_call: g3abc
+      my_continent: eu
+      my_country: g
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: vk3abc
+        their_exchange: [599, 1]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 20
+        duplicate: false
+      - their_call: vk5abc
+        their_exchange: [599, 2]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 20
+        duplicate: false
+      - their_call: vk3xyz
+        their_exchange: [599, 3]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 20
+        duplicate: false
+      - their_call: vk3def
+        their_exchange: [599, 4]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 20
+        duplicate: false
+      - their_call: vk3ghi
+        their_exchange: [599, 5]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: gm4abc
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: gm
+        band: 20m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: g4xyz
+        their_exchange: [599, 7]
+        their_continent: eu
+        their_country: g
+        band: 20m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 8]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: gb5hq
+        their_exchange: [599, 9, hq]
+        their_continent: eu
+        their_country: g
+        band: 20m
+        mode: cw
+        points: 5
+        multis: 20
+        duplicate: false
+      - their_call: vk3abc
+        their_exchange: [599, 10]
+        their_continent: oc
+        their_country: vk
+        band: 40m
+        mode: cw
+        points: 10
+        multis: 20
+        duplicate: false
+    score:
+      qsos: 10
+      points: 65
+      multis: 120
+      total: 185

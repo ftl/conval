@@ -442,10 +442,18 @@ type ScoringRule struct {
 	Except                []string             `yaml:"except,omitempty"`   // only useful for multis
 	PropertyConstraints   []PropertyConstraint `yaml:"property_constraints,omitempty"`
 	BandRule              BandRule             `yaml:"band_rule,omitempty"`
+	Count                 int                  `yaml:"count,omitempty"` // only useful for multis: how often the same value counts, defaults to 1
 	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`
 	Value                 int                  `yaml:"value,omitempty"`
 	ValueOfProperty       Property             `yaml:"value_of_property,omitempty"`
 	QTCKind               QTCKind              `yaml:"kind,omitempty"` // only useful for QTCs
+}
+
+func (r ScoringRule) countPerValue() int {
+	if r.Count < 1 {
+		return 1
+	}
+	return r.Count
 }
 
 type MultiOperation string

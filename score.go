@@ -22,7 +22,7 @@ type Counter struct {
 	qsos                    []ScoredQSO
 	qtcs                    []ScoredQTC
 	callsignsPerBandAndMode map[BandAndMode]map[callsign.Callsign]bool
-	multisPerBandAndMode    map[BandAndMode]map[Property]map[string]bool
+	multisPerBandAndMode    map[BandAndMode]map[Property]map[string]int
 	scorePerBand            map[ContestBand]BandScore
 }
 
@@ -59,7 +59,7 @@ func NewCounter(definition Definition, setup Setup, prefixes PrefixDatabase) *Co
 		qsos:                    make([]ScoredQSO, 0, 10000),
 		qtcs:                    make([]ScoredQTC, 0, 10000),
 		callsignsPerBandAndMode: make(map[BandAndMode]map[callsign.Callsign]bool),
-		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]bool),
+		multisPerBandAndMode:    make(map[BandAndMode]map[Property]map[string]int),
 		scorePerBand:            make(map[ContestBand]BandScore),
 	}
 }
@@ -132,7 +132,7 @@ func (c Counter) BandsPerMulti(property Property, multi string) []ContestBand {
 	bands := make(map[ContestBand]bool)
 	for bam, multisPerProperty := range c.multisPerBandAndMode {
 		multis := multisPerProperty[property]
-		if multis[multi] {
+		if multis[multi] > 0 {
 			bands[bam.Band] = true
 		}
 	}
@@ -219,13 +219,13 @@ func (c *Counter) Add(qso QSO) QSOScore {
 		bandAndMode := result.MultiBandAndMode[property]
 		properties, propertiesOK := c.multisPerBandAndMode[bandAndMode]
 		if !propertiesOK {
-			properties = make(map[Property]map[string]bool)
+			properties = make(map[Property]map[string]int)
 		}
 		values, valuesOK := properties[property]
 		if !valuesOK {
-			values = make(map[string]bool)
+			values = make(map[string]int)
 		}
-		values[value] = true
+		values[value] += 1
 		properties[property] = values
 		c.multisPerBandAndMode[bandAndMode] = properties
 	}
@@ -332,19 +332,19 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		// apply the band rule
 		bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, rule.BandRule)
 
-		// check for duplicate values
-		var duplicateValue bool
+		// check how often the value was already counted
+		valueCount := 0
 		properties, propertiesOK := c.multisPerBandAndMode[bandAndMode]
 		if propertiesOK {
 			tracef("rule #%d: multis for band and mode %v already exist: %v", i+1, bandAndMode, properties)
 			values, propertyOK := properties[rule.Property]
 			if propertyOK {
-				_, duplicateValue = values[value]
+				valueCount = values[value]
 			}
 		}
 
-		// count the multi if it is new
-		if !duplicateValue {
+		// count the multi if the value did not reach its count yet
+		if valueCount < rule.countPerValue() {
 			result.Multis += valueOfRule(rule, getTheirProperty)
 			result.MultiValues[rule.Property] = value
 			result.MultiBandAndMode[rule.Property] = bandAndMode

@@ -5,11 +5,13 @@ This file contains the implementation of the contest specific properties:
 - SAC, the Scandinavian Activity Contest (https://www.sactest.net)
 - SARL, the South African Radio League (https://mysarl.org.za)
 - BFRA, the Bulgarian Federation of Radio Amateurs (https://bfra.bg)
+- RSGB, the Radio Society of Great Britain (https://www.rsgbcc.org)
 */
 package conval
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/ftl/hamradio/callsign"
@@ -18,6 +20,7 @@ import (
 func init() {
 	commonPropertyValidators[EURegionProperty] = RegexpValidator(validEURegion, "EU region")
 	commonPropertyValidators[PAProvinceProperty] = RegexpValidator(validPAProvince, "PA province")
+	commonPropertyValidators[CommonwealthHQProperty] = RegexpValidator(validCommonwealthHQ, "Commonwealth HQ")
 
 	commonPropertyGetters[EURegionProperty] = getTheirExchangeProperty(EURegionProperty)
 	commonPropertyGetters[PAProvinceProperty] = getTheirExchangeProperty(PAProvinceProperty)
@@ -25,23 +28,29 @@ func init() {
 	commonPropertyGetters[SACAreaProperty] = PropertyGetterFunc(getSACArea)
 	commonPropertyGetters[SARLAreaProperty] = PropertyGetterFunc(getSARLArea)
 	commonPropertyGetters[BalkanPrefixProperty] = PropertyGetterFunc(getBalkanPrefix)
+	commonPropertyGetters[CommonwealthHQProperty] = getTheirExchangeProperty(CommonwealthHQProperty)
+	commonPropertyGetters[CommonwealthAreaProperty] = PropertyGetterFunc(getCommonwealthArea)
 
 	myPropertyGetters[PAProvinceProperty] = getMyExchangeProperty(PAProvinceProperty)
 	myPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getMyVeronEntity)
+	myPropertyGetters[CommonwealthAreaProperty] = PropertyGetterFunc(getMyCommonwealthArea)
 }
 
 const (
-	EURegionProperty     Property = "eu_region"
-	PAProvinceProperty   Property = "pa_province"
-	VeronEntityProperty  Property = "veron_entity"
-	SACAreaProperty      Property = "sac_area"
-	SARLAreaProperty     Property = "sarl_area"
-	BalkanPrefixProperty Property = "balkan_prefix"
+	EURegionProperty         Property = "eu_region"
+	PAProvinceProperty       Property = "pa_province"
+	VeronEntityProperty      Property = "veron_entity"
+	SACAreaProperty          Property = "sac_area"
+	SARLAreaProperty         Property = "sarl_area"
+	BalkanPrefixProperty     Property = "balkan_prefix"
+	CommonwealthHQProperty   Property = "commonwealth_hq"
+	CommonwealthAreaProperty Property = "commonwealth_area"
 )
 
 var (
-	validEURegion   = regexp.MustCompile(`AT0[1-9]|BE[01][0-9]|BG0[1-6]|CZ[01][0-9]|CY0[1-5]|DK0[1-6]|EE0[1-5]|FI[01][0-9]|FR[0-2][0-9]|DE[01][0-9]|GR[01][0-9]|HU0[1-7]|IE0[1-4]|IT[0-2][0-9]|LV0[1-6]|LT0[1-5]|LX01|MT0[1-5]|NL[01][0-9]|PL[01][0-9]|RO0[1-8]|SK0[1-8]|SI0[1-6]|ES[01][1-9]|SE[0-2][1-9]`)
-	validPAProvince = regexp.MustCompile(`DR|FL|FR|GD|GR|LB|NB|NH|OV|UT|ZH|ZL`)
+	validEURegion       = regexp.MustCompile(`AT0[1-9]|BE[01][0-9]|BG0[1-6]|CZ[01][0-9]|CY0[1-5]|DK0[1-6]|EE0[1-5]|FI[01][0-9]|FR[0-2][0-9]|DE[01][0-9]|GR[01][0-9]|HU0[1-7]|IE0[1-4]|IT[0-2][0-9]|LV0[1-6]|LT0[1-5]|LX01|MT0[1-5]|NL[01][0-9]|PL[01][0-9]|RO0[1-8]|SK0[1-8]|SI0[1-6]|ES[01][1-9]|SE[0-2][1-9]`)
+	validPAProvince     = regexp.MustCompile(`DR|FL|FR|GD|GR|LB|NB|NH|OV|UT|ZH|ZL`)
+	validCommonwealthHQ = regexp.MustCompile(`HQ`)
 )
 
 var callAreaDigitExpression = regexp.MustCompile("[0-9]")
@@ -202,4 +211,37 @@ func balkanPrefix(call callsign.Callsign) string {
 		return base[:2] + suffix
 	}
 	return base[:3]
+}
+
+func getMyCommonwealthArea(_ QSO, setup Setup, _ PrefixDatabase) string {
+	return commonwealthArea(setup.MyCall, setup.MyCountry)
+}
+
+func getCommonwealthArea(qso QSO, setup Setup, prefixes PrefixDatabase) string {
+	if qso.TheirExchange[CommonwealthHQProperty] != "" {
+		// each HQ station counts as an additional call area
+		return strings.ToUpper(qso.TheirCall.String())
+	}
+	return commonwealthArea(qso.TheirCall, DXCCEntity(getDXCCEntity(qso, setup, prefixes)))
+}
+
+// the entities of the Commonwealth call area list, see https://www.rsgbcc.org/hf/information/codes.shtml
+var commonwealthEntities = []string{
+	"1s", "3b6", "3b8", "3b9", "3d2", "3da", "4s", "5b", "5h", "5n", "5v", "5w", "5x", "5z", "6y", "7p", "7q",
+	"8p", "8q", "8r", "9g", "9h", "9j", "9l", "9m2", "9m6", "9v", "9x", "9y", "a2", "a3", "ap", "c2", "c5",
+	"c6", "c9", "cy0", "cy9", "e5/n", "e5/s", "e6", "g", "gd", "gi", "gj", "gm", "gu", "gw", "h4", "h40", "j3",
+	"j6", "j7", "j8", "p2", "s2", "s7", "t2", "t30", "t31", "t32", "t33", "tj", "tr", "v2", "v3", "v4", "v5",
+	"v8", "ve", "vk", "vk0h", "vk9c", "vk9m", "vk9n", "vk9w", "vk9x", "vp2e", "vp2m", "vp2v", "vp5", "vp6",
+	"vp6/d", "vp8", "vp9", "vq9", "vu", "vu4", "vu7", "yj", "zb", "zc4", "zd7", "zd8", "zd9", "zf", "zk3", "zl",
+	"zl7", "zl8", "zl9", "zs", "zs8",
+}
+
+func commonwealthArea(call callsign.Callsign, dxccEntity DXCCEntity) string {
+	entity := strings.ToLower(string(dxccEntity))
+	if !slices.Contains(commonwealthEntities, entity) {
+		return ""
+	}
+
+	// the call areas of VE, VK, ZL and ZS are split in the same way as for the VERON contests
+	return VeronEntity(call, dxccEntity)
 }

@@ -1114,3 +1114,31 @@ func TestCounter_Total_MultiplyPerBand(t *testing.T) {
 	assert.Equal(t, BandScore{QSOs: 4, Points: 4, Multis: 3}, counter.TotalScore(), "total score")
 	assert.Equal(t, 3*2+1*1, counter.Total(counter.TotalScore()), "total")
 }
+
+func TestCounter_Add_Multis_Count(t *testing.T) {
+	definition := Definition{
+		Exchange: []ExchangeDefinition{{Fields: []ExchangeField{}}},
+		Scoring: Scoring{
+			QSORules:       []ScoringRule{{Value: 1}},
+			QSOBandRule:    OncePerBand,
+			MultiRules:     []ScoringRule{{Property: GenericTextProperty, BandRule: OncePerBand, Count: 3, Value: 20}},
+			MultiOperation: AddMultis,
+		},
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, TheirExchange: QSOExchange{GenericTextProperty: "A"}},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m, TheirExchange: QSOExchange{GenericTextProperty: "A"}},
+		{TheirCall: callsign.MustParse("DL3ABC"), Band: Band80m, TheirExchange: QSOExchange{GenericTextProperty: "A"}},
+		{TheirCall: callsign.MustParse("DL4ABC"), Band: Band80m, TheirExchange: QSOExchange{GenericTextProperty: "A"}},
+		{TheirCall: callsign.MustParse("DL5ABC"), Band: Band40m, TheirExchange: QSOExchange{GenericTextProperty: "A"}},
+	}
+	expectedMultis := []int{20, 20, 20, 0, 20}
+
+	counter := NewCounter(definition, Setup{}, nil)
+	for i, qso := range qsos {
+		assert.Equal(t, expectedMultis[i], counter.Add(qso).Multis, "QSO %d", i+1)
+	}
+
+	assert.Equal(t, BandScore{QSOs: 5, Points: 5, Multis: 80}, counter.TotalScore(), "total score")
+	assert.Equal(t, 85, counter.Total(counter.TotalScore()), "total")
+}

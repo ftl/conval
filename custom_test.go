@@ -129,3 +129,31 @@ func TestBalkanPrefix(t *testing.T) {
 		})
 	}
 }
+
+func TestCommonwealthArea(t *testing.T) {
+	tt := []struct {
+		call     string
+		entity   DXCCEntity
+		expected string
+	}{
+		{"G3ABC", "g", "G"},
+		{"GM4ABC", "gm", "GM"},
+		{"VE3ABC", "ve", "VE3"},
+		{"VO1ABC", "ve", "VO1"},
+		{"VY1ABC", "ve", "VY1"},
+		{"VK3ABC", "vk", "VK3"},
+		{"VK5ABC", "vk", "VK5"},
+		{"ZL1ABC", "zl", "ZL1"},
+		{"ZS1ABC", "zs", "ZS1"},
+		{"ZS8XX", "zs8", "ZS8"},
+		{"9V1AA", "9v", "9V"},
+		{"DL1ABC", "dl", ""},
+		{"K1ABC", "k", ""},
+		{"UA3ABC", "ua", ""},
+	}
+	for _, tc := range tt {
+		t.Run(tc.call, func(t *testing.T) {
+			assert.Equal(t, tc.expected, commonwealthArea(callsign.MustParse(tc.call), tc.entity))
+		})
+	}
+}
