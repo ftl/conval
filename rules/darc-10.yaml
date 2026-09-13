@@ -1,0 +1,171 @@
+identifier: DARC-10
+name: DARC 10m Contest
+official_rules: https://www.darc.de/der-club/referate/conteste/darc-10m-contest/regeln/
+upload_url: https://dxhf2.darc.de/~d10mlog/upload.cgi?form=referat&lang=de
+upload_format: cabrillo
+duration: 2h
+duration-constraints:
+breaks:
+categories:
+  - name: SO Mixed Low
+    operator_mode: single
+    tx: one
+    power: low
+    bands: [all]
+    modes: [cw, ssb]
+  - name: SO Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [all]
+    modes: [cw, ssb]
+  - name: SO CW Low
+    operator_mode: single
+    tx: one
+    power: low
+    bands: [all]
+    modes: [cw]
+  - name: SO CW High
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [all]
+    modes: [cw]
+  - name: SO SSB Low
+    operator_mode: single
+    tx: one
+    power: low
+    bands: [all]
+    modes: [ssb]
+  - name: SO SSB High
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [all]
+    modes: [ssb]
+  - name: SO Mixed
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw, ssb]
+  - name: SO CW
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw]
+  - name: SO SSB
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [ssb]
+  - name: Trainee
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw, ssb]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 10m
+band_change_rules:
+properties:
+  - name: wag_dok
+    expression: "\\d*[A-Z][A-Z0-9ÄÖÜ-]*"
+exchange:
+  - their_country: [dl]
+    fields:
+      - [rst]
+      - [serial]
+      - [nm, wag_dok]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - value: 1
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: wae_entity
+      band_rule: once_per_band_and_mode
+      value: 1
+    - property: wag_dok
+      band_rule: once_per_band_and_mode
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, 1, b36]
+        their_continent: eu
+        their_country: dl
+        band: 10m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 2, b26]
+        their_continent: eu
+        their_country: dl
+        band: 10m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl3abc
+        their_exchange: [599, 3, nm]
+        their_continent: eu
+        their_country: dl
+        band: 10m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: f
+        band: 10m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [59, 5, b36]
+        their_continent: eu
+        their_country: dl
+        band: 10m
+        mode: ssb
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 6, b36]
+        their_continent: eu
+        their_country: dl
+        band: 10m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: k1abc
+        their_exchange: [599, 7]
+        their_continent: na
+        their_country: k
+        band: 10m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 7
+      points: 6
+      multis: 7
+      total: 42
