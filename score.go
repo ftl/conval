@@ -161,12 +161,30 @@ func (c Counter) Total(score BandScore) int {
 	switch c.definition.Scoring.MultiOperation {
 	case AddMultis:
 		return points + score.Multis
+	case MultiplyMultisPerBand:
+		return c.totalPerBand()
 	default:
 		if score.Multis == 0 {
 			return points
 		}
 		return points * score.Multis
 	}
+}
+
+func (c Counter) totalPerBand() int {
+	hasQTCs := c.definition.HasQTCs()
+	result := 0
+	for band, score := range c.scorePerBand {
+		if band == BandAll {
+			continue
+		}
+		points := score.Points
+		if hasQTCs {
+			points += score.QTCs
+		}
+		result += points * score.Multis
+	}
+	return result
 }
 
 func (c *Counter) EffectiveExchangeFields(theirCall callsign.Callsign) []ExchangeField {

@@ -4,6 +4,7 @@ This file contains the implementation of the contest specific properties:
 - VERON, the Dutch amateur radio association (https://www.veron.nl)
 - SAC, the Scandinavian Activity Contest (https://www.sactest.net)
 - SARL, the South African Radio League (https://mysarl.org.za)
+- BFRA, the Bulgarian Federation of Radio Amateurs (https://bfra.bg)
 */
 package conval
 
@@ -23,17 +24,19 @@ func init() {
 	commonPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getVeronEntity)
 	commonPropertyGetters[SACAreaProperty] = PropertyGetterFunc(getSACArea)
 	commonPropertyGetters[SARLAreaProperty] = PropertyGetterFunc(getSARLArea)
+	commonPropertyGetters[BalkanPrefixProperty] = PropertyGetterFunc(getBalkanPrefix)
 
 	myPropertyGetters[PAProvinceProperty] = getMyExchangeProperty(PAProvinceProperty)
 	myPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getMyVeronEntity)
 }
 
 const (
-	EURegionProperty    Property = "eu_region"
-	PAProvinceProperty  Property = "pa_province"
-	VeronEntityProperty Property = "veron_entity"
-	SACAreaProperty     Property = "sac_area"
-	SARLAreaProperty    Property = "sarl_area"
+	EURegionProperty     Property = "eu_region"
+	PAProvinceProperty   Property = "pa_province"
+	VeronEntityProperty  Property = "veron_entity"
+	SACAreaProperty      Property = "sac_area"
+	SARLAreaProperty     Property = "sarl_area"
+	BalkanPrefixProperty Property = "balkan_prefix"
 )
 
 var (
@@ -163,4 +166,40 @@ func sarlArea(call callsign.Callsign, dxccEntity DXCCEntity) string {
 	default:
 		return "9"
 	}
+}
+
+func getBalkanPrefix(qso QSO, _ Setup, _ PrefixDatabase) string {
+	return balkanPrefix(qso.TheirCall)
+}
+
+var balkanCallsignPrefixes = []string{
+	"ZC4",
+	"4O", "5B", "9A", "C4", "E7", "ER", "H2", "J4", "LZ", "P3", "S5", "SV", "SW", "SX",
+	"SY", "SZ", "TA", "TB", "TC", "YM", "YO", "YP", "YQ", "YR", "YT", "YU", "Z3", "Z6", "ZA",
+}
+
+func balkanPrefix(call callsign.Callsign) string {
+	// according to the Balkan HF Contest rules §2 and §11, see https://bfra.bg/en/node/464
+	base := strings.ToUpper(call.BaseCall)
+	if len(base) < 3 {
+		return ""
+	}
+
+	isBalkan := false
+	for _, prefix := range balkanCallsignPrefixes {
+		if strings.HasPrefix(base, prefix) {
+			isBalkan = true
+			break
+		}
+	}
+	if !isBalkan {
+		return ""
+	}
+
+	// operation from another call area counts for that area
+	suffix := strings.ToUpper(call.Suffix)
+	if len(suffix) == 1 && suffix[0] >= '0' && suffix[0] <= '9' {
+		return base[:2] + suffix
+	}
+	return base[:3]
 }

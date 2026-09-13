@@ -454,6 +454,7 @@ const (
 	DefaultMultiOperation MultiOperation = ""
 	MultiplyMultis        MultiOperation = "multiply"
 	AddMultis             MultiOperation = "add"
+	MultiplyMultisPerBand MultiOperation = "multiply_per_band"
 )
 
 type PropertyConstraint struct {

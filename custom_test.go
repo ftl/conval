@@ -104,3 +104,28 @@ func TestSARLArea(t *testing.T) {
 		})
 	}
 }
+
+func TestBalkanPrefix(t *testing.T) {
+	tt := []struct {
+		call     string
+		expected string
+	}{
+		{"LZ6Y", "LZ6"},
+		{"LZ07KM", "LZ0"},
+		{"YO2014A", "YO2"},
+		{"ER650MD", "ER6"},
+		{"SV0XCA/5", "SV5"},
+		{"YO8WW/QRP", "YO8"},
+		{"4O4A", "4O4"},
+		{"9A5MP", "9A5"},
+		{"ZC4A", "ZC4"},
+		{"TA4RC", "TA4"},
+		{"DL1ABC", ""},
+		{"K1ABC", ""},
+	}
+	for _, tc := range tt {
+		t.Run(tc.call, func(t *testing.T) {
+			assert.Equal(t, tc.expected, balkanPrefix(callsign.MustParse(tc.call)))
+		})
+	}
+}

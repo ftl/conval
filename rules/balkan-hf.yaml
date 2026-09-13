@@ -1,0 +1,146 @@
+identifier: BALKAN-HF
+name: Balkan HF Contest
+official_rules: https://bfra.bg/en/node/464
+upload_url: mailto:lz1us@abv.bg
+upload_format: cabrillo
+duration: 4h
+duration-constraints:
+breaks:
+categories:
+  - name: A - Normal Power
+    power: high
+    bands: [all]
+    modes: [all]
+  - name: B - QRP
+    power: qrp
+    bands: [all]
+    modes: [all]
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+band_change_rules:
+  - grace_period: 10m
+properties:
+  - name: balkan_qrp
+    source: their_call
+    expression: "/(QRP)$"
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - property_constraints:
+        - name: balkan_prefix
+          their_value_not_empty: true
+        - name: balkan_qrp
+          their_value_not_empty: true
+      additional_weight: 10
+      value: 2
+    - property_constraints:
+        - name: balkan_prefix
+          their_value_not_empty: true
+      value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: balkan_prefix
+      band_rule: once_per_band
+      value: 1
+  multi_operation: multiply_per_band
+examples:
+  - setup:
+      my_continent: eu
+      my_country: lz
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+      - their_call: lz1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: lz
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: lz1xyz
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: lz
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: lz2abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: lz
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: yo8ww/qrp
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: yo
+        band: 40m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: lz1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: lz
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: sv0xca/5
+        their_exchange: [599, 7]
+        their_continent: eu
+        their_country: sv
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: lz1abc
+        their_exchange: [599, 8]
+        their_continent: eu
+        their_country: lz
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: yo8ww/qrp
+        their_exchange: [599, 9]
+        their_continent: eu
+        their_country: yo
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 9
+      points: 9
+      multis: 6
+      total: 30
