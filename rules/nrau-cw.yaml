@@ -1,0 +1,119 @@
+identifier: NRAU-CW
+name: NRAU-Baltic Contest, CW
+official_rules: https://nraubaltic.eu/rules
+upload_url: https://logs.nraubaltic.eu/
+upload_format: cabrillo
+duration: 2h
+duration-constraints:
+breaks:
+categories:
+  - name: A - SO High
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [all]
+    modes: [cw]
+  - name: B - SO Low
+    operator_mode: single
+    tx: one
+    power: low
+    bands: [all]
+    modes: [cw]
+  - name: C - MO
+    operator_mode: multi
+    bands: [all]
+    modes: [cw]
+overlays:
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+band_change_rules:
+properties:
+  - name: nrau_region
+    values: [BH, FA, GR, KH, NJ, SJ, VJ, VS, HM, HR, IV, JG, JR, LN, LV, PL, PU, RP, SR, TA, TL, VC, VP, VO, AL, EK, EP, ES, KE, KL, KP, KT, KU, LA, PH, PK, PM, PO, PP, PS, SA, UU, VA, IS, AI, AU, BA, BV, CE, DG, DO, GU, JE, JP, KG, KV, LI, LM, LU, MD, OE, PR, RE, RR, SD, TS, TU, VE, VK, VR, AT, KD, KI, KM, KN, MM, PA, PN, SI, SU, TG, TI, UT, VU, VV, AG, AK, BO, BU, FI, HO, IN, JA, MO, NO, OF, OS, RL, SV, TE, TR, XX, BL, DA, GA, GO, HA, JL, JO, KA, KR, NB, OG, OR, SE, SL, SO, UP, VB, VD, VL, VM, VN]
+exchange:
+  - their_country: [es, jw, jx, la, ly, oh, oh0, oj0, ox, oy, oz, sm, tf, yl]
+    fields:
+      - [rst]
+      - [serial]
+      - [nrau_region]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - their_country: [es, jw, jx, la, ly, oh, oh0, oj0, ox, oy, oz, sm, tf, yl]
+      value: 2
+  qso_band_rule: once_per_band
+  multis:
+    - property: nrau_region
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: es
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+      - their_call: es5ep
+        their_exchange: [599, 3, ta]
+        their_continent: eu
+        their_country: es
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: ly4k
+        their_exchange: [599, 3, km]
+        their_continent: eu
+        their_country: ly
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: sm3abc
+        their_exchange: [599, 5, vn]
+        their_continent: eu
+        their_country: sm
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: es5ep
+        their_exchange: [599, 7, ta]
+        their_continent: eu
+        their_country: es
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: true
+      - their_call: es5ep
+        their_exchange: [599, 8, ta]
+        their_continent: eu
+        their_country: es
+        band: 40m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 8
+      multis: 4
+      total: 32
