@@ -1,0 +1,118 @@
+identifier: DIG-QSO-PARTY
+name: DIG QSO Party
+official_rules: https://diplom-interessen-gruppe.info/downloads/dig-qso-party-en/
+upload_url: https://dig-contest.de
+upload_format: cabrillo
+duration: 23h
+duration-constraints:
+breaks:
+categories:
+  - name: CW
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw]
+  - name: SSB
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [ssb]
+  - name: SWL
+    bands: [all]
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [member_number, empty]
+scoring:
+  qsos:
+    - property_constraints:
+        - name: member_number
+          their_value_not_empty: true
+      value: 10
+    - value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: member_number
+      band_rule: once
+      value: 1
+    - property: wae_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 456]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        mode: cw
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 123]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+      - their_call: k1abc
+        their_exchange: [599]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 32
+      multis: 6
+      total: 192
