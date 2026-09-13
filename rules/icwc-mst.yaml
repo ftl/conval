@@ -1,0 +1,100 @@
+identifier: ICWC-MST
+name: ICWC Medium Speed Test
+official_rules: https://internationalcwcouncil.org/mst-contest/
+upload_url: https://www.3830scores.com/
+upload_format: cabrillo
+duration: 1h
+duration-constraints:
+breaks:
+categories:
+  - name: HP
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [all]
+    modes: [cw]
+  - name: LP
+    operator_mode: single
+    tx: one
+    power: low
+    bands: [all]
+    modes: [cw]
+  - name: QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    bands: [all]
+    modes: [cw]
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [name]
+      - [serial]
+scoring:
+  qsos:
+    - value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: their_call
+      band_rule: once
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+      my_exchange:
+        name: karl
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [hans, 1]
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [fritz, 2]
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [hans, 3]
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [hans, 4]
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [john, 5]
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 5
+      points: 4
+      multis: 3
+      total: 12
