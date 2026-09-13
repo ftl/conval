@@ -1,0 +1,225 @@
+identifier: BALTIC-CONTEST
+name: Baltic Contest
+official_rules: https://www.lrsf.lt/en/balticcontestrules/
+upload_url: mailto:lrsf@lrsf.lt
+upload_format: cabrillo
+duration: 5h
+duration-constraints:
+breaks:
+categories:
+  - name: A - SO Mixed
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw, ssb]
+  - name: B - SO CW
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw]
+  - name: C - SO SSB
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [ssb]
+  - name: D - SO Mixed Assisted
+    operator_mode: single
+    tx: one
+    bands: [all]
+    modes: [cw, ssb]
+    assisted: true
+  - name: E - MO Single TX
+    operator_mode: multi
+    tx: one
+    bands: [all]
+    modes: [cw, ssb]
+  - name: F - SWL
+    bands: [all]
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [es, yl, ly]
+      their_continent: [eu]
+      value: 1
+    - my_country: [es, yl, ly]
+      their_continent: [not, eu]
+      value: 2
+    - my_continent: [eu]
+      my_country: [not, es, yl, ly]
+      their_country: [es, yl, ly]
+      value: 10
+    - my_continent: [eu]
+      my_country: [not, es, yl, ly]
+      value: 1
+    - my_continent: [not, eu]
+      their_country: [es, yl, ly]
+      value: 20
+    - my_continent: [not, eu]
+      value: 1
+    - their_country: [ua, ua2, ua9, eu]
+      additional_weight: 100
+      value: 0
+  qso_band_rule: once_per_band_and_mode
+  multis:
+examples:
+  - setup:
+      my_continent: eu
+      my_country: ly
+      bands: [80m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ly2abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: ly
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [59, 4]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: ssb
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: ua3abc
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: ua
+        band: 80m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 6
+      points: 5
+      multis: 0
+      total: 5
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ly2abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: ly
+        band: 80m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: es1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: es
+        band: 80m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 4]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: eu1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: eu
+        band: 80m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 5
+      points: 22
+      multis: 0
+      total: 22
+  - setup:
+      my_continent: na
+      my_country: k
+      bands: [80m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ly2abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: ly
+        band: 80m
+        mode: cw
+        points: 20
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 2
+      points: 21
+      multis: 0
+      total: 21
