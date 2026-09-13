@@ -1,0 +1,195 @@
+identifier: PORTUGAL-DAY
+name: Portugal Day Contest
+official_rules: https://portugaldaycontest.rep.pt/rules.php
+upload_url: mailto:rep-concursos@rep.pt
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: MOAB Single TX
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: MOAB Multi TX
+    operator_mode: multi
+    tx: distributed
+    band_count: all
+    modes: [cw, ssb]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: ct_district
+    values: [AV, BJ, BR, BG, CB, CO, EV, FR, GD, LR, LX, PG, PT, SR, ST, VC, VR, VS, CAL, CMB, FU, MC, PS, PM, PTS, RB, SCM, STM, SV, AH, CA, SCG, VL, PV, CV, HT, LJF, LJP, MD, SCF, SRP, LG, ND, PD, PO, RG, FC, VP]
+exchange:
+  - their_country: [ct, cu, ct3]
+    fields:
+      - [rst]
+      - [ct_district]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [not, ct, cu, ct3]
+      their_country: [ct, cu, ct3]
+      additional_weight: 10
+      value: 10
+    - my_country: [ct, cu, ct3]
+      their_country: [ct, cu, ct3]
+      additional_weight: 10
+      value: 5
+    - my_country: [ct, cu, ct3]
+      their_country: [not, ct, cu, ct3]
+      additional_weight: 10
+      value: 1
+    - their_continent: [same]
+      value: 1
+    - their_continent: [other]
+      value: 2
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: ct_district
+      band_rule: once_per_band
+      value: 5
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ct1abc
+        their_exchange: [599, lx]
+        their_continent: eu
+        their_country: ct
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 6
+        duplicate: false
+      - their_call: ct1xyz
+        their_exchange: [599, pt]
+        their_continent: eu
+        their_country: ct
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 5
+        duplicate: false
+      - their_call: cu2abc
+        their_exchange: [599, ah]
+        their_continent: eu
+        their_country: cu
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 6
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: ct1abc
+        their_exchange: [59, lx]
+        their_continent: eu
+        their_country: ct
+        band: 20m
+        mode: ssb
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: ct1abc
+        their_exchange: [599, lx]
+        their_continent: eu
+        their_country: ct
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+      - their_call: ct1abc
+        their_exchange: [599, lx]
+        their_continent: eu
+        their_country: ct
+        band: 40m
+        mode: cw
+        points: 10
+        multis: 6
+        duplicate: false
+    score:
+      qsos: 8
+      points: 53
+      multis: 25
+      total: 1325
+  - setup:
+      my_continent: eu
+      my_country: ct
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ct1xyz
+        their_exchange: [599, pt]
+        their_continent: eu
+        their_country: ct
+        band: 20m
+        mode: cw
+        points: 5
+        multis: 6
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 7
+      multis: 8
+      total: 56
