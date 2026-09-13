@@ -1,0 +1,205 @@
+identifier: EA-MAJESTAD-CW
+name: His Majesty The King of Spain Contest, CW
+official_rules: https://concursos.ure.es/en/s-m-el-rey-de-espana-cw/bases/
+upload_url: https://concursos.ure.es/en/logs/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SOAB Youth
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: SOSB
+    operator_mode: single
+    tx: one
+    band_count: single
+    modes: [cw]
+  - name: MOAB Multi TX High
+    operator_mode: multi
+    tx: multi
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: MOAB Multi TX Low
+    operator_mode: multi
+    tx: multi
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: ea_province
+    values: [AV, BU, C, LE, LO, LU, O, OU, P, PO, S, SA, SG, SO, VA, ZA, BI, HU, NA, SS, TE, VI, Z, B, GI, L, T, BA, CC, CR, CU, GU, M, TO, A, AB, CS, MU, V, IB, AL, CA, CO, GR, H, J, MA, SE, GC, TF, CE, ML, SMR]
+exchange:
+  - their_country: [ea, ea6, ea8, ea9]
+    fields:
+      - [rst]
+      - [ea_province]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [ea, ea6, ea8, ea9]
+      their_country: [ea, ea6, ea8, ea9]
+      value: 2
+    - my_country: [ea, ea6, ea8, ea9]
+      their_country: [not, ea, ea6, ea8, ea9]
+      value: 1
+    - my_country: [not, ea, ea6, ea8, ea9]
+      their_country: [ea, ea6, ea8, ea9]
+      value: 3
+    - my_country: [not, ea, ea6, ea8, ea9]
+      their_country: [not, ea, ea6, ea8, ea9]
+      value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+    - property: ea_province
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: ea
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: ea1abc
+        their_exchange: [599, c]
+        their_continent: eu
+        their_country: ea
+        band: 20m
+        points: 2
+        multis: 2
+        duplicate: false
+      - their_call: ea8xyz
+        their_exchange: [599, gc]
+        their_continent: af
+        their_country: ea8
+        band: 20m
+        points: 2
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: ef0f
+        their_exchange: [599, smr]
+        their_continent: eu
+        their_country: ea
+        band: 20m
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 8
+      multis: 7
+      total: 56
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: ea1abc
+        their_exchange: [599, c]
+        their_continent: eu
+        their_country: ea
+        band: 20m
+        points: 3
+        multis: 2
+        duplicate: false
+      - their_call: ea1bcd
+        their_exchange: [599, c]
+        their_continent: eu
+        their_country: ea
+        band: 20m
+        points: 3
+        multis: 0
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: ea1abc
+        their_exchange: [599, c]
+        their_continent: eu
+        their_country: ea
+        band: 40m
+        points: 3
+        multis: 2
+        duplicate: false
+    score:
+      qsos: 5
+      points: 11
+      multis: 6
+      total: 66
