@@ -157,3 +157,30 @@ func TestCommonwealthArea(t *testing.T) {
 		})
 	}
 }
+
+func TestWTZCOffsetHours(t *testing.T) {
+	tt := []struct {
+		mine     string
+		theirs   string
+		expected string
+	}{
+		// the examples from https://wtzc-contest.com/rules section 5.1
+		{"0000Z", "0300E", "3"},
+		{"0530E", "0800E", "2"},
+		{"1100E", "1100W", "2"},
+		{"1245E", "0345W", "7"},
+		{"0900E", "0900W", "6"},
+		{"0200E", "0200E", "0"},
+		{"0200E", "", ""},
+		{"", "0200E", ""},
+	}
+	for _, tc := range tt {
+		t.Run(tc.mine+"/"+tc.theirs, func(t *testing.T) {
+			qso := QSO{
+				MyExchange:    QSOExchange{WTZCOffsetProperty: tc.mine},
+				TheirExchange: QSOExchange{WTZCOffsetProperty: tc.theirs},
+			}
+			assert.Equal(t, tc.expected, getWTZCOffsetHours(qso, Setup{}, nil))
+		})
+	}
+}

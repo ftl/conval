@@ -6,12 +6,14 @@ This file contains the implementation of the contest specific properties:
 - SARL, the South African Radio League (https://mysarl.org.za)
 - BFRA, the Bulgarian Federation of Radio Amateurs (https://bfra.bg)
 - RSGB, the Radio Society of Great Britain (https://www.rsgbcc.org)
+- the WTZC Committee (https://wtzc-contest.com)
 */
 package conval
 
 import (
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/ftl/hamradio/callsign"
@@ -30,6 +32,7 @@ func init() {
 	commonPropertyGetters[BalkanPrefixProperty] = PropertyGetterFunc(getBalkanPrefix)
 	commonPropertyGetters[CommonwealthHQProperty] = getTheirExchangeProperty(CommonwealthHQProperty)
 	commonPropertyGetters[CommonwealthAreaProperty] = PropertyGetterFunc(getCommonwealthArea)
+	commonPropertyGetters[WTZCOffsetHoursProperty] = PropertyGetterFunc(getWTZCOffsetHours)
 
 	myPropertyGetters[PAProvinceProperty] = getMyExchangeProperty(PAProvinceProperty)
 	myPropertyGetters[VeronEntityProperty] = PropertyGetterFunc(getMyVeronEntity)
@@ -45,6 +48,8 @@ const (
 	BalkanPrefixProperty     Property = "balkan_prefix"
 	CommonwealthHQProperty   Property = "commonwealth_hq"
 	CommonwealthAreaProperty Property = "commonwealth_area"
+	WTZCOffsetProperty       Property = "wtzc_offset"
+	WTZCOffsetHoursProperty  Property = "wtzc_offset_hours"
 )
 
 var (
@@ -244,4 +249,48 @@ func commonwealthArea(call callsign.Callsign, dxccEntity DXCCEntity) string {
 
 	// the call areas of VE, VK, ZL and ZS are split in the same way as for the VERON contests
 	return VeronEntity(call, dxccEntity)
+}
+
+func getWTZCOffsetHours(qso QSO, setup Setup, _ PrefixDatabase) string {
+	// the shortest distance around the 24 hour clock in full hours, see https://wtzc-contest.com/rules section 5.1
+	myOffset, myOK := utcOffset(qso.MyExchange[WTZCOffsetProperty])
+	if !myOK {
+		myOffset, myOK = utcOffset(setup.MyExchange[WTZCOffsetProperty])
+	}
+	theirOffset, theirOK := utcOffset(qso.TheirExchange[WTZCOffsetProperty])
+	if !myOK || !theirOK {
+		return ""
+	}
+
+	distance := myOffset - theirOffset
+	if distance < 0 {
+		distance = -distance
+	}
+	if distance > 12*60 {
+		distance = 24*60 - distance
+	}
+	return strconv.Itoa(distance / 60)
+}
+
+var utcOffsetExpression = regexp.MustCompile(`^([0-9]{2})([0-9]{2})([EWZ])$`)
+
+func utcOffset(value string) (int, bool) {
+	matches := utcOffsetExpression.FindStringSubmatch(strings.ToUpper(strings.TrimSpace(value)))
+	if matches == nil {
+		return 0, false
+	}
+	hours, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return 0, false
+	}
+	minutes, err := strconv.Atoi(matches[2])
+	if err != nil {
+		return 0, false
+	}
+
+	offset := hours*60 + minutes
+	if matches[3] == "W" {
+		offset = -offset
+	}
+	return offset, true
 }

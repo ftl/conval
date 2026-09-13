@@ -1,0 +1,170 @@
+identifier: WTZC
+name: World Time Zone Challenge
+official_rules: https://wtzc-contest.com/rules
+upload_url: https://wtzc-contest.com/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: CWHI
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: CWLO
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: CWQRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SSBHI
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [ssb]
+  - name: SSBLO
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [ssb]
+  - name: SSBQRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [ssb]
+  - name: MXHI
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: MXLO
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: MXQRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: wtzc_offset
+    values: [1200W, 1100W, 1000W, 0930W, 0900W, 0800W, 0700W, 0600W, 0500W, 0400W, 0330W, 0300W, 0230W, 0200W, 0100W, 0000Z, 0100E, 0200E, 0300E, 0330E, 0400E, 0430E, 0500E, 0530E, 0545E, 0600E, 0630E, 0700E, 0800E, 0845E, 0900E, 0930E, 1000E, 1030E, 1100E, 1200E, 1245E, 1300E, 1400E]
+exchange:
+  - fields:
+      - [rst]
+      - [wtzc_offset]
+scoring:
+  qsos:
+    - value: 1
+  qso_bonuses:
+    - value_of_property: wtzc_offset_hours
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: wtzc_offset
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+      my_exchange:
+        wtzc_offset: 0200E
+    qsos:
+      - their_call: g3abc
+        their_exchange: [599, 0100E]
+        their_continent: eu
+        their_country: g
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: ja1abc
+        their_exchange: [599, 0900E]
+        their_continent: as
+        their_country: ja
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+      - their_call: kl7abc
+        their_exchange: [599, 0800W]
+        their_continent: na
+        their_country: kl
+        band: 20m
+        mode: cw
+        points: 11
+        multis: 1
+        duplicate: false
+      - their_call: tf3abc
+        their_exchange: [599, 0000Z]
+        their_continent: eu
+        their_country: tf
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: g3abc
+        their_exchange: [59, 0100E]
+        their_continent: eu
+        their_country: g
+        band: 20m
+        mode: ssb
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: g3abc
+        their_exchange: [599, 0100E]
+        their_continent: eu
+        their_country: g
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: true
+      - their_call: ja1abc
+        their_exchange: [599, 0900E]
+        their_continent: as
+        their_country: ja
+        band: 40m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 7
+      points: 34
+      multis: 5
+      total: 170
