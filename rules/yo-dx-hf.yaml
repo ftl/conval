@@ -1,0 +1,261 @@
+identifier: YO-DX-HF
+name: YO DX HF Contest
+official_rules: https://www.yodx.ro/rules.php
+upload_url: https://www.yodx.ro/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB-MIX-HP
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB-MIX-LP
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB-CW
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: SOAB-SSB
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [ssb]
+  - name: SOSB 80m
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [80m]
+    modes: [cw, ssb]
+  - name: SOSB 40m
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [40m]
+    modes: [cw, ssb]
+  - name: SOSB 20m
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [20m]
+    modes: [cw, ssb]
+  - name: SOSB 15m
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [15m]
+    modes: [cw, ssb]
+  - name: SOSB 10m
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [10m]
+    modes: [cw, ssb]
+  - name: MOST
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: YN
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: SWL
+    bands: [all]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    grace_period: 10m
+    multiplier_exception: true
+properties:
+  - name: yo_county
+    values: [AR, CS, HD, TM, BU, IF, CT, BR, GL, TL, VN, AB, BH, BN, CJ, SM, SJ, MM, BV, CV, HR, MS, SB, AG, DJ, GJ, MH, OT, VL, BC, BT, IS, NT, SV, VS, BZ, CL, DB, GR, IL, PH, TR]
+exchange:
+  - their_country: [yo]
+    fields:
+      - [rst]
+      - [yo_county]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - their_working_condition: [mm]
+      additional_weight: 100
+      value: 4
+    - my_country: [not, yo]
+      their_country: [yo]
+      additional_weight: 10
+      value: 8
+    - my_country: [not, yo]
+      their_continent: [other]
+      value: 4
+    - my_country: [not, yo]
+      their_country: [other]
+      their_continent: [same]
+      value: 2
+    - my_country: [not, yo]
+      their_country: [same]
+      value: 1
+    - my_country: [yo]
+      their_continent: [other]
+      value: 8
+    - my_country: [yo]
+      their_country: [not, yo]
+      their_continent: [same]
+      value: 4
+    - my_country: [yo]
+      their_country: [yo]
+      value: 0
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - my_country: [not, yo]
+      property: yo_county
+      their_working_condition: [not, mm]
+      band_rule: once_per_band
+      value: 1
+    - property: dxcc_entity
+      their_working_condition: [not, mm]
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: yo3abc
+        their_exchange: [599, bu]
+        their_continent: eu
+        their_country: yo
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 2
+        duplicate: false
+      - their_call: yo5xyz
+        their_exchange: [599, cj]
+        their_continent: eu
+        their_country: yo
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: yo3abc
+        their_exchange: [59, bu]
+        their_continent: eu
+        their_country: yo
+        band: 20m
+        mode: ssb
+        points: 8
+        multis: 0
+        duplicate: false
+      - their_call: yo3abc
+        their_exchange: [599, bu]
+        their_continent: eu
+        their_country: yo
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 0
+        duplicate: true
+      - their_call: f4abc/mm
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 8
+      points: 35
+      multis: 6
+      total: 210
+  - setup:
+      my_continent: eu
+      my_country: yo
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: yo5xyz
+        their_exchange: [599, cj]
+        their_continent: eu
+        their_country: yo
+        band: 20m
+        mode: cw
+        points: 0
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 12
+      multis: 3
+      total: 36
