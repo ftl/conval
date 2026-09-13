@@ -1,0 +1,238 @@
+identifier: CVA-DX-CW
+name: CVA DX Contest, CW
+official_rules: https://cvadx.org/regulamento/
+upload_url: https://www.cvadx.org/
+upload_format: cabrillo
+duration: 27h
+duration-constraints:
+breaks:
+categories:
+  - name: SOSB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    modes: [cw]
+  - name: SOSB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: single
+    modes: [cw]
+  - name: SOAB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SODB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: 2
+    bands: [80m, 10m]
+    modes: [cw]
+  - name: RAEB
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: SOAB MIL
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: SOYL
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: MULTI-ONE
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: MULTI-ONE-OM FI
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: MULTI-ONE-OM PI
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: MULTI-TWO
+    operator_mode: multi
+    tx: two
+    band_count: all
+    modes: [cw]
+  - name: Checklog
+overlays:
+  - rookie
+  - teen
+modes:
+  - cw
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: brazilian_state
+    values: [AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO]
+  - name: cva_military
+    values: [MIL]
+exchange:
+  - their_country: [py]
+    fields:
+      - [rst]
+      - [brazilian_state, cva_military]
+  - fields:
+      - [rst]
+      - [continent, cva_military]
+scoring:
+  qsos:
+    - their_country: [same]
+      value: 2
+    - their_country: [other]
+      their_continent: [same]
+      value: 3
+    - their_continent: [other]
+      value: 4
+  qso_band_rule: once_per_band
+  multis:
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+    - property: brazilian_state
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: py2abc
+        their_exchange: [599, sp]
+        their_continent: sa
+        their_country: py
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 2
+        duplicate: false
+      - their_call: py5xyz
+        their_exchange: [599, pr]
+        their_continent: sa
+        their_country: py
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, eu]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, eu]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: py2abc
+        their_exchange: [599, sp]
+        their_continent: sa
+        their_country: py
+        band: 40m
+        mode: cw
+        points: 4
+        multis: 2
+        duplicate: false
+      - their_call: py2abc
+        their_exchange: [599, sp]
+        their_continent: sa
+        their_country: py
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 0
+        duplicate: true
+      - their_call: k1mil
+        their_exchange: [599, mil]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 7
+      points: 21
+      multis: 8
+      total: 168
+  - setup:
+      my_continent: sa
+      my_country: py
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: py5xyz
+        their_exchange: [599, pr]
+        their_continent: sa
+        their_country: py
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 2
+        duplicate: false
+      - their_call: lu1abc
+        their_exchange: [599, sa]
+        their_continent: sa
+        their_country: lu
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, eu]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 9
+      multis: 4
+      total: 36
