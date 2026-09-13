@@ -1,0 +1,292 @@
+identifier: OK-OM-DX
+name: OK-OM DX Contest
+official_rules: http://okomdx.crk.cz/index.php?page=CW-rules-english
+upload_url: http://okomdx.crk.cz/index.php?page=send-log
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [all]
+  - name: SOAB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [all]
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [all]
+  - name: SOSB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    modes: [all]
+  - name: SOSB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: single
+    modes: [all]
+  - name: SOSB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: single
+    modes: [all]
+  - name: MOAB Single TX
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [all]
+  - name: MOAB Two TX
+    operator_mode: multi
+    tx: two
+    band_count: all
+    modes: [all]
+  - name: SWL
+    bands: [all]
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    grace_period: 10m
+    multiplier_exception: true
+properties:
+  - name: okom_county
+    values: [APA, APB, APC, APD, APE, APF, APG, APH, API, APJ, BBN, BBE, BKD, BKO, BKH, BME, BMB, BNY, BPZ, BPV, BPB, BRA, CBU, CCK, CJH, CPE, CPI, CPR, CST, CTA, DDO, DCH, DKV, DKL, DPM, DPJ, DPS, DRO, DSO, DTA, ECL, EDE, ECH, EJA, ELI, ELT, ELO, EMO, ETE, EUL, FHB, FHK, FCR, FJI, FNA, FPA, FRK, FSE, FSV, FTR, FUO, GBL, GBM, GBV, GBR, GHO, GJI, GKR, GPR, GTR, GUH, GVY, GZL, GZN, GZS, HBR, HFM, HJE, HKA, HNJ, HOL, HOP, HOS, HPR, HSU, HVS, BAA, BAB, BAC, BAD, BAE, MAL, PEZ, SEN, TRN, DST, GAL, HLO, PIE, SEA, SKA, TNC, BAN, ILA, MYJ, NMV, PAR, PBY, PRI, PUC, NIT, KOM, LVC, NZA, SAL, TOP, ZMO, ZIL, BYT, CAD, DKU, KNM, LMI, MAR, NAM, RUZ, TTE, TVR, BBY, BRE, DET, KRU, LUC, POL, REV, RSO, VKR, ZVO, ZAR, ZIH, BST, KEA, KEB, KEC, KED, KEO, GEL, MIC, ROZ, SOB, SNV, TRE, PRE, BAR, HUM, KEZ, LEV, MED, POP, SAB, SNI, SLU, STR, SVI, VRT]
+exchange:
+  - their_country: [ok, om]
+    fields:
+      - [rst]
+      - [okom_county]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [ok, om]
+      their_country: [same]
+      value: 2
+    - my_country: [ok, om]
+      their_country: [other]
+      their_continent: [same]
+      value: 3
+    - my_country: [ok, om]
+      their_continent: [other]
+      value: 5
+    - my_country: [not, ok, om]
+      their_country: [ok, om]
+      additional_weight: 10
+      value: 10
+    - my_country: [not, ok, om]
+      their_country: [same]
+      value: 1
+    - my_country: [not, ok, om]
+      their_country: [other]
+      their_continent: [same]
+      value: 3
+    - my_country: [not, ok, om]
+      their_continent: [other]
+      value: 5
+    - their_working_condition: [mm]
+      additional_weight: 100
+      value: 5
+  qso_band_rule: once_per_band
+  multis:
+    - property: okom_county
+      their_working_condition: [not, mm]
+      band_rule: once_per_band
+      value: 1
+    - property: wae_entity
+      their_working_condition: [not, mm]
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: ok
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: ok2xyz
+        their_exchange: [599, BKD]
+        their_continent: eu
+        their_country: ok
+        band: 160m
+        points: 2
+        multis: 2
+        duplicate: false
+      - their_call: om3abc
+        their_exchange: [599, TRN]
+        their_continent: eu
+        their_country: om
+        band: 160m
+        points: 3
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 160m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 80m
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 3
+        multis: 0
+        duplicate: true
+      - their_call: f4abc/mm
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: f
+        band: 80m
+        points: 5
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 7
+      points: 21
+      multis: 7
+      total: 147
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: ok1abc
+        their_exchange: [599, APA]
+        their_continent: eu
+        their_country: ok
+        band: 160m
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: om3abc
+        their_exchange: [599, TRN]
+        their_continent: eu
+        their_country: om
+        band: 160m
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 160m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: f
+        band: 160m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 160m
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: ok1abc
+        their_exchange: [599, APA]
+        their_continent: eu
+        their_country: ok
+        band: 80m
+        points: 10
+        multis: 2
+        duplicate: false
+    score:
+      qsos: 6
+      points: 39
+      multis: 9
+      total: 351
+  - setup:
+      my_continent: na
+      my_country: k
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: ok1abc
+        their_exchange: [599, APA]
+        their_continent: eu
+        their_country: ok
+        band: 20m
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: k2xyz
+        their_exchange: [599, 1]
+        their_continent: na
+        their_country: k
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: ok1abc
+        their_exchange: [599, APA]
+        their_continent: eu
+        their_country: ok
+        band: 20m
+        points: 10
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 4
+      points: 16
+      multis: 4
+      total: 64
