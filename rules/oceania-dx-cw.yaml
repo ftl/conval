@@ -1,0 +1,225 @@
+identifier: OCEANIA-DX-CW
+name: Oceania DX Contest, CW
+official_rules: https://www.oceaniadxcontest.com/rules
+arrl_country_list: true
+upload_url: https://ocdx.contesting.com/submitlog.php
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SOSB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: single
+    modes: [cw]
+  - name: SOAB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOSB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: single
+    modes: [cw]
+  - name: SOAB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOSB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    modes: [cw]
+  - name: MOAB Single TX
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: MOAB Two TX
+    operator_mode: multi
+    tx: two
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: MOAB Multi TX
+    operator_mode: multi
+    tx: multi
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SWL
+    bands: [all]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    changes_per_hour: 10
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - bands: [160m]
+      value: 20
+    - bands: [80m]
+      value: 10
+    - bands: [40m]
+      value: 5
+    - bands: [20m]
+      value: 1
+    - bands: [15m]
+      value: 2
+    - bands: [10m]
+      value: 3
+    - my_continent: [not, oc]
+      their_continent: [not, oc]
+      additional_weight: 10
+      value: 0
+  qso_band_rule: once_per_band
+  multis:
+    - property: wpx_prefix
+      band_rule: once_per_band
+      value: 1
+    - property: wpx_prefix
+      my_continent: [not, oc]
+      their_continent: [not, oc]
+      additional_weight: 10
+      band_rule: once_per_band
+      value: 0
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: vk2abc
+        their_exchange: [599, 1]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: vk3xyz
+        their_exchange: [599, 2]
+        their_continent: oc
+        their_country: vk
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: vk2abc
+        their_exchange: [599, 4]
+        their_continent: oc
+        their_country: vk
+        band: 40m
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: vk2abc
+        their_exchange: [599, 5]
+        their_continent: oc
+        their_country: vk
+        band: 40m
+        points: 5
+        multis: 0
+        duplicate: true
+      - their_call: zl1abc
+        their_exchange: [599, 6]
+        their_continent: oc
+        their_country: zl
+        band: 160m
+        points: 20
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 27
+      multis: 4
+      total: 108
+  - setup:
+      my_continent: oc
+      my_country: vk
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 15m
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: vk3xyz
+        their_exchange: [599, 3]
+        their_continent: oc
+        their_country: vk
+        band: 10m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 10
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 5
+      points: 16
+      multis: 4
+      total: 64
