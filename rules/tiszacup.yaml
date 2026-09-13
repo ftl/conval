@@ -1,0 +1,267 @@
+identifier: TISZACUP
+name: Tisza Cup Contest
+official_rules: https://www.tiszacup.eu/index.php/en/contest-rules
+upload_url: https://log.tiszacup.eu
+upload_format: cabrillo
+duration: 15h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB High CW
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low CW
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB QRP CW
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SOAB High SSB
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [ssb]
+  - name: SOAB Low SSB
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [ssb]
+  - name: SOAB QRP SSB
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [ssb]
+  - name: SOAB High Mixed
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB Low Mixed
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB QRP Mixed
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOSB Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    modes: [cw, ssb]
+  - name: MOAB Single TX High
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: MOAB Single TX Low
+    operator_mode: multi
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: MOAB Multi TX Mixed
+    operator_mode: multi
+    tx: multi
+    band_count: all
+    modes: [cw, ssb]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [cq_zone]
+scoring:
+  qsos:
+    - their_working_condition: [am, mm]
+      additional_weight: 100
+      value: 3
+    - my_country: [ur, yo, om, ha, yu]
+      their_country: [ur, yo, om, ha, yu]
+      additional_weight: 10
+      value: 1
+    - my_country: [not, ur, yo, om, ha, yu]
+      their_country: [ur, yo, om, ha, yu]
+      additional_weight: 10
+      value: 10
+    - property_constraints:
+        - name: cq_zone
+          same: true
+      additional_weight: 5
+      value: 2
+    - their_continent: [same]
+      value: 3
+    - their_continent: [other]
+      value: 5
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: cq_zone
+      band_rule: once_per_band
+      value: 1
+    - their_country: [ur, yo, om, ha, yu]
+      property: wpx_prefix
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_call: dl1xyz
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ha1abc
+        their_exchange: [599, 15]
+        their_continent: eu
+        their_country: ha
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: yo3xyz
+        their_exchange: [599, 20]
+        their_continent: eu
+        their_country: yo
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 14]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: ua3abc
+        their_exchange: [599, 16]
+        their_continent: eu
+        their_country: ua
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 5]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: ha1abc
+        their_exchange: [59, 15]
+        their_continent: eu
+        their_country: ha
+        band: 20m
+        mode: ssb
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: ha1abc
+        their_exchange: [599, 15]
+        their_continent: eu
+        their_country: ha
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+      - their_call: f4abc/mm
+        their_exchange: [599, 14]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 8
+      points: 43
+      multis: 7
+      total: 301
+  - setup:
+      my_call: ha0kda
+      my_continent: eu
+      my_country: ha
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ha2xyz
+        their_exchange: [599, 15]
+        their_continent: eu
+        their_country: ha
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 14]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 5]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: ha3abc
+        their_exchange: [599, 15]
+        their_continent: eu
+        their_country: ha
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 4
+      points: 10
+      multis: 5
+      total: 50
