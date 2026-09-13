@@ -1,0 +1,135 @@
+identifier: SARL-HF-CW
+name: SARL HF CW Contest
+official_rules: https://mysarl.org.za/wp-content/uploads/2025/11/2026-The-SARL-HF-Phone-Digital-and-CW-Contests-v1.1.pdf
+upload_url: mailto:contest@sarl.org.za
+upload_format: cabrillo
+duration: 3h
+duration-constraints:
+breaks:
+categories:
+  - name: SOSB
+    operator_mode: single
+    tx: one
+    band_count: single
+    modes: [cw]
+  - name: SOAB
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: MOSB
+    operator_mode: multi
+    band_count: single
+    modes: [cw]
+  - name: MOAB
+    operator_mode: multi
+    band_count: all
+    modes: [cw]
+overlays:
+  - yl
+  - youth
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+  - 20m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: sarl_area
+      band_rule: once_per_band
+      value: 2
+  multi_operation: add
+examples:
+  - setup:
+      my_continent: af
+      my_country: zs
+      bands: [80m, 40m, 20m]
+      modes: [cw]
+    qsos:
+      - their_call: zs1abc
+        their_exchange: [599, 1]
+        their_continent: af
+        their_country: zs
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: zs1xyz
+        their_exchange: [599, 2]
+        their_continent: af
+        their_country: zs
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: zs6def
+        their_exchange: [599, 3]
+        their_continent: af
+        their_country: zs
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: v51abc
+        their_exchange: [599, 4]
+        their_continent: af
+        their_country: v5
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: 3da0ab
+        their_exchange: [599, 5]
+        their_continent: af
+        their_country: 3da
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: zs1abc
+        their_exchange: [599, 7]
+        their_continent: af
+        their_country: zs
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: zs1abc
+        their_exchange: [599, 8]
+        their_continent: af
+        their_country: zs
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+    score:
+      qsos: 8
+      points: 7
+      multis: 12
+      total: 19
