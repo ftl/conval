@@ -1,0 +1,92 @@
+identifier: CW-OPEN
+name: CWops CW Open
+official_rules: https://cwops.org/cwops-tests/cw-open/
+upload_url: https://cwops.contesting.com/
+upload_format: cabrillo
+duration: 4h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB High
+    operator_mode: single
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low
+    operator_mode: single
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB QRP
+    operator_mode: single
+    power: qrp
+    band_count: all
+    modes: [cw]
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [serial]
+      - [name]
+scoring:
+  qsos:
+    - value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: their_call
+      band_rule: once
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+      my_exchange:
+        name: karl
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [1, hans]
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [2, fritz]
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [3, hans]
+        band: 80m
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: dl1abc
+        their_exchange: [4, hans]
+        band: 40m
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [5, john]
+        band: 40m
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 5
+      points: 4
+      multis: 3
+      total: 12
