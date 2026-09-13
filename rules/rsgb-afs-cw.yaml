@@ -1,0 +1,88 @@
+identifier: RSGB-AFS-CW
+name: RSGB AFS Contest, CW
+official_rules: https://www.rsgbcc.org/hf/rules/2026/rafs.shtml
+upload_url: https://www.rsgbcc.org/cgi-bin/hfenter.pl
+upload_format: cabrillo
+duration: 4h
+duration-constraints:
+breaks:
+categories:
+  - name: High Power
+    bands: [all]
+    modes: [cw]
+    assisted: true
+  - name: 100W
+    power: low
+    bands: [all]
+    modes: [cw]
+    assisted: true
+  - name: 10W
+    power: qrp
+    bands: [all]
+    modes: [cw]
+    assisted: true
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - value: 1
+  qso_band_rule: once_per_band
+  multis:
+examples:
+  - setup:
+      my_continent: eu
+      my_country: g
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+      - their_call: g3abc
+        their_exchange: [599, 1]
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: g4xyz
+        their_exchange: [599, 2]
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: g3abc
+        their_exchange: [599, 3]
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: g3abc
+        their_exchange: [599, 4]
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 0]
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 5
+      points: 4
+      multis: 0
+      total: 4
