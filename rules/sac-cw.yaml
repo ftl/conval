@@ -1,0 +1,279 @@
+identifier: SAC-CW
+name: Scandinavian Activity Contest, CW
+official_rules: https://www.sactest.net/blog/scandinavian-activity-contest-2025-rules/
+upload_url: https://www.sactest.net/robot/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SO Single Band
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    modes: [cw]
+  - name: SO Low Band
+    operator_mode: single
+    tx: one
+    power: high
+    bands: [80m, 40m]
+    modes: [cw]
+  - name: MULTI-ONE
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: MULTI-MULTI
+    operator_mode: multi
+    tx: multi
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: Checklog
+overlays:
+  - rookie
+  - classic
+  - tb_wires
+  - wire_only
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    grace_period: 10m
+    multiplier_exception: true
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      their_continent: [eu]
+      value: 2
+    - my_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      their_continent: [not, eu]
+      value: 3
+    - my_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      their_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      additional_weight: 10
+      value: 0
+    - my_continent: [eu]
+      their_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      value: 1
+    - my_continent: [not, eu]
+      their_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      bands: [20m, 15m, 10m]
+      value: 1
+    - my_continent: [not, eu]
+      their_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      bands: [80m, 40m]
+      value: 3
+  qso_band_rule: once_per_band
+  multis:
+    - my_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      property: dxcc_entity
+      except: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      band_rule: once_per_band
+      value: 1
+    - my_country: [not, jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      their_country: [jw, jx, la, oh, oh0, oj0, ox, oy, oz, sm, tf]
+      property: sac_area
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: sm
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 1]
+        their_continent: na
+        their_country: k
+        band: 80m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        points: 2
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 2
+        multis: 0
+        duplicate: true
+      - their_call: la1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: la
+        band: 40m
+        points: 0
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 6
+      points: 9
+      multis: 3
+      total: 27
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: sm3abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: sm
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: si3xyz
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: sm
+        band: 80m
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: sm5abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: sm
+        band: 80m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: sm3abc
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: sm
+        band: 40m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: dl
+        band: 40m
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: la/g3xyz
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: la
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 5
+      multis: 4
+      total: 20
+  - setup:
+      my_continent: na
+      my_country: k
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: sm3abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: sm
+        band: 80m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: sm3abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: sm
+        band: 20m
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: oh0xx
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: oh0
+        band: 40m
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: oh0xx
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: oh0
+        band: 40m
+        points: 3
+        multis: 0
+        duplicate: true
+      - their_call: ja1abc
+        their_exchange: [599, 5]
+        their_continent: as
+        their_country: ja
+        band: 40m
+        points: 0
+        multis: 0
+        duplicate: false
+    score:
+      qsos: 5
+      points: 7
+      multis: 3
+      total: 21
