@@ -1,0 +1,251 @@
+identifier: UKRAINIAN-DX
+name: Ukrainian DX Contest
+official_rules: https://urdxc.org/rules.php?english
+upload_url: https://urdxc.org/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB High Mixed
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB High CW
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB High SSB
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [ssb]
+  - name: SOAB Low Mixed
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB Low CW
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB Low SSB
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [ssb]
+  - name: SOAB QRP Mixed
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOSB 160m Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [160m]
+    modes: [cw, ssb]
+  - name: SOSB 80m Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [80m]
+    modes: [cw, ssb]
+  - name: SOSB 40m Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [40m]
+    modes: [cw, ssb]
+  - name: SOSB 20m Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [20m]
+    modes: [cw, ssb]
+  - name: SOSB 15m Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [15m]
+    modes: [cw, ssb]
+  - name: SOSB 10m Mixed
+    operator_mode: single
+    tx: one
+    band_count: single
+    bands: [10m]
+    modes: [cw, ssb]
+  - name: MOAB Single TX Mixed
+    operator_mode: multi
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: ur_oblast
+    values: [CH, CN, CR, DN, DO, HA, HE, HM, IF, KI, KO, KR, KV, LU, LV, NI, OD, PO, RI, SL, SU, TE, VI, VO, ZA, ZH, ZP]
+exchange:
+  - their_country: [ur]
+    fields:
+      - [rst]
+      - [ur_oblast]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [not, ur]
+      their_country: [ur]
+      additional_weight: 10
+      value: 10
+    - their_country: [same]
+      value: 1
+    - their_country: [other]
+      their_continent: [same]
+      value: 2
+    - their_continent: [other]
+      value: 3
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: wae_entity
+      band_rule: once_per_band
+      value: 1
+    - my_country: [not, ur]
+      property: ur_oblast
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ur5abc
+        their_exchange: [599, kv]
+        their_continent: eu
+        their_country: ur
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: ut7xyz
+        their_exchange: [599, od]
+        their_continent: eu
+        their_country: ur
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: ur5abc
+        their_exchange: [59, kv]
+        their_continent: eu
+        their_country: ur
+        band: 20m
+        mode: ssb
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: ur5abc
+        their_exchange: [599, kv]
+        their_continent: eu
+        their_country: ur
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 7
+      points: 36
+      multis: 6
+      total: 216
+  - setup:
+      my_continent: eu
+      my_country: ur
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: ut7xyz
+        their_exchange: [599, od]
+        their_continent: eu
+        their_country: ur
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 2]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 6
+      multis: 3
+      total: 18
