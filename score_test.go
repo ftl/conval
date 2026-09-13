@@ -1169,3 +1169,32 @@ func TestCounter_Add_Points_Bonus(t *testing.T) {
 
 	assert.Equal(t, BandScore{QSOs: 4, Points: 28}, counter.TotalScore(), "total score")
 }
+
+func TestCounter_Add_Points_BonusFactor(t *testing.T) {
+	definition := Definition{
+		Exchange: []ExchangeDefinition{{Fields: []ExchangeField{}}},
+		Scoring: Scoring{
+			QSORules: []ScoringRule{{Value: 4}},
+			QSOBonusRules: []ScoringRule{
+				{Time: &TimeWindow{From: "01:00", To: "04:59"}, Factor: 2},
+				{Bands: []ContestBand{Band80m}, Value: 1},
+			},
+			QSOBandRule: OncePerBand,
+		},
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band40m, Timestamp: time.Date(2026, time.April, 25, 13, 0, 0, 0, time.UTC)},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band40m, Timestamp: time.Date(2026, time.April, 26, 2, 0, 0, 0, time.UTC)},
+		{TheirCall: callsign.MustParse("DL3ABC"), Band: Band80m, Timestamp: time.Date(2026, time.April, 25, 13, 0, 0, 0, time.UTC)},
+		{TheirCall: callsign.MustParse("DL4ABC"), Band: Band80m, Timestamp: time.Date(2026, time.April, 26, 2, 0, 0, 0, time.UTC)},
+	}
+	// the additive bonus is applied before the factor
+	expectedPoints := []int{4, 8, 5, 10}
+
+	counter := NewCounter(definition, Setup{}, nil)
+	for i, qso := range qsos {
+		assert.Equal(t, expectedPoints[i], counter.Add(qso).Points, "QSO %d", i+1)
+	}
+
+	assert.Equal(t, BandScore{QSOs: 4, Points: 27}, counter.TotalScore(), "total score")
+}

@@ -444,7 +444,8 @@ type ScoringRule struct {
 	PropertyConstraints   []PropertyConstraint `yaml:"property_constraints,omitempty"`
 	BandRule              BandRule             `yaml:"band_rule,omitempty"`
 	Time                  *TimeWindow          `yaml:"time,omitempty"`
-	Count                 int                  `yaml:"count,omitempty"` // only useful for multis: how often the same value counts, defaults to 1
+	Count                 int                  `yaml:"count,omitempty"`  // only useful for multis: how often the same value counts, defaults to 1
+	Factor                int                  `yaml:"factor,omitempty"` // only useful for QSO bonuses: multiplies the points of the QSO instead of adding to them
 	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`
 	Value                 int                  `yaml:"value,omitempty"`
 	ValueOfProperty       Property             `yaml:"value_of_property,omitempty"`

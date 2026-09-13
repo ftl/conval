@@ -1,0 +1,349 @@
+identifier: UKEI-DX
+name: UK/EI DX Contest
+official_rules: https://www.ukeicc.com/dx-contest-rules.php
+upload_url: https://www.ukeicc.com/
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+  - operator_mode: single
+    duration: 1h
+categories:
+  - name: SOAB High Unassisted 24 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB High Unassisted 12 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+    duration: 12h
+  - name: SOAB High Assisted 24 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+  - name: SOAB High Assisted 12 Hours
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+    duration: 12h
+  - name: SOAB Low Unassisted 24 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB Low Unassisted 12 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+    duration: 12h
+  - name: SOAB Low Assisted 24 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+  - name: SOAB Low Assisted 12 Hours
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+    duration: 12h
+  - name: SOAB QRP Unassisted 24 Hours
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB QRP Unassisted 12 Hours
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+    duration: 12h
+  - name: SOAB QRP Assisted 24 Hours
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+  - name: SOAB QRP Assisted 12 Hours
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+    duration: 12h
+  - name: MOAB High Assisted
+    operator_mode: multi
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+    assisted: true
+  - name: Checklog
+overlays:
+  - single_element
+  - rookie
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: ukei_district
+    values: [AB, AL, AN, AR, BA, BB, BD, BH, BL, BM, BN, BR, BS, CA, CB, CE, CF, CH, CK, CL, CM, CN, CO, CR, CT, CV, CW, DA, DD, DE, DG, DH, DL, DN, DO, DR, DT, DU, DW, DY, EC, EH, EL, EN, EX, FE, FK, FY, GA, GL, GS, GU, GY, HA, HD, HG, HP, HR, HS, HU, HX, IG, IM, IP, IV, JE, KA, KD, KE, KI, KT, KW, KY, LA, LD, LE, LF, LH, LI, LL, LN, LO, LP, LS, LT, LU, MA, ME, MK, ML, MO, MR, MT, NE, NG, NL, NN, NP, NK, NW, OF, OL, OX, PA, PE, PH, PL, PO, PR, RG, RH, RM, RO, SA, SD, SE, SG, SI, SK, SL, SM, SN, SO, SP, SR, SS, ST, SW, SY, TA, TD, TF, TI, TN, TQ, TR, TS, TW, TY, UB, WA, WC, WD, WF, WI, WL, WM, WN, WR, WS, WT, WV, WX, YO, ZE]
+exchange:
+  - their_country: [ei, g, gd, gi, gj, gm, gu, gw]
+    fields:
+      - [rst]
+      - [serial]
+      - [ukei_district]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [eu]
+      bands: [80m, 40m]
+      value: 4
+    - my_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [eu]
+      bands: [20m, 15m, 10m]
+      value: 2
+    - my_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [not, eu]
+      bands: [80m, 40m]
+      value: 8
+    - my_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [not, eu]
+      bands: [20m, 15m, 10m]
+      value: 4
+    - my_continent: [eu]
+      my_country: [not, ei, g, gd, gi, gj, gm, gu, gw]
+      their_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      bands: [80m, 40m]
+      additional_weight: 10
+      value: 4
+    - my_continent: [eu]
+      my_country: [not, ei, g, gd, gi, gj, gm, gu, gw]
+      their_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      bands: [20m, 15m, 10m]
+      additional_weight: 10
+      value: 2
+    - my_continent: [eu]
+      my_country: [not, ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [eu]
+      bands: [80m, 40m]
+      value: 2
+    - my_continent: [eu]
+      my_country: [not, ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [eu]
+      bands: [20m, 15m, 10m]
+      value: 1
+    - my_continent: [eu]
+      my_country: [not, ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [not, eu]
+      bands: [80m, 40m]
+      value: 4
+    - my_continent: [eu]
+      my_country: [not, ei, g, gd, gi, gj, gm, gu, gw]
+      their_continent: [not, eu]
+      bands: [20m, 15m, 10m]
+      value: 2
+    - my_continent: [not, eu]
+      their_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      bands: [80m, 40m]
+      additional_weight: 10
+      value: 8
+    - my_continent: [not, eu]
+      their_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      bands: [20m, 15m, 10m]
+      additional_weight: 10
+      value: 4
+    - my_continent: [not, eu]
+      their_continent: [eu]
+      bands: [80m, 40m]
+      value: 4
+    - my_continent: [not, eu]
+      their_continent: [eu]
+      bands: [20m, 15m, 10m]
+      value: 2
+    - my_continent: [not, eu]
+      their_continent: [not, eu]
+      bands: [80m, 40m]
+      value: 2
+    - my_continent: [not, eu]
+      their_continent: [not, eu]
+      bands: [20m, 15m, 10m]
+      value: 1
+  qso_bonuses:
+    - my_country: [ei, g, gd, gi, gj, gm, gu, gw]
+      time: {from: "01:00", to: "04:59"}
+      factor: 2
+  qso_band_rule: once_per_band
+  multis:
+    - property: dxcc_entity
+      except: [ei, g, gd, gi, gj, gm, gu, gw]
+      band_rule: once_per_band
+      value: 1
+    - property: ukei_district
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: na
+      my_country: k
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: g3abc
+        time: 2026-04-25T13:00:00Z
+        their_exchange: [599, 1, bm]
+        their_continent: eu
+        their_country: g
+        band: 80m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+      - their_call: gm4xyz
+        time: 2026-04-25T13:05:00Z
+        their_exchange: [599, 2, ab]
+        their_continent: eu
+        their_country: gm
+        band: 80m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        time: 2026-04-25T13:10:00Z
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        time: 2026-04-25T13:15:00Z
+        their_exchange: [599, 4]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: g3abc
+        time: 2026-04-25T13:20:00Z
+        their_exchange: [599, 5, bm]
+        their_continent: eu
+        their_country: g
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: g3abc
+        time: 2026-04-25T13:25:00Z
+        their_exchange: [599, 6, bm]
+        their_continent: eu
+        their_country: g
+        band: 80m
+        mode: cw
+        points: 8
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 6
+      points: 26
+      multis: 5
+      total: 130
+  - setup:
+      my_continent: eu
+      my_country: g
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: dl1abc
+        time: 2026-04-25T13:00:00Z
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        time: 2026-04-26T02:00:00Z
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 8
+        multis: 0
+        duplicate: false
+      - their_call: k1abc
+        time: 2026-04-26T02:30:00Z
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: cw
+        points: 16
+        multis: 1
+        duplicate: false
+      - their_call: gm4xyz
+        time: 2026-04-26T03:00:00Z
+        their_exchange: [599, 4, ab]
+        their_continent: eu
+        their_country: gm
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        time: 2026-04-25T14:00:00Z
+        their_exchange: [599, 5]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 5
+      points: 36
+      multis: 4
+      total: 144

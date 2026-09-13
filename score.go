@@ -302,9 +302,16 @@ func (c Counter) Probe(qso QSO) QSOScore {
 	tracef("filtering %d QSO bonus rules", len(c.definition.Scoring.QSOBonusRules))
 	bonusRules := c.filterScoringRules(c.definition.Scoring.QSOBonusRules, allMatchingRules, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, qso.Timestamp, "" /* qtcKind */, getMyProperty, getTheirProperty)
 	tracef("found %d relevant QSO bonus rules", len(bonusRules))
+	bonus := 0
+	factor := 1
 	for _, rule := range bonusRules {
-		result.Points += valueOfRule(rule, getTheirProperty)
+		if rule.Factor > 0 {
+			factor *= rule.Factor
+			continue
+		}
+		bonus += valueOfRule(rule, getTheirProperty)
 	}
+	result.Points = (result.Points + bonus) * factor
 
 	// apply the QSO band rule
 	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.definition.Scoring.QSOBandRule)
