@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ftl/hamradio/callsign"
 )
@@ -277,7 +278,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 	// find the relevant QSO rules
 	tracef("filtering %d QSO scoring rules", len(c.definition.Scoring.QSORules))
-	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, true, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, "" /* qtcKind */, getMyProperty, getTheirProperty)
+	qsoRules := c.filterScoringRules(c.definition.Scoring.QSORules, mostRelevantRule, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, qso.Timestamp, "" /* qtcKind */, getMyProperty, getTheirProperty)
 	tracef("found %d relevant QSO rules: %+v", len(qsoRules), qsoRules)
 	if len(qsoRules) == 1 {
 		result.Points = valueOfRule(qsoRules[0], getTheirProperty)
@@ -297,6 +298,14 @@ func (c Counter) Probe(qso QSO) QSOScore {
 		}
 	}
 
+	// add the bonus points
+	tracef("filtering %d QSO bonus rules", len(c.definition.Scoring.QSOBonusRules))
+	bonusRules := c.filterScoringRules(c.definition.Scoring.QSOBonusRules, allMatchingRules, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, qso.Timestamp, "" /* qtcKind */, getMyProperty, getTheirProperty)
+	tracef("found %d relevant QSO bonus rules", len(bonusRules))
+	for _, rule := range bonusRules {
+		result.Points += valueOfRule(rule, getTheirProperty)
+	}
+
 	// apply the QSO band rule
 	bandAndMode := effectiveBandAndMode(qso.Band, qso.Mode, c.definition.Scoring.QSOBandRule)
 
@@ -310,7 +319,7 @@ func (c Counter) Probe(qso QSO) QSOScore {
 
 	// find the relevant multi rules
 	tracef("filtering %d multi rules", len(c.definition.Scoring.MultiRules))
-	multiRules := c.filterScoringRules(c.definition.Scoring.MultiRules, false, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, "" /* qtcKind */, getMyProperty, getTheirProperty)
+	multiRules := c.filterScoringRules(c.definition.Scoring.MultiRules, mostRelevantRulePerProperty, c.setup.MyContinent, c.setup.MyCountry, c.setup.MyPrefix(), qso.TheirContinent, qso.TheirCountry, qso.TheirPrefix(), qso.Band, qso.Timestamp, "" /* qtcKind */, getMyProperty, getTheirProperty)
 	tracef("found %d relevant multi rules", len(multiRules))
 	for i, rule := range multiRules {
 		if rule.Property == "" {
@@ -383,7 +392,15 @@ func effectiveBandAndMode(band ContestBand, mode Mode, rule BandRule) BandAndMod
 
 type propertyProvider func(property Property) string
 
-func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool, myContinent Continent, myCountry DXCCEntity, myPrefix string, theirContinent Continent, theirCountry DXCCEntity, theirPrefix string, band ContestBand, qtcKind QTCKind, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
+type ruleSelection int
+
+const (
+	mostRelevantRulePerProperty ruleSelection = iota
+	mostRelevantRule
+	allMatchingRules
+)
+
+func (c *Counter) filterScoringRules(rules []ScoringRule, selection ruleSelection, myContinent Continent, myCountry DXCCEntity, myPrefix string, theirContinent Continent, theirCountry DXCCEntity, theirPrefix string, band ContestBand, timestamp time.Time, qtcKind QTCKind, getMyProperty propertyProvider, getTheirProperty propertyProvider) []ScoringRule {
 	matchingRules := make([]ScoringRule, 0, len(rules))
 	ruleScores := make([]int, 0, len(matchingRules))
 	maxRuleScores := make(map[Property]int)
@@ -485,6 +502,13 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 				continue
 			}
 		}
+		if rule.Time != nil {
+			if !rule.Time.Matches(timestamp) {
+				tracef("not in the time window %v-%v", rule.Time.From, rule.Time.To)
+				continue
+			}
+			ruleScore++
+		}
 		if qtcKind != "" && rule.QTCKind != "" {
 			if qtcKind == rule.QTCKind {
 				ruleScore++
@@ -581,17 +605,20 @@ func (c *Counter) filterScoringRules(rules []ScoringRule, onlyMostRelevant bool,
 
 	tracef("%d matching rules with a max score of %d", len(matchingRules), maxRuleScore)
 
-	if maxRuleScore == 0 && len(matchingRules) > 1 {
+	if selection != allMatchingRules && maxRuleScore == 0 && len(matchingRules) > 1 {
 		return []ScoringRule{}
 	}
 
 	result := make([]ScoringRule, 0, len(matchingRules))
 	for i, rule := range matchingRules {
-		if onlyMostRelevant {
+		switch selection {
+		case allMatchingRules:
+			result = append(result, rule)
+		case mostRelevantRule:
 			if ruleScores[i] == maxRuleScore {
 				result = append(result, rule)
 			}
-		} else {
+		default:
 			if ruleScores[i] == maxRuleScores[rule.Property] {
 				result = append(result, rule)
 			}

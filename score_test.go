@@ -2,6 +2,7 @@ package conval
 
 import (
 	"testing"
+	"time"
 
 	"github.com/ftl/hamradio/callsign"
 	"github.com/stretchr/testify/assert"
@@ -29,20 +30,21 @@ func TestCounter_SimplestHappyPath(t *testing.T) {
 
 func TestFilterScoringRules(t *testing.T) {
 	tt := []struct {
-		desc             string
-		rules            []ScoringRule
-		myContinent      Continent
-		myCountry        DXCCEntity
-		myPrefix         string
-		theirContinent   Continent
-		theirCountry     DXCCEntity
-		theirPrefix      string
-		band             ContestBand
-		qtcKind          QTCKind
-		myExchange       QSOExchange
-		theirExchange    QSOExchange
-		onlyMostRelevant bool
-		expected         []ScoringRule
+		desc           string
+		rules          []ScoringRule
+		myContinent    Continent
+		myCountry      DXCCEntity
+		myPrefix       string
+		theirContinent Continent
+		theirCountry   DXCCEntity
+		theirPrefix    string
+		band           ContestBand
+		timestamp      time.Time
+		qtcKind        QTCKind
+		myExchange     QSOExchange
+		theirExchange  QSOExchange
+		selection      ruleSelection
+		expected       []ScoringRule
 	}{
 		{
 			desc:     "one simple unspecific rule",
@@ -254,7 +256,7 @@ func TestFilterScoringRules(t *testing.T) {
 			theirExchange: QSOExchange{
 				MemberNumberProperty: "1234",
 			},
-			onlyMostRelevant: true,
+			selection: mostRelevantRule,
 			expected: []ScoringRule{
 				{Property: MemberNumberProperty, Value: 3},
 			},
@@ -817,7 +819,7 @@ func TestFilterScoringRules(t *testing.T) {
 			}
 			counter := Counter{}
 
-			actual := counter.filterScoringRules(tc.rules, tc.onlyMostRelevant, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, tc.qtcKind, getMyProperty, getTheirProperty)
+			actual := counter.filterScoringRules(tc.rules, tc.selection, tc.myContinent, tc.myCountry, tc.myPrefix, tc.theirContinent, tc.theirCountry, tc.theirPrefix, tc.band, tc.timestamp, tc.qtcKind, getMyProperty, getTheirProperty)
 
 			assert.Equal(t, tc.expected, actual)
 		})
@@ -1141,4 +1143,29 @@ func TestCounter_Add_Multis_Count(t *testing.T) {
 
 	assert.Equal(t, BandScore{QSOs: 5, Points: 5, Multis: 80}, counter.TotalScore(), "total score")
 	assert.Equal(t, 85, counter.Total(counter.TotalScore()), "total")
+}
+
+func TestCounter_Add_Points_Bonus(t *testing.T) {
+	definition := Definition{
+		Exchange: []ExchangeDefinition{{Fields: []ExchangeField{}}},
+		Scoring: Scoring{
+			QSORules:      []ScoringRule{{Value: 6}},
+			QSOBonusRules: []ScoringRule{{Time: &TimeWindow{From: "23:00", To: "04:59"}, Value: 2}},
+			QSOBandRule:   OncePerBand,
+		},
+	}
+	qsos := []QSO{
+		{TheirCall: callsign.MustParse("DL1ABC"), Band: Band80m, Timestamp: time.Date(2026, time.December, 20, 22, 0, 0, 0, time.UTC)},
+		{TheirCall: callsign.MustParse("DL2ABC"), Band: Band80m, Timestamp: time.Date(2026, time.December, 20, 23, 30, 0, 0, time.UTC)},
+		{TheirCall: callsign.MustParse("DL3ABC"), Band: Band80m, Timestamp: time.Date(2026, time.December, 21, 2, 0, 0, 0, time.UTC)},
+		{TheirCall: callsign.MustParse("DL4ABC"), Band: Band80m, Timestamp: time.Date(2026, time.December, 21, 6, 0, 0, 0, time.UTC)},
+	}
+	expectedPoints := []int{6, 8, 8, 6}
+
+	counter := NewCounter(definition, Setup{}, nil)
+	for i, qso := range qsos {
+		assert.Equal(t, expectedPoints[i], counter.Add(qso).Points, "QSO %d", i+1)
+	}
+
+	assert.Equal(t, BandScore{QSOs: 4, Points: 28}, counter.TotalScore(), "total score")
 }

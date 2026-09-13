@@ -418,6 +418,7 @@ func (f ExchangeField) Contains(property Property) bool {
 
 type Scoring struct {
 	QSORules       []ScoringRule  `yaml:"qsos,omitempty"`
+	QSOBonusRules  []ScoringRule  `yaml:"qso_bonuses,omitempty"`
 	QSOBandRule    BandRule       `yaml:"qso_band_rule,omitempty"`
 	QTCRules       []ScoringRule  `yaml:"qtcs,omitempty"`
 	MultiRules     []ScoringRule  `yaml:"multis,omitempty"`
@@ -442,11 +443,54 @@ type ScoringRule struct {
 	Except                []string             `yaml:"except,omitempty"`   // only useful for multis
 	PropertyConstraints   []PropertyConstraint `yaml:"property_constraints,omitempty"`
 	BandRule              BandRule             `yaml:"band_rule,omitempty"`
+	Time                  *TimeWindow          `yaml:"time,omitempty"`
 	Count                 int                  `yaml:"count,omitempty"` // only useful for multis: how often the same value counts, defaults to 1
 	AdditionalWeight      int                  `yaml:"additional_weight,omitempty"`
 	Value                 int                  `yaml:"value,omitempty"`
 	ValueOfProperty       Property             `yaml:"value_of_property,omitempty"`
 	QTCKind               QTCKind              `yaml:"kind,omitempty"` // only useful for QTCs
+}
+
+type TimeWindow struct {
+	From string `yaml:"from"` // HH:MM in UTC, inclusive
+	To   string `yaml:"to"`   // HH:MM in UTC, inclusive
+}
+
+func (w TimeWindow) Matches(timestamp time.Time) bool {
+	if timestamp.IsZero() {
+		return false
+	}
+	from, fromOK := parseMinuteOfDay(w.From)
+	to, toOK := parseMinuteOfDay(w.To)
+	if !fromOK || !toOK {
+		return false
+	}
+
+	utc := timestamp.UTC()
+	minuteOfDay := utc.Hour()*60 + utc.Minute()
+	if from <= to {
+		return minuteOfDay >= from && minuteOfDay <= to
+	}
+	// the window spans midnight
+	return minuteOfDay >= from || minuteOfDay <= to
+}
+
+var timeOfDayExpression = regexp.MustCompile(`^([0-9]{1,2}):([0-9]{2})$`)
+
+func parseMinuteOfDay(value string) (int, bool) {
+	matches := timeOfDayExpression.FindStringSubmatch(strings.TrimSpace(value))
+	if matches == nil {
+		return 0, false
+	}
+	hours, err := strconv.Atoi(matches[1])
+	if err != nil || hours > 23 {
+		return 0, false
+	}
+	minutes, err := strconv.Atoi(matches[2])
+	if err != nil || minutes > 59 {
+		return 0, false
+	}
+	return hours*60 + minutes, true
 }
 
 func (r ScoringRule) countPerValue() int {

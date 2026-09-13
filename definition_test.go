@@ -591,3 +591,33 @@ func TestPropertyDefinition_getMemberOfProperty(t *testing.T) {
 	actual = pd.getMemberOfProperty(qso, Setup{}, nil)
 	assert.Equal(t, "from cache", actual, "from cache")
 }
+
+func TestTimeWindow_Matches(t *testing.T) {
+	utc := func(hour int, minute int, second int) time.Time {
+		return time.Date(2026, time.December, 20, hour, minute, second, 0, time.UTC)
+	}
+	tt := []struct {
+		desc      string
+		window    TimeWindow
+		timestamp time.Time
+		expected  bool
+	}{
+		{"inside", TimeWindow{From: "23:00", To: "04:59"}, utc(23, 30, 0), true},
+		{"inside after midnight", TimeWindow{From: "23:00", To: "04:59"}, utc(2, 0, 0), true},
+		{"at the beginning", TimeWindow{From: "23:00", To: "04:59"}, utc(23, 0, 0), true},
+		{"at the end", TimeWindow{From: "23:00", To: "04:59"}, utc(4, 59, 59), true},
+		{"before the beginning", TimeWindow{From: "23:00", To: "04:59"}, utc(22, 59, 59), false},
+		{"after the end", TimeWindow{From: "23:00", To: "04:59"}, utc(5, 0, 0), false},
+		{"outside", TimeWindow{From: "23:00", To: "04:59"}, utc(14, 0, 0), false},
+		{"within one day", TimeWindow{From: "08:00", To: "12:00"}, utc(10, 0, 0), true},
+		{"outside one day", TimeWindow{From: "08:00", To: "12:00"}, utc(23, 0, 0), false},
+		{"other timezone", TimeWindow{From: "23:00", To: "04:59"}, utc(23, 30, 0).In(time.FixedZone("UTC+2", 2*60*60)), true},
+		{"no timestamp", TimeWindow{From: "23:00", To: "04:59"}, time.Time{}, false},
+		{"invalid window", TimeWindow{From: "cq", To: "test"}, utc(23, 30, 0), false},
+	}
+	for _, tc := range tt {
+		t.Run(tc.desc, func(t *testing.T) {
+			assert.Equal(t, tc.expected, tc.window.Matches(tc.timestamp))
+		})
+	}
+}

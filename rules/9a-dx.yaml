@@ -1,0 +1,318 @@
+identifier: 9A-DX
+name: Croatian DX Contest
+official_rules: https://www.hamradio.hr/9a-dx-contest/
+upload_url: http://www.hamradio.hr/hfrobot
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB Mixed Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB Mixed QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB CW High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOAB CW Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB SSB High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [ssb]
+  - name: SOAB SSB Low
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [ssb]
+  - name: SOSB Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    modes: [cw, ssb]
+  - name: SO 2 Bands Mixed High
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: 2
+    modes: [cw, ssb]
+  - name: MOAB Single TX Mixed High
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: Checklog
+overlays:
+  - youth
+modes:
+  - cw
+  - ssb
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+  - operator_mode: multi
+    grace_period: 10m
+    multiplier_exception: true
+properties:
+  - name: 9a_county
+    values: [BJ, BM, CK, DA, DE, DU, DJ, GS, IM, KA, KC, KR, KT, KZ, MA, NA, NG, OG, OS, PU, PZ, RI, SB, SK, SL, ST, SI, VK, VT, VU, VZ, ZD, ZG, ZU]
+exchange:
+  - their_country: [9a]
+    fields:
+      - [rst]
+      - [9a_county]
+  - fields:
+      - [rst]
+      - [itu_zone]
+scoring:
+  qsos:
+    - my_country: [9a]
+      their_country: [9a]
+      additional_weight: 10
+      value: 1
+    - my_country: [9a]
+      their_continent: [eu]
+      bands: [160m, 80m]
+      value: 4
+    - my_country: [9a]
+      their_continent: [eu]
+      bands: [40m, 20m, 15m, 10m]
+      value: 2
+    - my_country: [9a]
+      their_continent: [not, eu]
+      bands: [160m, 80m]
+      value: 10
+    - my_country: [9a]
+      their_continent: [not, eu]
+      bands: [40m]
+      value: 8
+    - my_country: [9a]
+      their_continent: [not, eu]
+      bands: [20m, 15m, 10m]
+      value: 6
+    - my_country: [not, 9a]
+      their_country: [9a]
+      bands: [160m, 80m, 40m]
+      additional_weight: 10
+      value: 10
+    - my_country: [not, 9a]
+      their_country: [9a]
+      bands: [20m, 15m, 10m]
+      additional_weight: 10
+      value: 6
+    - my_country: [not, 9a]
+      their_continent: [other]
+      bands: [160m, 80m, 40m]
+      value: 6
+    - my_country: [not, 9a]
+      their_continent: [other]
+      bands: [20m, 15m, 10m]
+      value: 3
+    - my_country: [not, 9a]
+      their_continent: [same]
+      bands: [160m, 80m, 40m]
+      value: 2
+    - my_country: [not, 9a]
+      their_continent: [same]
+      bands: [20m, 15m, 10m]
+      value: 1
+  qso_bonuses:
+    - time: {from: "23:00", to: "04:59"}
+      value: 2
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: itu_zone
+      band_rule: once_per_band_and_mode
+      value: 1
+    - my_country: [not, 9a]
+      property: 9a_county
+      band_rule: once_per_band_and_mode
+      value: 1
+    - my_country: [9a]
+      property: wae_entity
+      band_rule: once_per_band_and_mode
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: 9a
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: 9a1abc
+        time: 2025-12-20T15:00:00Z
+        their_exchange: [599, zg]
+        their_continent: eu
+        their_country: 9a
+        band: 80m
+        mode: cw
+        points: 1
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        time: 2025-12-20T16:00:00Z
+        their_exchange: [599, 28]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 4
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        time: 2025-12-20T23:30:00Z
+        their_exchange: [599, 8]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: cw
+        points: 12
+        multis: 2
+        duplicate: false
+      - their_call: k1abc
+        time: 2025-12-21T02:00:00Z
+        their_exchange: [599, 8]
+        their_continent: na
+        their_country: k
+        band: 40m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: k1abc
+        time: 2025-12-21T06:00:00Z
+        their_exchange: [599, 8]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 6
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        time: 2025-12-21T07:00:00Z
+        their_exchange: [599, 28]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        time: 2025-12-21T07:05:00Z
+        their_exchange: [59, 28]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: ssb
+        points: 2
+        multis: 2
+        duplicate: false
+      - their_call: dl1abc
+        time: 2025-12-21T07:10:00Z
+        their_exchange: [599, 28]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 8
+      points: 37
+      multis: 13
+      total: 481
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: 9a1abc
+        time: 2025-12-20T15:00:00Z
+        their_exchange: [599, zg]
+        their_continent: eu
+        their_country: 9a
+        band: 80m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: 9a2xyz
+        time: 2025-12-20T15:05:00Z
+        their_exchange: [599, st]
+        their_continent: eu
+        their_country: 9a
+        band: 80m
+        mode: cw
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        time: 2025-12-21T01:00:00Z
+        their_exchange: [599, 8]
+        their_continent: na
+        their_country: k
+        band: 80m
+        mode: cw
+        points: 8
+        multis: 1
+        duplicate: false
+      - their_call: dl2abc
+        time: 2025-12-21T01:05:00Z
+        their_exchange: [599, 28]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 4
+        multis: 0
+        duplicate: false
+      - their_call: 9a1abc
+        time: 2025-12-21T09:00:00Z
+        their_exchange: [599, zg]
+        their_continent: eu
+        their_country: 9a
+        band: 20m
+        mode: cw
+        points: 6
+        multis: 2
+        duplicate: false
+    score:
+      qsos: 5
+      points: 38
+      multis: 6
+      total: 228
