@@ -1,0 +1,189 @@
+identifier: UN-DX
+name: UN DX Contest
+official_rules: https://undxc.kz/rules-eng/
+upload_url: https://ua9qcq.com/
+upload_format: cabrillo
+duration: 15h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB Mixed
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw, ssb]
+  - name: SOAB CW
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [cw]
+  - name: SOAB SSB
+    operator_mode: single
+    tx: one
+    band_count: all
+    modes: [ssb]
+  - name: MOAB Single TX Mixed High
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw, ssb]
+  - name: SWL
+    bands: [all]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+  - ssb
+bands:
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+  - name: kda_district
+    expression: "[A-Z][0-9]{2}"
+exchange:
+  - their_country: [un]
+    fields:
+      - [rst]
+      - [kda_district]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - their_country: [un]
+      additional_weight: 10
+      value: 10
+    - my_country: [not, un]
+      their_country: [same]
+      value: 2
+    - their_country: [other]
+      their_continent: [same]
+      value: 3
+    - their_continent: [other]
+      value: 5
+  qso_band_rule: once_per_band_and_mode
+  multis:
+    - property: kda_district
+      band_rule: once_per_band
+      value: 1
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: un7abc
+        their_exchange: [599, l17]
+        their_continent: as
+        their_country: un
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: un9xyz
+        their_exchange: [599, m20]
+        their_continent: as
+        their_country: un
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 2
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: f
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 3]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 5
+        multis: 1
+        duplicate: false
+      - their_call: un7abc
+        their_exchange: [59, l17]
+        their_continent: as
+        their_country: un
+        band: 20m
+        mode: ssb
+        points: 10
+        multis: 0
+        duplicate: false
+      - their_call: un7abc
+        their_exchange: [599, l17]
+        their_continent: as
+        their_country: un
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 0
+        duplicate: true
+    score:
+      qsos: 7
+      points: 40
+      multis: 6
+      total: 240
+  - setup:
+      my_continent: as
+      my_country: un
+      bands: [80m, 40m, 20m, 15m, 10m]
+      modes: [cw, ssb]
+    qsos:
+      - their_call: un9xyz
+        their_exchange: [599, m20]
+        their_continent: as
+        their_country: un
+        band: 20m
+        mode: cw
+        points: 10
+        multis: 2
+        duplicate: false
+      - their_call: ua9abc
+        their_exchange: [599, 1]
+        their_continent: as
+        their_country: ua9
+        band: 20m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 5
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 3
+      points: 18
+      multis: 4
+      total: 72
