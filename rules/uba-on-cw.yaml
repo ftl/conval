@@ -1,0 +1,174 @@
+identifier: UBA-ON-CW
+name: UBA ON Contest, CW
+official_rules: https://www.uba.be/en/hf/contest-rules/on-contest
+upload_url: https://contestupload.uba.be/
+upload_format: cabrillo
+duration: 4h
+duration-constraints:
+breaks:
+categories:
+  - name: A - ON
+    bands: [all]
+    modes: [cw]
+  - name: A2 - ON QRP
+    power: qrp
+    bands: [all]
+    modes: [cw]
+  - name: B - ONL
+    bands: [all]
+  - name: D - Foreign
+    bands: [all]
+    modes: [cw]
+  - name: E - Foreign SWL
+    bands: [all]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 80m
+  - 40m
+band_change_rules:
+properties:
+  - name: uba_section
+    values: [AAA, ACC, ALT, ARA, ARC, ATH, ATO, BDX, BLW, BRC, BSE, BTS, BXE, CDZ, CLR, CPN, CRD, DNZ, DRC, DST, EKO, ERA, GBN, GBX, GDV, GNT, GTM, HAC, HCC, HOB, HRT, IPR, KSD, KTK, LGE, LIR, LLV, LUS, LVN, MCL, MLB, MNS, MTT, MWV, NBT, NLB, NMR, NNV, NOK, NOL, OBR, ODE, ONZ, ORA, OSA, OSB, OST, PHI, RAC, RAF, RAM, RAT, RBO, RCA, RCN, REM, RST, RSX, SNW, TLS, TOR, TRA, TRC, TWS, UBA, VHF, WLD, WRA, WRC, WTO, XXX, ZLB, ZLZ, ZTM]
+exchange:
+  - their_country: [on]
+    fields:
+      - [rst]
+      - [serial]
+      - [uba_section]
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - my_country: [on]
+      value: 3
+    - my_country: [not, on]
+      their_country: [on]
+      value: 3
+  qso_band_rule: once_per_band
+  multis:
+    - property: uba_section
+      except: [XXX]
+      band_rule: once_per_band
+      value: 1
+    - my_country: [on]
+      property: dxcc_entity
+      except: [on]
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: on
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+      - their_call: on4abc
+        their_exchange: [599, 1, mcl]
+        their_continent: eu
+        their_country: on
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: on5xyz
+        their_exchange: [599, 2, xxx]
+        their_continent: eu
+        their_country: on
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 4]
+        their_continent: eu
+        their_country: f
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: dl
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 0
+        duplicate: true
+      - their_call: on4abc
+        their_exchange: [599, 6, mcl]
+        their_continent: eu
+        their_country: on
+        band: 40m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 15
+      multis: 4
+      total: 60
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [80m, 40m]
+      modes: [cw]
+    qsos:
+      - their_call: on4abc
+        their_exchange: [599, 1, mcl]
+        their_continent: eu
+        their_country: on
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+      - their_call: on5xyz
+        their_exchange: [599, 2, xxx]
+        their_continent: eu
+        their_country: on
+        band: 80m
+        mode: cw
+        points: 3
+        multis: 0
+        duplicate: false
+      - their_call: f1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: f
+        band: 80m
+        mode: cw
+        points: 0
+        multis: 0
+        duplicate: false
+      - their_call: on4abc
+        their_exchange: [599, 4, mcl]
+        their_continent: eu
+        their_country: on
+        band: 40m
+        mode: cw
+        points: 3
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 4
+      points: 9
+      multis: 2
+      total: 18
