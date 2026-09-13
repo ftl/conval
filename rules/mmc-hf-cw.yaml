@@ -1,0 +1,130 @@
+identifier: MMC-HF-CW
+name: Marconi Memorial HF Contest
+official_rules: https://www.arifano.it/contest_marconi.html
+upload_url: https://www.arifano.it/uplog.php
+upload_format: cabrillo
+duration: 24h
+duration-constraints:
+breaks:
+categories:
+  - name: SOAB QRP
+    operator_mode: single
+    tx: one
+    power: qrp
+    band_count: all
+    modes: [cw]
+  - name: SOAB LP
+    operator_mode: single
+    tx: one
+    power: low
+    band_count: all
+    modes: [cw]
+  - name: SOAB HP
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: SOSB
+    operator_mode: single
+    tx: one
+    power: high
+    band_count: single
+    modes: [cw]
+  - name: MO
+    operator_mode: multi
+    tx: one
+    power: high
+    band_count: all
+    modes: [cw]
+  - name: Checklog
+overlays:
+modes:
+  - cw
+bands:
+  - 160m
+  - 80m
+  - 40m
+  - 20m
+  - 15m
+  - 10m
+band_change_rules:
+properties:
+exchange:
+  - fields:
+      - [rst]
+      - [serial]
+scoring:
+  qsos:
+    - value: 1
+  qso_band_rule: once_per_band
+  multis:
+    - property: dxcc_entity
+      band_rule: once_per_band
+      value: 1
+examples:
+  - setup:
+      my_continent: eu
+      my_country: dl
+      bands: [160m, 80m, 40m, 20m, 15m, 10m]
+      modes: [cw]
+    qsos:
+      - their_call: i1abc
+        their_exchange: [599, 1]
+        their_continent: eu
+        their_country: i
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: i2xyz
+        their_exchange: [599, 2]
+        their_continent: eu
+        their_country: i
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: false
+      - their_call: dl1abc
+        their_exchange: [599, 3]
+        their_continent: eu
+        their_country: dl
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: k1abc
+        their_exchange: [599, 4]
+        their_continent: na
+        their_country: k
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+      - their_call: i1abc
+        their_exchange: [599, 5]
+        their_continent: eu
+        their_country: i
+        band: 20m
+        mode: cw
+        points: 1
+        multis: 0
+        duplicate: true
+      - their_call: i1abc
+        their_exchange: [599, 6]
+        their_continent: eu
+        their_country: i
+        band: 40m
+        mode: cw
+        points: 1
+        multis: 1
+        duplicate: false
+    score:
+      qsos: 6
+      points: 5
+      multis: 4
+      total: 20
