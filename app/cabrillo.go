@@ -85,18 +85,7 @@ func cabrilloToOperatorMode(operator cabrillo.CategoryOperator) conval.OperatorM
 }
 
 func cabrilloToOverlay(overlay cabrillo.CategoryOverlay) conval.Overlay {
-	switch overlay {
-	case cabrillo.ClassicOverlay:
-		return conval.ClassicOverlay
-	case cabrillo.TBWiresOverlay:
-		return conval.ThreeBandAndWiresOverlay
-	case cabrillo.RookieOverlay:
-		return conval.RookieOverlay
-	case cabrillo.YouthOverlay:
-		return conval.YouthOverlay
-	default:
-		return conval.NoOverlay
-	}
+	return conval.Overlay(strings.ReplaceAll(strings.ToLower(string(overlay)), "-", "_"))
 }
 
 func cabrilloToModes(mode cabrillo.CategoryMode) []conval.Mode {

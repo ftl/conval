@@ -5,6 +5,7 @@ import (
 
 	"github.com/ftl/hamradio/dxcc"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParseExchange(t *testing.T) {
@@ -67,7 +68,7 @@ func TestParseExchange(t *testing.T) {
 
 func TestPrefixDatabase_Find(t *testing.T) {
 	prefixes, _, err := dxcc.DefaultPrefixes(true)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	tt := []struct {
 		call         string

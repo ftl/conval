@@ -3,11 +3,11 @@ module github.com/ftl/conval
 go 1.24.3
 
 require (
-	github.com/ftl/cabrillo v0.2.2
+	github.com/ftl/cabrillo v0.4.0
 	github.com/ftl/hamradio v0.2.13
 	github.com/ftl/localcopy v0.0.0-20190616142648-8915fb81f0d9
 	github.com/spf13/cobra v1.6.1
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.10.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

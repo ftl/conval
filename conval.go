@@ -216,8 +216,18 @@ const (
 	NoOverlay                Overlay = ""
 	ClassicOverlay           Overlay = "classic"
 	ThreeBandAndWiresOverlay Overlay = "tb_wires"
+	WireOnlyOverlay          Overlay = "wire_only"
 	RookieOverlay            Overlay = "rookie"
 	YouthOverlay             Overlay = "youth"
+	YLOverlay                Overlay = "yl"
+	YNOverlay                Overlay = "yn"
+	TeenOverlay              Overlay = "teen"
+	NewcomerOverlay          Overlay = "newcomer"
+	DXpeditionOverlay        Overlay = "dxpedition"
+	SingleElementOverlay     Overlay = "single_element"
+	TwelveHourOverlay        Overlay = "12_hour"
+	NoviceTechOverlay        Overlay = "novice_tech"
+	Over50Overlay            Overlay = "over_50"
 )
 
 type Property string

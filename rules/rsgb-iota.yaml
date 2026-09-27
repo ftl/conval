@@ -5,11 +5,11 @@ upload_url: https://www.rsgbcc.org/hf/robot.shtml
 upload_format: cabrillo
 duration: 24h
 duration-constraints:
-  - overlay: 12-hour
+  - overlay: 12_hour
     duration: 12h
     constraint_mode: operation_time
 breaks:
-  - overlay: 12-hour
+  - overlay: 12_hour
     duration: 60m
 categories:
   - name: High Power
@@ -24,7 +24,7 @@ categories:
 overlays:
   - dxpedition
   - newcomer
-  - 12-hour
+  - 12_hour
 modes:
   - cw
   - ssb
